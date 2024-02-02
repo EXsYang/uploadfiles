@@ -1,0 +1,25 @@
+implements  实现
+
+default 默认、缺省
+Integer.parseInt()
+extends 继承
+
+static 可以修饰属性、方法、代码块、内部类
+final	可以修饰类、变量、方法
+abstract 抽象 可以修饰类、方法（不能用来修饰：①属性、构造器 ②私有方法、静态方法、final的
+方法、final的类
+int a = Integer.parseInt(String s);
+String s = String.valueOf(int a);
+Priority优先级
+synchronized同步
+/'sɪŋkrənaɪzd/ 
+
+ReentrantLock lock = new ReentrantLock();
+ /riːˈentrənt/
+lock.lock();
+lock.unlock():
+
+synchronized
+
+
+

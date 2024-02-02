@@ -1,0 +1,11 @@
+-- 创建测试表 演员表
+
+CREATE TABLE actor ( -- 演员表
+id INT PRIMARY KEY AUTO_INCREMENT,
+`name` VARCHAR(32) NOT NULL DEFAULT '',
+sex CHAR(1) NOT NULL DEFAULT '女',
+borndate DATETIME,
+phone VARCHAR(12));
+
+SELECT * FROM actor
+SELECT * FROM actor01

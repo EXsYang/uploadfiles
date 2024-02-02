@@ -1,0 +1,13 @@
+在需要整体修改名字文件s的上一层目录中打开cmd
+在当前文件夹下 按 shift + 鼠标右键 打开CMD命令窗口
+
+输入 dir /b files > names.txt
+将names.txt 里的文件名复制到wps表格 C列 
+替换掉需要修改的部分
+将names.txt 里的原文件名 复制到 B列
+在A列输入 ren
+将全部内容复制到names.txt 
+将两两之间的间距替换为正常的空格
+在需要修改名字文件的上一层目录中打开cmd
+输入cd files 回车
+将names.txt 修改好的内容 复制到命令行 修改完成

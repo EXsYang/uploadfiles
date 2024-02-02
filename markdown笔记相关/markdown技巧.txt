@@ -1,0 +1,16 @@
+在Markdown中，可以使用HTML标签来实现更复杂的布局，因为大多数Markdown解析器支持在Markdown文件中直接使用HTML代码。如果想让图片居左，可以直接使用HTML的<img>标签，并设置样式让图片浮动到左边。
+
+下面是一个示例代码，展示了如何在Markdown中使用HTML来使图片居左：
+
+html
+Copy code
+
+<img src="image_url_here" alt="alt_text_here" style="float: left; margin-right: 10px;" />
+
+
+在这段代码中：
+
+src="image_url_here": 替换image_url_here为你的图片URL。
+alt="alt_text_here": 替换alt_text_here为图片的替代文本，当图片不可见时显示。
+style="float: left; margin-right: 10px;": 设置图片样式为左浮动，并在图片右侧增加10px的间距。
+请注意，使用HTML可能会使Markdown的可读性降低，而且并非所有Markdown解析器都会支持HTML标签。因此，仅在需要时使用HTML，并确保你的Markdown解析器支持它。

@@ -1,0 +1,14 @@
+dotnet-cnblog proc -f <markdown文件路径>
+
+
+格式如下
+dotnet-cnblog proc -f C:\Users\yangd\Desktop\sb随手笔记.md
+
+
+dotnet-cnblog proc -f C:\Users\yangd\Desktop\JavaWeb随手笔记.md
+
+
+
+
+
+

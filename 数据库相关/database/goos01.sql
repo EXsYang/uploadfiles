@@ -1,0 +1,15 @@
+CREATE TABLE goods01(
+`Field` INT,
+goods_name VARCHAR(10),
+price DOUBLE)
+DROP TABLE goods;
+SELECT * FROM goods01;
+INSERT INTO goods01 VALUES(10,'华为手机',2000);
+INSERT INTO goods01 VALUES(20,'vovo手机',3000);
+INSERT INTO goods01 VALUES(30,'aa手机',4000);
+INSERT INTO goods01 VALUES(40,'da手机',5000);
+INSERT INTO goods01 VALUES(50,'avva手机',5000);
+INSERT INTO goods01 VALUES(60,'lao手机',6000);
+INSERT INTO goods01 VALUES(70,'va手机',6000);
+INSERT INTO goods01 VALUES(80,'华bb为手机',7000);
+DELETE
