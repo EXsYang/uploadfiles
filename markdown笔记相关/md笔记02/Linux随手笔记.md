@@ -6,9 +6,9 @@
 
 
 
-![image-20240115152508430](D:\TyporaPhoto\image-20240115152508430.png)
+![image-20240115152508430](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240115152508430.png)
 
-![image-20240115152514028](D:\TyporaPhoto\image-20240115152514028.png)
+![image-20240115152514028](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240115152514028.png)
 
 # Vim指令
 
@@ -18,7 +18,7 @@
 
 ### 1.ALT + R 可以让 Xshell7 变成半透明的
 
-![image-20240115160941562](D:\TyporaPhoto\image-20240115160941562.png)
+![image-20240115160941562](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240115160941562.png)
 
 
 
@@ -143,11 +143,11 @@
    
    
    
-   ![image-20240115210411150](D:\TyporaPhoto\image-20240115210411150.png)
+   ![image-20240115210411150](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240115210411150.png)
 
 
 
-![image-20240115215347091](D:\TyporaPhoto\image-20240115215347091.png)
+![image-20240115215347091](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240115215347091.png)
 
 
 
@@ -519,7 +519,7 @@ userdel: user mycentos is currently used by process 8188
 
 `systemctl` 是 `system control` 的缩写
 
-![image-20240115232423772](D:\TyporaPhoto\image-20240115232423772.png)
+![image-20240115232423772](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240115232423772.png)
 
 
 
@@ -589,7 +589,7 @@ ls -l /home > /home/info.txt
 
 
 
-![image-20240117202632505](D:\TyporaPhoto\image-20240117202632505.png)
+![image-20240117202632505](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240117202632505.png)
 
 
 
@@ -643,7 +643,7 @@ bashCopy code
 
 1. 如果当前在`/home`目录下，要进入`tom`目录 ，直接使用 `cd tom` 即可，而不是使用 `cd /tom`。
 
-   ![image-20240116164456916](D:\TyporaPhoto\image-20240116164456916.png)
+   ![image-20240116164456916](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240116164456916.png)
 
    `cd ~` 或者 `cd` ：回到自己的家目录, 比如你是root，`cd ~` 到 `/root`。
 
@@ -1148,13 +1148,13 @@ mv [options] source destination
 
 2.当more作为管道命令时，`cat  /opt/杂文.txt | more`,在打开的文件中使用`:f`,显示不出文件名
 
-![image-20240117175121996](D:\TyporaPhoto\image-20240117175121996.png)
+![image-20240117175121996](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240117175121996.png)
 
 
 
 [root@hspEdu01 home]# more /opt/杂文.txt  #直接使用more ，而不是作为管道命令使用，再`:f`可以显示文件名，
 
-![image-20240117174751397](D:\TyporaPhoto\image-20240117174751397.png)
+![image-20240117174751397](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240117174751397.png)
 
 使用 `more filename` 而不是 `cat filename | more`。
 
@@ -1260,7 +1260,7 @@ mv [options] source destination
 
 
 
-![image-20240117190720215](D:\TyporaPhoto\image-20240117190720215.png)
+![image-20240117190720215](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240117190720215.png)
 
 **应用实例:**
 
@@ -1298,7 +1298,7 @@ ln -s /root /home/myroot
 rm /home/myroot
 ~~~
 
-![image-20240117193812353](D:\TyporaPhoto\image-20240117193812353.png)
+![image-20240117193812353](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240117193812353.png)
 
 
 
@@ -1329,7 +1329,7 @@ rm /home/myroot
 1. 不能跨文件系统：硬链接只能在同一个文件系统中创建，因为它们直接指向物理存储中的 inode。
 2. 不能链接到目录：为了防止可能产生的循环引用，大多数 Unix/Linux 系统不允许对目录创建硬链接。但是，`.` 和 `..` 是每个目录自动拥有的硬链接，分别指向目录本身和父目录。
 
-![image-20240117192836108](D:\TyporaPhoto\image-20240117192836108.png)
+![image-20240117192836108](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240117192836108.png)
 
 创建硬链接的语法如下：
 
@@ -1446,7 +1446,7 @@ ln source_file link_name
 
 **注意细节：修改时间会导致连接中断，解决方法是重启虚拟机Linux系统，使得时间变为当前时间**
 
-![image-20240117204208278](D:\TyporaPhoto\image-20240117204208278.png)
+![image-20240117204208278](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240117204208278.png)
 
 是的，修改系统时间可能会导致当前的网络连接断开，特别是当你使用的是基于时间的安全协议（如 SSL/TLS）时。这些协议依赖于系统时间来验证证书的有效性，如果时间被设置到过去或未来，那么当前的证书可能会被视为无效。
 
@@ -1617,7 +1617,7 @@ grep [选项] 查找内容 源文件
   - 写法1: `cat /home/hello.txt | grep "yes"`
   - 写法2: `grep -n "yes" /home/hello.txt`
 
- ![image-20240117222031718](D:\TyporaPhoto\image-20240117222031718.png)
+ ![image-20240117222031718](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240117222031718.png)
 
 
 
@@ -1663,7 +1663,7 @@ grep -ni "yes" /home/hello.txt
 
 关于引号的使用：都可以，这里建议正则使用单引号 
 
-![image-20240117225417459](D:\TyporaPhoto\image-20240117225417459.png)
+![image-20240117225417459](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240117225417459.png)
 
 
 
@@ -2064,7 +2064,7 @@ hello.txt  info.txt  jack  milan  mycal  mydate2.txt  mydate3.txt  mydate.txt  m
 
 
 
-![image-20240118013914615](D:\TyporaPhoto\image-20240118013914615.png)
+![image-20240118013914615](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240118013914615.png)
 
 注意是用大写C指定解压目标目录
 
@@ -2279,7 +2279,7 @@ chgrp -R users mydir
   usermod -g wudang zwj
   ```
 
-![image-20240119175508071](D:\TyporaPhoto\image-20240119175508071.png)
+![image-20240119175508071](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240119175508071.png)
 
 
 
@@ -2883,7 +2883,7 @@ ChatGPT
 
 
 
-![User](D:\TyporaPhoto\ACg8ocIHS-8SrIxNACX_W4kh1gBxxAmKatgl2D-uFcgwungh9g=s96-c.jpeg)
+![User](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/ACg8ocIHS-8SrIxNACX_W4kh1gBxxAmKatgl2D-uFcgwungh9g=s96-c.jpeg)
 
 You
 
@@ -3025,7 +3025,7 @@ chmod +x /home/bb/script.sh
 
 **退出编辑crontab的方式和 vim 一样**
 
-![image-20240121202424467](D:\TyporaPhoto\image-20240121202424467.png)
+![image-20240121202424467](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240121202424467.png)
 
 #### 15.1.4 crontab 参数和特殊符号
 
@@ -3255,11 +3255,11 @@ atrm job_number
 5. **相对计时法**：使用 `now + count time-units` 的格式，其中 `now` 表示当前时间，`time-units` 是时间单位（可以是 `minutes`、`hours`、`days`、`weeks`），`count` 是数量。例如：`now + 5 minutes` 表示从现在开始的5分钟后。
 6. **今天和明天**：可以直接使用 `today` 或 `tomorrow` 来指定任务在今天或明天的同一时间执行。
 
-![image-20240121215803400](D:\TyporaPhoto\image-20240121215803400.png)
+![image-20240121215803400](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240121215803400.png)
 
 **`atd`** :at的守护进程，会以后台模式运行
 
-![image-20240121215716651](D:\TyporaPhoto\image-20240121215716651.png)
+![image-20240121215716651](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240121215716651.png)
 
 检测`atd`是否在运行
 
@@ -3389,9 +3389,9 @@ sr0     11:0    1  1024M  0 rom
 
 #### 执行`lsblk -f`后结果如下： 
 
-![image-20240122163631882](D:\TyporaPhoto\image-20240122163631882.png)
+![image-20240122163631882](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240122163631882.png)
 
-![image-20240122173822407](D:\TyporaPhoto\image-20240122173822407.png)
+![image-20240122173822407](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240122173822407.png)
 
 `sr0` 在 `lsblk` 命令显示的输出中通常代表第一个SCSI光驱设备。在这里：
 
@@ -3451,7 +3451,7 @@ mkfs -t ext4 /dev/sdb1
 
 
 
-![image-20240122181837084](D:\TyporaPhoto\image-20240122181837084.png)
+![image-20240122181837084](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240122181837084.png)
 
 4. **挂载**：将新分区挂载到特定目录，例如 `mount /dev/sdb1 /newdisk`。
 
@@ -3732,7 +3732,7 @@ ChatGPT
 
    
 
-   ![image-20240122212819171](D:\TyporaPhoto\image-20240122212819171.png)
+   ![image-20240122212819171](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240122212819171.png)
 
 ### `wc` 命令
 
@@ -3841,7 +3841,7 @@ ChatGPT
 
 
 
-![image-20240122224959655](D:\TyporaPhoto\image-20240122224959655.png)
+![image-20240122224959655](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240122224959655.png)
 
 #### 17.1 配置静态IP地址
 
@@ -3860,10 +3860,6 @@ vi /etc/sysconfig/network-scripts/ifcfg-ens33
   ```
 
 ---
-
-
-
-
 
 
 
@@ -3933,7 +3929,7 @@ NETMASK=255.255.255.0
 
 **ens33网络配置文件的等号右边的值在添加了引号后，使用ifconfig才会输出ens33网络配置文件中，我们自己手动配置的ipv4地址！！才会生效！此时即使关机在重新启动虚拟机，ens33网络配置文件中自己配置的IPV4地址也生效！**
 
-![image-20240129044243169](D:\TyporaPhoto\image-20240129044243169.png)
+![image-20240129044243169](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240129044243169.png)
 
 - **ifcfg-ens33 文件说明**：
   - `DEVICE=eth0`：接口名（设备，网卡）
@@ -4100,7 +4096,7 @@ rtt min/avg/max/mdev = 0.185/0.220/0.305/0.050 ms
 
 ~~~
 
-![image-20240123000701299](D:\TyporaPhoto\image-20240123000701299.png)
+![image-20240123000701299](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240123000701299.png)
 
 
 
@@ -4164,7 +4160,7 @@ Copy code192.168.1.10    example.com
 
 这里少了一个先找浏览器缓存的步骤，但如果是直接ping，那么这个图是对的
 
-![image-20240123175149741](D:\TyporaPhoto\image-20240123175149741.png)
+![image-20240123175149741](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240123175149741.png)
 
 此步骤说明了从用户输入域名到浏览器获取 IP 地址的整个过程。如果在本地找到了 DNS 记录，解析过程会很快；如果需要向远程 DNS 服务器请求解析，可能会稍慢，但通常这个过程也非常迅速。
 
@@ -4174,7 +4170,7 @@ Copy code192.168.1.10    example.com
 
 
 
-##  18. Linux 实操篇-进程管理
+#  18. Linux 实操篇-进程管理
 
 ### 18.1 基本介绍
 
@@ -4246,7 +4242,7 @@ ps –aux | grep sshd
 
 
 
-![image-20240126010001412](D:\TyporaPhoto\image-20240126010001412.png)
+![image-20240126010001412](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240126010001412.png)
 
 
 上面这个问题是由于命令中的破折号（dash）字符不正确导致的。在您提供的两个命令中：
@@ -4303,19 +4299,40 @@ ps –aux | grep sshd
 
 ---
 
-<img src="D:\TyporaPhoto\image-20240123203649813.png" alt="alt_text_here" style="float: left; margin-right: 10px;" />
+<img src="https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240123203649813.png" alt="alt_text_here" style="float: left; margin-right: 10px;" />
 
 对应：
 
-![image-20240123203651985](D:\TyporaPhoto\image-20240123203651985.png)
+![image-20240123203651985](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240123203651985.png)
 
 ---
 
-<img src="D:\TyporaPhoto\image-20240123203947955.png" alt="alt_text_here" style="float: left; margin-right: 10px;" />
+<img src="https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240123203947955.png" alt="alt_text_here" style="float: left; margin-right: 10px;" />
 
 对应：
 
-![image-20240123203951847](D:\TyporaPhoto\image-20240123203951847.png)
+![image-20240123203951847](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240123203951847.png)
+
+
+
+`ps -ef` 是一个在 Unix 和类 Unix 系统中常用的命令，用于显示当前系统中活动进程的详细信息。这个命令的输出提供了每个进程的快照。以下是该命令选项的详细解释：
+
+- `ps`：这是 "process status" 的缩写，是用来显示当前运行的系统进程信息的命令。
+- `-e`：这个选项告诉 `ps` 命令显示所有进程。没有 `-e` 选项，`ps` 通常只显示当前用户和当前终端相关的进程。
+- `-f`：这个选项表示 "full format"，意味着显示完整格式的信息。这会提供关于每个进程的更详细信息，而不仅仅是基本信息。
+
+使用 `ps -ef` 命令通常会显示如下信息：
+
+- **UID**：启动进程的用户 ID。
+- **PID**：进程 ID。
+- **PPID**：父进程 ID（即创建这个进程的进程的 ID）。
+- **C**：CPU 利用率。
+- **STIME**：进程开始时间。
+- **TTY**：与进程关联的终端类型。
+- **TIME**：进程占用的 CPU 时间。
+- **CMD**：启动进程的命令名称或命令行。
+
+这个命令非常有用，可以帮助系统管理员查看系统中所有运行的进程及其相关信息，进行故障诊断，了解系统运行状态等。
 
 ---
 
@@ -4368,17 +4385,17 @@ centos7图形界面上的两个控制台终端，这里要查询Linux控制台�
 
 即`ps -aux | grep bash`
 
-![image-20240123222724259](D:\TyporaPhoto\image-20240123222724259.png)
+![image-20240123222724259](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240123222724259.png)
 
 以上操作演示了如何使用`kill`和`killall`命令来管理系统进程，包括强制终止和平滑关闭进程。这些操作在系统管理中非常常见，特别是处理不响应的程序或服务时。
 
 
 
-![image-20240123221116710](D:\TyporaPhoto\image-20240123221116710.png)
+![image-20240123221116710](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240123221116710.png)
 
 
 
-![image-20240123221507997](D:\TyporaPhoto\image-20240123221507997.png)
+![image-20240123221507997](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240123221507997.png)
 
 
 
@@ -4424,7 +4441,7 @@ centos7图形界面上的两个控制台终端，这里要查询Linux控制台�
 
 3. service指令管理的服务在`/etc/init.d`中可以查看。
 
-   ![image-20240125220107061](D:\TyporaPhoto\image-20240125220107061.png)
+   ![image-20240125220107061](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240125220107061.png)
 
 #### 18.5.3 service管理指令案例
 
@@ -4481,7 +4498,7 @@ centos7图形界面上的两个控制台终端，这里要查询Linux控制台�
  	  `chkconfig` 是一个缩写，常用于 Unix 和 Linux 系统中。它代表 "检查配置"（check configuration）。  
 
 - chkconfig指令管理的服务在`/etc/init.d`中可以查看,有三个。
-- ![image-20240126015058187](D:\TyporaPhoto\image-20240126015058187.png)
+- ![image-20240126015058187](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240126015058187.png)
 - 注意: CentOS7.0之后，很多服务使用systemctl管理。
 
 基本语法：
@@ -4582,7 +4599,7 @@ cmd命令行中 **`telnet`**指令
 
 查看网络服务的信息 `netstat -anp | more`
 
-![image-20240125232415933](D:\TyporaPhoto\image-20240125232415933.png)
+![image-20240125232415933](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240125232415933.png)
 
 
 
@@ -4590,29 +4607,29 @@ cmd命令行中 **`telnet`**指令
 
 
 
-![image-20240126000510687](D:\TyporaPhoto\image-20240126000510687.png)
+![image-20240126000510687](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240126000510687.png)
 
 
 
 如果报错，则启用Telnet客户端
 
-![image-20240126002403924](D:\TyporaPhoto\image-20240126002403924.png)
+![image-20240126002403924](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240126002403924.png)
 
-![image-20240126002327428](D:\TyporaPhoto\image-20240126002327428.png)
+![image-20240126002327428](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240126002327428.png)
 
-![image-20240126002452023](D:\TyporaPhoto\image-20240126002452023.png)
+![image-20240126002452023](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240126002452023.png)
 
 之后就可以连接上了
 
-![image-20240126002633574](D:\TyporaPhoto\image-20240126002633574.png)
+![image-20240126002633574](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240126002633574.png)
 
 
 
 如果Linux防火墙是打开的，同时111端口没有在Linux防火墙打开/放行的端口列表中，则访问不到，如下
 
-![image-20240126002850686](D:\TyporaPhoto\image-20240126002850686.png)
+![image-20240126002850686](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240126002850686.png)
 
-![image-20240126004049827](D:\TyporaPhoto\image-20240126004049827.png)
+![image-20240126004049827](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240126004049827.png)
 
 
 
@@ -4630,7 +4647,7 @@ cmd命令行中 **`telnet`**指令
 
 
 
-![image-20240126004729270](D:\TyporaPhoto\image-20240126004729270.png)
+![image-20240126004729270](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240126004729270.png)
 
 - 在生产环境中，通常需要打开防火墙，但如果打开防火墙，外部请求数据包就不能与服务器监听端口通信。这时需要打开指定的端口，例如80、22、8080等。
 
@@ -4648,7 +4665,7 @@ cmd命令行中 **`telnet`**指令
 
 这里的`协议`可以使用指令 `netstat -anp | more` 来查看
 
-![image-20240126003744862](D:\TyporaPhoto\image-20240126003744862.png)
+![image-20240126003744862](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240126003744862.png)
 
 
 
@@ -4662,7 +4679,7 @@ cmd命令行中 **`telnet`**指令
 
 - 命令：`top [选项]`
 
-![image-20240126010735893](D:\TyporaPhoto\image-20240126010735893.png)
+![image-20240126010735893](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240126010735893.png)
 
 
 
@@ -4731,11 +4748,11 @@ cmd命令行中 **`telnet`**指令
 
 #### 18.6.3 选项说明
 
-![image-20240126011327840](D:\TyporaPhoto\image-20240126011327840.png)
+![image-20240126011327840](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240126011327840.png)
 
 #### 18.6.4 交互操作说明
 
-![image-20240126011343965](D:\TyporaPhoto\image-20240126011343965.png)
+![image-20240126011343965](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240126011343965.png)
 
 这里在交互时输入大写的P才可以,也可以输入shift+p，但是不能输入小写的p
 
@@ -4755,11 +4772,11 @@ cmd命令行中 **`telnet`**指令
   - 执行 `top` 命令，查看执行的进程。
   - 输入 `k`，然后回车，再输入要结束的进程 ID 号。
 
-  ![image-20240126012854400](D:\TyporaPhoto\image-20240126012854400.png)
+  ![image-20240126012854400](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240126012854400.png)
 
   回车，这时让我们输入信号量，输入9,即强制结束/删除
 
-![image-20240126012955495](D:\TyporaPhoto\image-20240126012955495.png)
+![image-20240126012955495](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240126012955495.png)
 
 - 案例 3：指定系统状态更新的时间（每隔 10 秒自动更新），默认是 3 秒
   - 执行命令 `top -d 10`。
@@ -4780,7 +4797,7 @@ cmd命令行中 **`telnet`**指令
 
 
 
-![image-20240126013859439](D:\TyporaPhoto\image-20240126013859439.png)
+![image-20240126013859439](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240126013859439.png)
 
 - **Proto**: 表示协议类型，通常是 TCP 或 UDP。
 - **Recv-Q**: 接收队列大小，显示待处理的接收数据量。
@@ -4973,7 +4990,7 @@ Yum 是一个基于 RPM 包管理的 Shell 前端软件包管理器。能够自�
 
 2. 进入 `/opt/tomcat/bin`，启动 Tomcat `./startup.sh`
 
-   ![image-20240128030030959](D:\TyporaPhoto\image-20240128030030959.png)
+   ![image-20240128030030959](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240128030030959.png)
 
 3. 开放 8080 端口，回顾 `firewall-cmd` 指令
 
@@ -4986,7 +5003,7 @@ success
 yes
 ~~~
 
-![image-20240128031424957](D:\TyporaPhoto\image-20240128031424957.png)
+![image-20240128031424957](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240128031424957.png)
 
 
 
@@ -4996,13 +5013,13 @@ yes
 
 http://192.168.200.130:8080
 
-![image-20240128031759720](D:\TyporaPhoto\image-20240128031759720.png)
+![image-20240128031759720](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240128031759720.png)
 
 
 
 http://192.168.200.130:8080/hsp.html
 
-![image-20240128032045697](D:\TyporaPhoto\image-20240128032045697.png)
+![image-20240128032045697](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240128032045697.png)
 
 ### 20.4 安装 IntelliJ IDEA 2020
 
@@ -5014,7 +5031,7 @@ http://192.168.200.130:8080/hsp.html
 
 **Linux中SDK的选择，就指定到jdk1.8安装目录文件夹即可，不需要指定到bin目录**
 
-![image-20240128034210204](D:\TyporaPhoto\image-20240128034210204.png)
+![image-20240128034210204](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240128034210204.png)
 
 1. 编写并测试 Hello World 程序
 
@@ -6006,11 +6023,11 @@ find ${BACKUP} -atime +10 -name "*.tar.gz" -exec rm -rf {} \;
 1、问题阐述与截图
 在桌面虚拟机软件VMVare Workstation中创建新的虚拟机，选择客户机操作系统时，出现“此主机不支持64位客户机操作系统，此系统无法运行”的警告（如图1），
 
-![img](D:\TyporaPhoto\format,png.png)
+![img](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/format,png.png)
 
 如果无视这个问题，直接点击“下一步”，倒也可以完成环境的配置，但是后面想要开启此虚拟机并正式安装红帽系统时，会出现“ VMware Workstation 与 Hyper-V不兼容 ”的提示（如图2），需要移除Hyper-V然后再运行VMWare安装RHEL。
 
-![img](D:\TyporaPhoto\20191015114859593.png)
+![img](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/20191015114859593.png)
 
 
 
@@ -6030,22 +6047,22 @@ bcdedit /set hypervisorlaunchtype off
 
  笔记本新安装的workstation，接着装了centOS-7，开机后无法联网，首先检查下这两个服务，八成是没起来。
 
-![image-20240112193015083](D:\TyporaPhoto\image-20240112193015083.png)
+![image-20240112193015083](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240112193015083.png)
 
 
  VMware DHCP service启动不起来应该是这个地方没勾选,就按照图上勾选就行了，不用改什么配置文件
 
-![img](D:\TyporaPhoto\a00e388c2e4a4a2ea3fd42bb685795cf.png)
+![img](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/a00e388c2e4a4a2ea3fd42bb685795cf.png)
 
 最后   执行下 service network restart  ? 重启虚拟机 ,重启下面两个服务  应该就可以了  。
 
-![img](D:\TyporaPhoto\118d5b016765435a90c155d86cb67a1d.png)
+![img](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/118d5b016765435a90c155d86cb67a1d.png)
 
 
 
 
 
-![image-20240112193015083](D:\TyporaPhoto\image-20240112193015083.png)
+![image-20240112193015083](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240112193015083.png)
 
 
 
@@ -6127,13 +6144,13 @@ sudo systemctl restart network
 
 物理主机F2 IPV4为：192.168.0.12
 
-![image-20240112191215742](D:\TyporaPhoto\image-20240112191215742.png)
+![image-20240112191215742](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240112191215742.png)
 
-![image-20240112194326151](D:\TyporaPhoto\image-20240112194326151.png)
+![image-20240112194326151](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240112194326151.png)
 
 
 
-![image-20240113175635254](D:\TyporaPhoto\image-20240113175635254.png)
+![image-20240113175635254](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240113175635254.png)
 
 **为什么一般不需要为VMNet8勾选共享网络呢？**
 
@@ -6152,7 +6169,7 @@ ChatGPT
 
 
 
-![image-20240112191034031](D:\TyporaPhoto\image-20240112191034031.png)
+![image-20240112191034031](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240112191034031.png)
 
 #### 2.虚拟网卡VMNet8 配置相关:
 
@@ -6160,17 +6177,17 @@ VMware Virtual Ethernet Adapter for VMnet8  IPv4 地址: 192.168.137.1
 
 最好设置为自动获取否则后面会出现宿主机ping不通虚拟机的情况
 
-![image-20240112190631853](D:\TyporaPhoto\image-20240112190631853.png)
+![image-20240112190631853](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240112190631853.png)
 
-![image-20240113174255779](D:\TyporaPhoto\image-20240113174255779.png)
+![image-20240113174255779](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240113174255779.png)
 
 但是在宿主机ping NAT模式的虚拟机时用到了上图的VMnet8，最好不要禁用！！ 
 
 
 
-![image-20240114013433918](D:\TyporaPhoto\image-20240114013433918.png)
+![image-20240114013433918](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240114013433918.png)
 
-![image-20240114011414434](D:\TyporaPhoto\image-20240114011414434.png)
+![image-20240114011414434](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240114011414434.png)
 
 如果宿主机VMNet8配置有误会导致宿主机ping不通虚拟机
 
@@ -6211,7 +6228,7 @@ Ethernet adapter VMware Network Adapter VMnet8:
 
 编辑->虚拟网络编辑器配置如下：
 
-![image-20240112200447804](D:\TyporaPhoto\image-20240112200447804.png)
+![image-20240112200447804](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240112200447804.png)
 
 在许多家庭和小型办公室网络中，网关地址通常被配置为子网中的第一个主机地址，也就是以`.1`结束的地址（例如`192.168.1.1`或`192.168.0.1`）。这是一种常见的约定，但并不是强制性的网络标准。网关地址可以是子网中的任何有效主机地址，这取决于网络管理员的配置。
 
@@ -6219,9 +6236,9 @@ Ethernet adapter VMware Network Adapter VMnet8:
 
 因此，尽管`.1`作为网关是非常普遍的做法，但并不是唯一的选择。网络的实际配置应该总是查阅相关的网络文档或通过网络设置来确定。
 
-![image-20240112204059671](D:\TyporaPhoto\image-20240112204059671.png)
+![image-20240112204059671](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240112204059671.png)
 
-<img src="D:\TyporaPhoto\image-20240112200742424.png" alt="image-20240112200742424" style="zoom: 67%;" />
+<img src="https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240112200742424.png" alt="image-20240112200742424" style="zoom: 67%;" />
 
 
 
@@ -6229,7 +6246,7 @@ Ethernet adapter VMware Network Adapter VMnet8:
 
 虚拟机IPV4: 192.168.100.128
 
-![image-20240112192635021](D:\TyporaPhoto\image-20240112192635021.png)
+![image-20240112192635021](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240112192635021.png)
 
 
 
@@ -6269,7 +6286,7 @@ Ethernet adapter VMware Network Adapter VMnet8:
 
 取消 工具-选项 的勾选，解决“XShell7 使用时复制的内容粘贴到Xshell7时，竟然自动执行了，我还没回车呢。如何解决”
 
-![image-20240128011621661](D:\TyporaPhoto\image-20240128011621661.png)
+![image-20240128011621661](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240128011621661.png)
 
 
 
@@ -6298,7 +6315,7 @@ Type `help' to learn how to use Xshell prompt.
 
 接着会出现下面的问题Xshell7连接虚拟机失败 和 宿主机ping虚拟机请求超时
 
-![image-20240114011533125](D:\TyporaPhoto\image-20240114011533125.png)
+![image-20240114011533125](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240114011533125.png)
 
 ## 2. 宿主机ping虚拟机请求超时
 
@@ -6327,12 +6344,12 @@ Ping statistics for 192.168.2.129:
 
 解决办法
 打开电脑的设置，找到网络
-![在这里插入图片描述](D:\TyporaPhoto\watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAX3N0cml2aW5nXw==,size_20,color_FFFFFF,t_70,g_se,x_16.png)
-![在这里插入图片描述](D:\TyporaPhoto\watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAX3N0cml2aW5nXw==,size_20,color_FFFFFF,t_70,g_se,x_16-17051654514379.png)
+![在这里插入图片描述](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAX3N0cml2aW5nXw==,size_20,color_FFFFFF,t_70,g_se,x_16.png)
+![在这里插入图片描述](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAX3N0cml2aW5nXw==,size_20,color_FFFFFF,t_70,g_se,x_16-17051654514379.png)
 [VMware](https://so.csdn.net/so/search?q=VMware&spm=1001.2101.3001.7020) Network Adapter VMnet1和 VMware Network Adapter VMnet8 分别进行如下操作
 
-![在这里插入图片描述](D:\TyporaPhoto\watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAX3N0cml2aW5nXw==,size_20,color_FFFFFF,t_70,g_se,x_16-170516545143710.png)
-![在这里插入图片描述](D:\TyporaPhoto\watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAX3N0cml2aW5nXw==,size_14,color_FFFFFF,t_70,g_se,x_16.png)
+![在这里插入图片描述](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAX3N0cml2aW5nXw==,size_20,color_FFFFFF,t_70,g_se,x_16-170516545143710.png)
+![在这里插入图片描述](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAX3N0cml2aW5nXw==,size_14,color_FFFFFF,t_70,g_se,x_16.png)
 然后就可以了
 
 ~~~
@@ -6354,9 +6371,9 @@ Approximate round trip times in milli-seconds:
 
 下面是网络适配器的配置
 
-![image-20240114011318880](D:\TyporaPhoto\image-20240114011318880.png)
+![image-20240114011318880](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240114011318880.png)
 
-![image-20240114011414434](D:\TyporaPhoto\image-20240114011414434.png)
+![image-20240114011414434](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240114011414434.png)
 
 
 
@@ -6396,7 +6413,7 @@ Wireless LAN adapter WLAN 2:
    NetBIOS over Tcpip. . . . . . . . : Enabled
 ~~~
 
-![image-20240114013358273](D:\TyporaPhoto\image-20240114013358273.png)
+![image-20240114013358273](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240114013358273.png)
 
 如果宿主机VMNet8配置有误会导致宿主机ping不通虚拟机
 
@@ -6518,7 +6535,7 @@ rtt min/avg/max/mdev = 0.428/0.441/0.459/0.028 ms
 
 此时在进行Xshell7远程连接，连接虚拟机Linux服务器主机成功！
 
-![image-20240114015301812](D:\TyporaPhoto\image-20240114015301812.png)
+![image-20240114015301812](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240114015301812.png)
 
 ---
 
