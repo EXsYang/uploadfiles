@@ -6,9 +6,9 @@
 
 
 
-![image-20240115152508430](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240115152508430.png)
+![image-20240115152508430](D:\TyporaPhoto\image-20240115152508430.png)
 
-![image-20240115152514028](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240115152514028.png)
+![image-20240115152514028](D:\TyporaPhoto\image-20240115152514028.png)
 
 # Vim指令
 
@@ -18,7 +18,7 @@
 
 ### 1.ALT + R 可以让 Xshell7 变成半透明的
 
-![image-20240115160941562](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240115160941562.png)
+![image-20240115160941562](D:\TyporaPhoto\image-20240115160941562.png)
 
 
 
@@ -143,11 +143,11 @@
    
    
    
-   ![image-20240115210411150](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240115210411150.png)
+   ![image-20240115210411150](D:\TyporaPhoto\image-20240115210411150.png)
 
 
 
-![image-20240115215347091](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240115215347091.png)
+![image-20240115215347091](D:\TyporaPhoto\image-20240115215347091.png)
 
 
 
@@ -519,7 +519,7 @@ userdel: user mycentos is currently used by process 8188
 
 `systemctl` 是 `system control` 的缩写
 
-![image-20240115232423772](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240115232423772.png)
+![image-20240115232423772](D:\TyporaPhoto\image-20240115232423772.png)
 
 
 
@@ -589,7 +589,7 @@ ls -l /home > /home/info.txt
 
 
 
-![image-20240117202632505](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240117202632505.png)
+![image-20240117202632505](D:\TyporaPhoto\image-20240117202632505.png)
 
 
 
@@ -643,7 +643,7 @@ bashCopy code
 
 1. 如果当前在`/home`目录下，要进入`tom`目录 ，直接使用 `cd tom` 即可，而不是使用 `cd /tom`。
 
-   ![image-20240116164456916](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240116164456916.png)
+   ![image-20240116164456916](D:\TyporaPhoto\image-20240116164456916.png)
 
    `cd ~` 或者 `cd` ：回到自己的家目录, 比如你是root，`cd ~` 到 `/root`。
 
@@ -1148,13 +1148,13 @@ mv [options] source destination
 
 2.当more作为管道命令时，`cat  /opt/杂文.txt | more`,在打开的文件中使用`:f`,显示不出文件名
 
-![image-20240117175121996](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240117175121996.png)
+![image-20240117175121996](D:\TyporaPhoto\image-20240117175121996.png)
 
 
 
 [root@hspEdu01 home]# more /opt/杂文.txt  #直接使用more ，而不是作为管道命令使用，再`:f`可以显示文件名，
 
-![image-20240117174751397](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240117174751397.png)
+![image-20240117174751397](D:\TyporaPhoto\image-20240117174751397.png)
 
 使用 `more filename` 而不是 `cat filename | more`。
 
@@ -1260,7 +1260,7 @@ mv [options] source destination
 
 
 
-![image-20240117190720215](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240117190720215.png)
+![image-20240117190720215](D:\TyporaPhoto\image-20240117190720215.png)
 
 **应用实例:**
 
@@ -1298,7 +1298,7 @@ ln -s /root /home/myroot
 rm /home/myroot
 ~~~
 
-![image-20240117193812353](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240117193812353.png)
+![image-20240117193812353](D:\TyporaPhoto\image-20240117193812353.png)
 
 
 
@@ -1329,7 +1329,7 @@ rm /home/myroot
 1. 不能跨文件系统：硬链接只能在同一个文件系统中创建，因为它们直接指向物理存储中的 inode。
 2. 不能链接到目录：为了防止可能产生的循环引用，大多数 Unix/Linux 系统不允许对目录创建硬链接。但是，`.` 和 `..` 是每个目录自动拥有的硬链接，分别指向目录本身和父目录。
 
-![image-20240117192836108](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240117192836108.png)
+![image-20240117192836108](D:\TyporaPhoto\image-20240117192836108.png)
 
 创建硬链接的语法如下：
 
@@ -1446,7 +1446,7 @@ ln source_file link_name
 
 **注意细节：修改时间会导致连接中断，解决方法是重启虚拟机Linux系统，使得时间变为当前时间**
 
-![image-20240117204208278](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240117204208278.png)
+![image-20240117204208278](D:\TyporaPhoto\image-20240117204208278.png)
 
 是的，修改系统时间可能会导致当前的网络连接断开，特别是当你使用的是基于时间的安全协议（如 SSL/TLS）时。这些协议依赖于系统时间来验证证书的有效性，如果时间被设置到过去或未来，那么当前的证书可能会被视为无效。
 
@@ -1617,7 +1617,7 @@ grep [选项] 查找内容 源文件
   - 写法1: `cat /home/hello.txt | grep "yes"`
   - 写法2: `grep -n "yes" /home/hello.txt`
 
- ![image-20240117222031718](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240117222031718.png)
+ ![image-20240117222031718](D:\TyporaPhoto\image-20240117222031718.png)
 
 
 
@@ -1663,7 +1663,7 @@ grep -ni "yes" /home/hello.txt
 
 关于引号的使用：都可以，这里建议正则使用单引号 
 
-![image-20240117225417459](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240117225417459.png)
+![image-20240117225417459](D:\TyporaPhoto\image-20240117225417459.png)
 
 
 
@@ -1845,7 +1845,6 @@ unzip -d /other/dir data.zip
 当你压缩文件或目录时，你可以直接在命令中指定要压缩的文件或目录的路径。例如：
 
 ```
-bashCopy code
 tar -zcvf archive.tar.gz /path/to/directory
 ```
 
@@ -1853,10 +1852,13 @@ tar -zcvf archive.tar.gz /path/to/directory
 
 ### 解压时指定目录
 
+**`-zxvf` 解压的是`.tar.gz`**
+
+**`-xvf` 解压的是`.tar`,解压`.tar`不需要`-z`选项**
+
 解压时，你可以使用 `-C` 选项指定解压缩后的文件应该放置的目录。例如：
 
 ```
-bashCopy code
 tar -zxvf archive.tar.gz -C /target/directory
 ```
 
@@ -1893,7 +1895,7 @@ tar -zxvf archive.tar.gz -C /target/directory
 **选项解释：**
 
 - `-t`：告诉 `tar` 列出归档文件中的内容。
-- `-z`：表示归档文件是用 gzip 压缩的，需要先解压。配合`-c`或`-x`使用
+- `-z`：表示归档文件是用 **gzip** 压缩的，需要先解压。配合`-c`或`-x`使用 ，会生成/解压**.gz**后缀的文件
 - `-v`：表示在处理时显示详细信息。
 - `-f`：后跟归档文件的名称。
 
@@ -2062,7 +2064,7 @@ hello.txt  info.txt  jack  milan  mycal  mydate2.txt  mydate3.txt  mydate.txt  m
 
 
 
-![image-20240118013914615](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240118013914615.png)
+![image-20240118013914615](D:\TyporaPhoto\image-20240118013914615.png)
 
 注意是用大写C指定解压目标目录
 
@@ -2090,6 +2092,39 @@ hello.txt  info.txt  jack  milan  mycal  mydate2.txt  mydate3.txt  mydate.txt  m
 - **tar -zcvf（压缩）**
   - **不能** 创建不存在的目标目录。
   - 创建的压缩文件（如 `.tar.gz`）必须存放在已存在的目录中。
+  - 以下是脚本相关部分的描述，以及执行该脚本时控制台的输出和原因：
+  
+    **脚本命令：**
+    ```bash
+    tar -zcvf $DATETIME.tar.gz ${DATETIME}
+    ```
+  
+    **控制台输出：**
+    ```
+    2024-01-29_221604/
+    2024-01-29_221604/2024-01-29_221604.sql.gz
+    ```
+  
+    **问题描述：**
+    执行备份脚本时，控制台输出了上述两行。这些输出是 `tar` 命令在归档文件时由于 `-v`（verbose，详细）选项而产生的。这个选项使得 `tar` 列出了所有正在添加到压缩归档 `.tar.gz` 文件中的文件和目录的名称。
+  
+    **要点：**
+    如果您不希望看到这样的详细输出，应从 `tar` 命令中移除 `-v` 选项。这样，`tar` 命令会静默执行，只在发生错误时向控制台输出信息。
+  
+    **修正后的脚本命令（移除 `-v` 选项）：**
+    ```bash
+    tar -zcf $DATETIME.tar.gz ${DATETIME}
+    ```
+  
+    **预期的控制台输出：**
+    移除 `-v` 选项后，在执行上述命令时，不应该有任何输出显示到控制台，除非发生错误。这会使得脚本的输出更加清晰，只显示重要的信息或错误消息。
+  
+    这样的修正可以减少日志的冗余，特别是在自动化脚本运行时，您可能更希望只记录关键步骤和潜在的错误。
+
+
+
+
+
 - **tar -zxvf（解压）**
   - **可以** 创建不存在的目标目录。
   - 使用 `-C` 选项指定的解压目标目录会被创建，如果它不存在的话。
@@ -2244,7 +2279,7 @@ chgrp -R users mydir
   usermod -g wudang zwj
   ```
 
-![image-20240119175508071](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240119175508071.png)
+![image-20240119175508071](D:\TyporaPhoto\image-20240119175508071.png)
 
 
 
@@ -2848,7 +2883,7 @@ ChatGPT
 
 
 
-![User](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/ACg8ocIHS-8SrIxNACX_W4kh1gBxxAmKatgl2D-uFcgwungh9g=s96-c.jpeg)
+![User](D:\TyporaPhoto\ACg8ocIHS-8SrIxNACX_W4kh1gBxxAmKatgl2D-uFcgwungh9g=s96-c.jpeg)
 
 You
 
@@ -2990,7 +3025,7 @@ chmod +x /home/bb/script.sh
 
 **退出编辑crontab的方式和 vim 一样**
 
-![image-20240121202424467](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240121202424467.png)
+![image-20240121202424467](D:\TyporaPhoto\image-20240121202424467.png)
 
 #### 15.1.4 crontab 参数和特殊符号
 
@@ -3220,11 +3255,11 @@ atrm job_number
 5. **相对计时法**：使用 `now + count time-units` 的格式，其中 `now` 表示当前时间，`time-units` 是时间单位（可以是 `minutes`、`hours`、`days`、`weeks`），`count` 是数量。例如：`now + 5 minutes` 表示从现在开始的5分钟后。
 6. **今天和明天**：可以直接使用 `today` 或 `tomorrow` 来指定任务在今天或明天的同一时间执行。
 
-![image-20240121215803400](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240121215803400.png)
+![image-20240121215803400](D:\TyporaPhoto\image-20240121215803400.png)
 
 **`atd`** :at的守护进程，会以后台模式运行
 
-![image-20240121215716651](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240121215716651.png)
+![image-20240121215716651](D:\TyporaPhoto\image-20240121215716651.png)
 
 检测`atd`是否在运行
 
@@ -3354,9 +3389,9 @@ sr0     11:0    1  1024M  0 rom
 
 #### 执行`lsblk -f`后结果如下： 
 
-![image-20240122163631882](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240122163631882.png)
+![image-20240122163631882](D:\TyporaPhoto\image-20240122163631882.png)
 
-![image-20240122173822407](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240122173822407.png)
+![image-20240122173822407](D:\TyporaPhoto\image-20240122173822407.png)
 
 `sr0` 在 `lsblk` 命令显示的输出中通常代表第一个SCSI光驱设备。在这里：
 
@@ -3416,7 +3451,7 @@ mkfs -t ext4 /dev/sdb1
 
 
 
-![image-20240122181837084](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240122181837084.png)
+![image-20240122181837084](D:\TyporaPhoto\image-20240122181837084.png)
 
 4. **挂载**：将新分区挂载到特定目录，例如 `mount /dev/sdb1 /newdisk`。
 
@@ -3697,7 +3732,7 @@ ChatGPT
 
    
 
-   ![image-20240122212819171](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240122212819171.png)
+   ![image-20240122212819171](D:\TyporaPhoto\image-20240122212819171.png)
 
 ### `wc` 命令
 
@@ -3806,9 +3841,31 @@ ChatGPT
 
 
 
-![image-20240122224959655](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240122224959655.png)
+![image-20240122224959655](D:\TyporaPhoto\image-20240122224959655.png)
 
 #### 17.1 配置静态IP地址
+
+
+
+vi /etc/sysconfig/network-scripts/ifcfg-ens33
+
+**注意事项：**
+
+- **重启虚拟机后发现配置在 `/etc/sysconfig/network-scripts/ifcfg-ens33` 的ipv4地址192.168.200.130没生效，只需要重启网络服务或者重启系统生效即可，执行下面的指令**：
+
+- **service network restart** 
+
+  ```
+  service network restart 或 reboot
+  ```
+
+---
+
+
+
+
+
+
 
 - **说明**： 直接修改配置文件来指定 IP, 并可以连接到外网（程序员推荐）。
 
@@ -3817,38 +3874,66 @@ ChatGPT
   1. 编辑网络配置文件：
 
      ```
+     
+     disable
+     英
+     /dɪsˈeɪbl/
+       
+     美
+     /dɪsˈeɪbl/
+      
+     vt.
+     使伤残;使无效;使残废;使丧失能力;使不能运转
+     
+     
      vi /etc/sysconfig/network-scripts/ifcfg-ens33
+      
      ```
-
+  
   2. 将 IP 地址配置为静态，例如设置 IP 地址为 `192.168.200.130`。
 
-**网络配置文件详情：**
+
+
+# 网络配置ifcfg-ens33文件中，注意等号右边的值一定要添加引号才能识别，否则会出问题！
+
+
+
+**网络配置ifcfg-ens33文件详情：**
+
+vi /etc/sysconfig/network-scripts/ifcfg-ens33
 
 ~~~
-TYPE=Ethernet
-PROXY_METHOD=none
-BROWSER_ONLY=no
-BOOTPROTO=static
-DEFROUTE=yes
-IPV4_FAILURE_FATAL=no
-IPV6INIT=yes
-IPV6_AUTOCONF=yes
-IPV6_DEFROUTE=yes
-IPV6_FAILURE_FATAL=no
-IPV6_ADDR_GEN_MODE=stable-privacy
-NAME=ens33
-UUID=2e5a5c25-b0b3-489a-aecd-1461cf86d9d8
-DEVICE=ens33
-ONBOOT=yes
+#注意等号右边的值一定要添加引号才能识别，否则会出问题！
+
+TYPE="Ethernet"
+PROXY_METHOD="none"
+BROWSER_ONLY="no"
+BOOTPROTO="static"
+DEFROUTE="yes"
+IPV4_FAILURE_FATAL="no"
+IPV6INIT="yes"
+IPV6_AUTOCONF="yes"
+IPV6_DEFROUTE="yes"
+IPV6_FAILURE_FATAL="no"
+IPV6_ADDR_GEN_MODE="stable-privacy"
+NAME="ens33"
+UUID="2e5a5c25-b0b3-489a-aecd-1461cf86d9d8"
+DEVICE="ens33"
+ONBOOT="yes"
 #IP 地址
 IPADDR=192.168.200.130
 #网关
 GATEWAY=192.168.200.2
 #域名解析器
 DNS1=192.168.200.2
+#子网掩码，不写默认就是255.255.255.0
+NETMASK=255.255.255.0
+
 ~~~
 
+**ens33网络配置文件的等号右边的值在添加了引号后，使用ifconfig才会输出ens33网络配置文件中，我们自己手动配置的ipv4地址！！才会生效！此时即使关机在重新启动虚拟机，ens33网络配置文件中自己配置的IPV4地址也生效！**
 
+![image-20240129044243169](D:\TyporaPhoto\image-20240129044243169.png)
 
 - **ifcfg-ens33 文件说明**：
   - `DEVICE=eth0`：接口名（设备，网卡）
@@ -3869,8 +3954,7 @@ PROXY_METHOD=none
 # 此设置仅用于图形用户界面，这里表示非仅浏览器模式
 BROWSER_ONLY=no
 # 启动协议，设置为dhcp表示IP地址通过动态主机配置协议（DHCP）自动获取，也可设置为static表示使用固定的IP地址
-BOOTPROTO=dhcp
-BOOTPROTO=dhcp
+BOOTPROTO=static
 # 是否作为默认路由，这里是是
 DEFROUTE=yes
 # IPv4连接失败是否致命，这里设置为不致命
@@ -3905,11 +3989,29 @@ ONBOOT=yes
 
 
 
+**VMware虚拟网络编辑器配置如下：**
+
+**==============================VMware虚拟网络编辑器配置开始==============================**
+
+![image-20240206013056054](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240206013056054.png)
+
+![image-20240206013348906](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240206013348906.png)
+
+ 
+
+![image-20240206014040497](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240206014040497.png)
+
+
+
+**==============================VMware虚拟网络编辑器配置结束==============================**
+
 通过上述配置后，即使在网络适配器选项中，**VMware Network Adapter VMnet8**之前配置的是自动获取IP地址，也会被更改为下面的配置，这里**不用**手动输入IP地址和子网掩码，**会自动分配！**
 
 
 
 ![image-20240123000850098](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240123000850098.png)
+
+
 
 
 
@@ -3967,7 +4069,22 @@ C:\Users\yangd>
 
 
 
-3. **虚拟机192.168.200.130 ping 宿主机 192.168.200.1** 
+3. **虚拟机192.168.200.130 ping 宿主机 192.168.200.1** 注意需要关闭宿主机公用网络防火墙！！！
+3. 即使宿主机公用网络防火墙是打开状态，此时只有配置正确虚拟机就可以正常上网(可以ping通百度)，也可以使用Xshell7正常连接上Linux虚拟机，只不过**此时ping不通宿主机**的VMNet8虚拟网卡
+
+![image-20240206012502135](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240206012502135.png)
+
+~~~
+#如果没有关闭宿主机防火墙！下面这里就不会ping通
+[root@hspEdu100 ~]# ping f2
+PING F2 (192.168.200.1) 56(84) bytes of data.
+^C
+--- F2 ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2000ms
+
+~~~
+
+
 
 ~~~
 [root@hspEdu01 ~]# ping 192.168.200.1
@@ -3983,7 +4100,7 @@ rtt min/avg/max/mdev = 0.185/0.220/0.305/0.050 ms
 
 ~~~
 
-![image-20240123000701299](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240123000701299.png)
+![image-20240123000701299](D:\TyporaPhoto\image-20240123000701299.png)
 
 
 
@@ -4047,7 +4164,7 @@ Copy code192.168.1.10    example.com
 
 这里少了一个先找浏览器缓存的步骤，但如果是直接ping，那么这个图是对的
 
-![image-20240123175149741](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240123175149741.png)
+![image-20240123175149741](D:\TyporaPhoto\image-20240123175149741.png)
 
 此步骤说明了从用户输入域名到浏览器获取 IP 地址的整个过程。如果在本地找到了 DNS 记录，解析过程会很快；如果需要向远程 DNS 服务器请求解析，可能会稍慢，但通常这个过程也非常迅速。
 
@@ -4118,14 +4235,41 @@ Copy code192.168.1.10    example.com
 **命令示例：**
 
 ```
-ps –aux|grep xxx
+ps –aux | grep xxx
 ```
 
 - 比如想查看是否有 `sshd` 服务正在运行，可以使用：
 
 ```
-ps –aux|grep sshd
+ps –aux | grep sshd
 ```
+
+
+
+![image-20240126010001412](D:\TyporaPhoto\image-20240126010001412.png)
+
+
+上面这个问题是由于命令中的破折号（dash）字符不正确导致的。在您提供的两个命令中：
+
+1. 第一个命令：
+
+   ```
+   csharpCopy code
+   [root@hspEdu100 ~]# ps -aux | grep sshd
+   ```
+
+   这个命令正确执行了，因为它使用了正确的短破折号 `-`。
+
+2. 第二个命令：
+
+   ```
+   csharpCopy code
+   [root@hspEdu100 ~]# ps –aux | grep sshd
+   ```
+
+   这个命令产生了错误，原因可能是使用了长破折号 `–`（通常是在文本编辑器或处理器中输入时生成的），而不是标准的短破折号 `-`。
+
+
 
 **命令输出字段解释：**
 
@@ -4159,19 +4303,19 @@ ps –aux|grep sshd
 
 ---
 
-<img src="https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240123203649813.png" alt="alt_text_here" style="float: left; margin-right: 10px;" />
+<img src="D:\TyporaPhoto\image-20240123203649813.png" alt="alt_text_here" style="float: left; margin-right: 10px;" />
 
 对应：
 
-![image-20240123203651985](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240123203651985.png)
+![image-20240123203651985](D:\TyporaPhoto\image-20240123203651985.png)
 
 ---
 
-<img src="https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240123203947955.png" alt="alt_text_here" style="float: left; margin-right: 10px;" />
+<img src="D:\TyporaPhoto\image-20240123203947955.png" alt="alt_text_here" style="float: left; margin-right: 10px;" />
 
 对应：
 
-![image-20240123203951847](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240123203951847.png)
+![image-20240123203951847](D:\TyporaPhoto\image-20240123203951847.png)
 
 ---
 
@@ -4224,17 +4368,17 @@ centos7图形界面上的两个控制台终端，这里要查询Linux控制台�
 
 即`ps -aux | grep bash`
 
-![image-20240123222724259](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240123222724259.png)
+![image-20240123222724259](D:\TyporaPhoto\image-20240123222724259.png)
 
 以上操作演示了如何使用`kill`和`killall`命令来管理系统进程，包括强制终止和平滑关闭进程。这些操作在系统管理中非常常见，特别是处理不响应的程序或服务时。
 
 
 
-![image-20240123221116710](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240123221116710.png)
+![image-20240123221116710](D:\TyporaPhoto\image-20240123221116710.png)
 
 
 
-![image-20240123221507997](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240123221507997.png)
+![image-20240123221507997](D:\TyporaPhoto\image-20240123221507997.png)
 
 
 
@@ -4262,45 +4406,685 @@ centos7图形界面上的两个控制台终端，这里要查询Linux控制台�
 
 
 
-### 18.5 服务（service）管理
-
-- **介绍**：服务（service）是在后台运行的进程，通常监听某个端口。
-- service 管理指令：
-  - 例如：`service network status/start/stop`
-- systemctl 管理指令：
-  - 例如：`systemctl start/stop/restart/status 服务名`
-
-
-
-`setup` 设置/配置命令
 
 
 
 
+###   18.5 服务(service)管理
+
+#### 18.5.1 介绍
+
+服务（service）本质上是进程，但是它在后台运行，通常会监听某个端口，等待其他程序的请求，如（mysqld, sshd, 防火墙等）。因此，我们也称之为守护进程，它是Linux中一个非常重要的概念。
+
+#### 18.5.2 service管理指令
+
+1. `service 服务名 [start | stop | restart | reload | status]`
+
+2. 在CentOS7.0之后，很多服务不再使用service，而是采用systemctl。
+
+3. service指令管理的服务在`/etc/init.d`中可以查看。
+
+   ![image-20240125220107061](D:\TyporaPhoto\image-20240125220107061.png)
+
+#### 18.5.3 service管理指令案例
+
+- 请使用service指令，查看、关闭、启动network（注意：在虚拟系统中演示，因为网络连接会关闭）。
+  - `service network status`
+  - `service network stop`
+  - `service network start`
+
+#### 18.5.4 查看服务名
+
+- 方式1：使用`setup -> 系统服务`就可以看到全部。
+
+- 方式2：在
+
+  ```
+  /etc/init.d
+  ```
+
+  中可以看到service指令管理的服务。
+
+  - `ls -l /etc/init.d`
+
+#### 18.5.5 服务的运行级别(runlevel)
+
+- Linux系统有7种运行级别(runlevel)，常用的是级别3和5。
+  - 运行级别0：系统停机状态，系统默认运行级别不能设为0，否则不能正常启动。
+  - 运行级别1：单用户工作状态，root权限，用于系统维护，禁止远程登录。
+  - 运行级别2：多用户状态(没有NFS)，不支持网络。
+  - 运行级别3：完全的多用户状态(有NFS)，无界面，登录后进入控制台命令行模式。
+  - 运行级别4：系统未使用，保留。
+  - 运行级别5：X11控制台，登录后进入图形GUI模式。
+  - 运行级别6：系统正常关闭并重启，默认运行级别不能设为6，否则不能正常启动。
+
+#### 18.5.6 CentOS7之后的运行级别说明
+
+- 在
+
+  ```
+  /etc/initab
+  ```
+
+  中进行了简化。
+
+  - `multi-user.target`: 相当于runlevel 3。
+  - `graphical.target`: 相当于runlevel 5。
+  - `init 0`
+  - 要查看当前默认目标，运行: `systemctl get-default`
+  - 要设置默认目标，运行: `systemctl set-default TARGET.target`
+
+#### 18.5.7 chkconfig指令
+
+- 介绍：通过chkconfig命令，可以为服务的各个运行级别设置自启动/关闭。
+
+ 	  `chkconfig` 是一个缩写，常用于 Unix 和 Linux 系统中。它代表 "检查配置"（check configuration）。  
+
+- chkconfig指令管理的服务在`/etc/init.d`中可以查看,有三个。
+- ![image-20240126015058187](D:\TyporaPhoto\image-20240126015058187.png)
+- 注意: CentOS7.0之后，很多服务使用systemctl管理。
+
+基本语法：
+
+- 查看服务：`chkconfig --list [| grep xxx]`
+- `chkconfig 服务名 --list`
+- `chkconfig --level 5 服务名 on/off`
+
+案例演示:
+
+- 对network服务进行各种操作，把network在3运行级别关闭自启动：`chkconfig --level 3 network off`
+- 同样的，可以打开自启动：`chkconfig --level 3 network on`
+- 注意：使用chkconfig重新设置服务后自启动或关闭，需要重启机器`reboot`生效。
+
+#### 18.5.8 systemctl管理指令
+
+基本语法：`systemctl [start | stop | restart | status] 服务名`
+
+- systemctl指令管理的服务在`/usr/lib/systemd/system`中可以查看。
+
+`systemctl` 是 `system control` 的缩写，用于控制 `systemd` 系统和服务管理器。在 Linux 中，`systemd` 是一个系统和服务管理器，负责初始化系统组件、管理系统服务等。
+
+**中文含义：** 系统控制
+
+**常用选项及用法：**
+
+1. `systemctl start 服务名`：启动服务。
+2. `systemctl stop 服务名`：停止服务。
+3. `systemctl restart 服务名`：重启服务。
+4. `systemctl reload 服务名`：重新加载服务配置文件，而不中断服务。
+5. `systemctl status 服务名`：查看服务当前状态。
+6. `systemctl enable 服务名`：设置服务为开机自启。
+7. `systemctl disable 服务名`：取消服务的开机自启。
+8. `systemctl is-enabled 服务名`：检查服务是否设置为开机自启。
+9. `systemctl list-unit-files`：列出所有服务的启动状态。
+
+通过这些命令，用户可以管理和控制系统上的服务和进程。
+
+#### 18.5.9 systemctl设置服务的自启动状态
+
+- `systemctl list-unit-files [| grep 服务名]` (查看服务开机启动状态，grep可以进行过滤)
+
+
+
+- `systemctl enable 服务名` (设置服务开机启动) 
+- `systemctl disable 服务名` (关闭服务开机启动)
+
+> 上面这两种设置服务开机启动/关闭服务的方式，没有像chkconfig指定运行级别，是因为在centos7以后默认设置的是运行级别**3和5**下是否开机启动/关闭服务
+
+
+
+- `systemctl is-enabled 服务名` (查询某个服务是否是自启动的)
+
+#### 18.5.10 应用案例
+
+- 查看当前防火墙的状况，关闭防火墙和重启防火墙。=> `firewalld.service`
+
+  1. 首先查出防火墙服务的名称 `ll /usr/lib/systemd/system/ | grep firewalld`
+  2. 查看防火墙服务的启动状态, `systemctl list-unit-files | grep firewalld`
+  3. 
+
+  - `systemctl status firewalld`
+  - `systemctl stop firewalld` ，这条指令只是**暂时关闭**防火墙，下次启动Linux系统防火墙会自动打开。
+  - `systemctl start firewalld`
+
+#### 18.5.11 细节讨论
+
+- 关闭或者启用防火墙后，立即生效。(可以通过telnet测试某个端口)
+- 这种方式只是**临时生效**，当重启系统后，会回到之前对服务的设置。
+- 如果希望设置某个服务自启动或关闭永久生效，应该使用`systemctl [enable|disable] 服务名`。
+
+查看Linux防火墙是否启用`systemctl is-enabled firewalld`
+
+设置启用`systemctl enable firewalld`,最好设置为启用状态
+
+#### 18.5.12 打开或关闭指定端口
+
+cmd命令行中 **`telnet`**指令
+
+**测试防火墙是否关闭** `telnet [主机地址] [端口号]`,比如在虚拟机Linux中关闭了防火墙，测试有没有成功关闭，可以使用，宿主机对虚拟机的Linux系统发起远程连接请求。
+
+`telnet` 是 "Telecommunication Network" 的缩写。
+
+**中文含义：** 远程登录
+
+**常用选项及用法：**
+
+- 基本用法：`telnet [主机地址] [端口号]`，用于远程登录到指定的主机上。如果不指定端口号，默认为23端口。
+
+**常见用途：**
+
+- 远程登录：允许用户通过网络登录到另一台计算机上，并在上面执行命令，就如同在本地计算机上一样。
+- 测试网络连接：可以用来测试TCP连接，比如检查某个端口是否开放。
+
+**注意事项：**
+
+- `telnet` 是不安全的，因为它不为客户端和服务器之间的通信提供加密，可能会暴露敏感信息。现代系统更推荐使用 `SSH`（Secure Shell）作为更安全的远程登录方法。
+
+查看网络服务的信息 `netstat -anp | more`
+
+![image-20240125232415933](D:\TyporaPhoto\image-20240125232415933.png)
+
+
+
+如果关闭防火墙，那么就相当于防护没有了，防火墙没有了，那么里面的3306，22，111... 等端口客户端cmd telnet 都可以访问到
+
+
+
+![image-20240126000510687](D:\TyporaPhoto\image-20240126000510687.png)
+
+
+
+如果报错，则启用Telnet客户端
+
+![image-20240126002403924](D:\TyporaPhoto\image-20240126002403924.png)
+
+![image-20240126002327428](D:\TyporaPhoto\image-20240126002327428.png)
+
+![image-20240126002452023](D:\TyporaPhoto\image-20240126002452023.png)
+
+之后就可以连接上了
+
+![image-20240126002633574](D:\TyporaPhoto\image-20240126002633574.png)
+
+
+
+如果Linux防火墙是打开的，同时111端口没有在Linux防火墙打开/放行的端口列表中，则访问不到，如下
+
+![image-20240126002850686](D:\TyporaPhoto\image-20240126002850686.png)
+
+![image-20240126004049827](D:\TyporaPhoto\image-20240126004049827.png)
+
+
+
+应用案例：
+
+\1) 启用防火墙， 测试 111 端口是否能 telnet , 不行
+
+\2) 开放 111 端口
+
+`firewall-cmd --permanent --add-port=111/tcp` ; 需要 `firewall-cmd --reload`
+
+\3) 再次关闭 111 端口
+
+`firewall-cmd --permanent --remove-port=111/tcp` ; 需要 `firewall-cmd --reload` 不然不生效
+
+
+
+![image-20240126004729270](D:\TyporaPhoto\image-20240126004729270.png)
+
+- 在生产环境中，通常需要打开防火墙，但如果打开防火墙，外部请求数据包就不能与服务器监听端口通信。这时需要打开指定的端口，例如80、22、8080等。
+
+#### 18.5.13 firewall指令
+
+##### Linux如何在使用防火墙的情况下，放行/打开特定端口呢？比如111端口？
+
+可以使用以下指令
+
+- 打开端口: `firewall-cmd --permanent --add-port=端口号/协议`
+
+- 关闭端口: `firewall-cmd --permanent --remove-port=端口号/协议`
+- 重新载入, 才能生效: `firewall-cmd --reload`
+- 查询端口是否开放: `firewall-cmd --query-port=端口/协议`
+
+这里的`协议`可以使用指令 `netstat -anp | more` 来查看
+
+![image-20240126003744862](D:\TyporaPhoto\image-20240126003744862.png)
+
+
+
+### 18.6 动态监控进程
+
+#### 18.6.1 介绍
+
+- `top` 与 `ps` 命令都用于显示正在执行的进程。`top` 与 `ps` 的主要区别在于，`top` 可以定期更新当前运行的进程，从而动态监控系统的进程状态。
+
+#### 18.6.2 基本语法
+
+- 命令：`top [选项]`
+
+![image-20240126010735893](D:\TyporaPhoto\image-20240126010735893.png)
+
+
+
+好的，让我们逐一解释 `top` 命令输出顶部的信息：
+
+- **top - 01:01:44**：表示 `top` 命令的当前时间是凌晨1点1分44秒。
+- **up 50 min**：系统已经运行了50分钟。
+- **1 user**：当前有1个用户登录系统。
+- **load average: 0.00, 0.01, 0.05**：系统平均负载，分别表示过去1分钟、5分钟和15分钟的平均负载。
+
+接下来是进程和资源使用的摘要：
+
+- Tasks
+
+  ：系统中进程的总数。
+
+  - **total**: 总进程数。
+  - **running**: 正在运行的进程数。
+  - **sleeping**: 处于睡眠状态的进程数。
+  - **stopped**: 已停止的进程数。
+  - **zombie**: 僵尸进程数。
+
+- %Cpu(s)
+
+  ：CPU使用率的百分比。
+
+  - **us** (user): 用户空间占用的CPU百分比。
+  - **sy** (system): 内核空间占用的CPU百分比。
+  - **ni** (nice): 优先级调整后的用户进程占用的CPU百分比。
+  - **id** (idle): 空闲的CPU百分比。
+  - **wa** (iowait): 等待I/O的CPU时间百分比。
+  - **hi** (hardware IRQ): 硬件中断的CPU时间百分比。
+  - **si** (software interrupts): 软件中断的CPU时间百分比。
+  - **st** (steal time): 虚拟化环境中，被其他操作系统占用的CPU时间百分比。
+
+
+
+
+- KiB Mem：以Kibibyte（KiB）为单位显示的物理内存使用情况。
+  - **total**: 系统的总内存量。
+  - **free**: 当前未被使用的内存量。
+  - **used**: 当前已被使用的内存量。
+  - **buff/cache**: 用于缓冲和缓存的内存量。
+- KiB Swap：交换分区的使用情况，交换空间是当物理内存不足时，系统用作内存的硬盘空间部分。
+  - **total**: 总的交换空间量。
+  - **free**: 未被使用的交换空间量。
+  - **used**: 已被使用的交换空间量。
+  - **avail Mem**: 估计的可用内存量，即尽管已被缓冲和缓存占用，但仍可以不经过交换就被当前或即将启动的进程使用的内存量。
+
+接下来是每个进程的具体信息，列出了系统中的每个进程及其资源使用情况，这部分通常会在 `top` 命令的后续输出中显示，例如：
+
+- **PID**: 进程ID。
+- **USER**: 运行该进程的用户名称。
+- **PR**: 进程的优先级。
+- **NI**: Nice值，影响进程优先级的值。
+- **VIRT**: 虚拟内存的总量，该进程使用的虚拟地址空间的大小。
+- **RES**: 进程使用的、未被换出的物理内存大小。
+- **SHR**: 进程使用的共享内存大小。
+- **S**: 进程的状态（例如，睡眠（S）、运行（R）等）。
+- **%CPU**: 该进程使用的CPU百分比。
+- **%MEM**: 该进程使用的物理内存百分比。
+- **TIME+**: 进程使用的CPU时间总和。
+- **COMMAND**: 启动进程的命令名称或命令行。
+
+
+
+#### 18.6.3 选项说明
+
+![image-20240126011327840](D:\TyporaPhoto\image-20240126011327840.png)
+
+#### 18.6.4 交互操作说明
+
+![image-20240126011343965](D:\TyporaPhoto\image-20240126011343965.png)
+
+这里在交互时输入大写的P才可以,也可以输入shift+p，但是不能输入小写的p
 
 
 
 
 
+#### 18.6.5 应用实例
 
+- 案例 1：监视特定用户，例如监控 `tom` 用户
 
-### 18.6 动态监控进程 - `top`
+  - 执行 `top` 命令，查看执行的进程。
+  - 输入 `u`，然后回车，再输入用户名 `tom`。
 
-- **介绍**：与 `ps` 类似，但可以动态更新显示运行的进程。
+- 案例 2：终止指定的进程，例如结束 `tom` 用户的登录
 
-### 18.7 监控网络状态 - `netstat`
+  - 执行 `top` 命令，查看执行的进程。
+  - 输入 `k`，然后回车，再输入要结束的进程 ID 号。
 
-- **介绍**：显示网络接口和网络连接状态。
+  ![image-20240126012854400](D:\TyporaPhoto\image-20240126012854400.png)
+
+  回车，这时让我们输入信号量，输入9,即强制结束/删除
+
+![image-20240126012955495](D:\TyporaPhoto\image-20240126012955495.png)
+
+- 案例 3：指定系统状态更新的时间（每隔 10 秒自动更新），默认是 3 秒
+  - 执行命令 `top -d 10`。
+
+### 18.7 监控网络状态
+
+#### 18.7.1 查看系统网络情况 `netstat`
+
+- 基本语法：`netstat [选项]`		`netstat -anp | more`
 - 选项说明：
-  - `-an`：按一定顺序排列输出。
-  - `-p`：显示哪个进程在调用。
-
-### 18.8 检测主机连接 - `ping`
-
-- **介绍**：检测远程主机是否可达，用于网络故障诊断。
+  - `-an`：按一定顺序排列输出
+  - `-p`：显示哪个进程在调用
 
 
 
+- 应用案例：
+  - 查看服务名为 `sshd` 的服务的信息：`netstat -anp | grep sshd`
+
+
+
+![image-20240126013859439](D:\TyporaPhoto\image-20240126013859439.png)
+
+- **Proto**: 表示协议类型，通常是 TCP 或 UDP。
+- **Recv-Q**: 接收队列大小，显示待处理的接收数据量。
+- **Send-Q**: 发送队列大小，显示待处理的发送数据量。
+- **Local Address**: 本地端口和地址，表示本机的端口号和IP地址。
+- **Foreign Address**: 远端地址和端口，表示外部连接到本机的端口和IP地址。
+- **State**: 连接的状态，如 LISTEN 表示正在监听的端口，ESTABLISHED 表示已经建立的连接。
+
+在网络配置中，这些地址具有特殊含义：
+
+- `0.0.0.0`：这个地址通常表示 "在所有IP地址上监听"。如果一个服务在 `0.0.0.0` 上监听，它将接受来自所有网络接口上的所有IPv4地址的连接。这是让服务对外界所有可能的IPv4连接都可达的一种方式。
+- `127.0.0.1`：这是一个特殊的IP地址，称为 "环回" 或 "localhost" 地址。它用于一个主机网络内部的IP通信。基本上，它用来让计算机发送消息给自己。如果一个服务在 `127.0.0.1` 上监听，它只能接受从同一台机器上发起的连接。
+- `:::22`：这是 IPv6 地址格式，其中 `::` 表示一串连续的零。在这里，它表示在端口22上监听所有IPv6地址。这就像 IPv4 中的 `0.0.0.0`，表示服务对所有IPv6接口上的连接都是可达的。
+- `::1`：这是 IPv6 的本地回环地址，类似于 IPv4 的 `127.0.0.1`。服务如果在这个地址上监听，只能接受从同一台机器上的IPv6连接。
+
+#### 18.7.2 检测主机连接命令 `ping`
+
+- `ping` 是一种网络检测工具，主要用于检测远程主机是否正常，或检测两台主机间的网线或网卡是否存在故障。
+- 用法示例：`ping [对方 ip 地址]`
+
+以上内容根据您提供的资料整理而成。如果需要更多详细信息，您可以参考 `man` 页面或其他文档。
+
+
+
+### 19.1 rpm 包的管理
+
+#### 19.1.1 介绍
+
+rpm 是 RedHat Package Manager（RedHat 软件包管理工具）的缩写，是一种在互联网上下载包的打包及安装工具，生成的文件具有 `.RPM` 扩展名。它被多个Linux发行版采用，如 SUSE、RedHat、CentOS 等。
+
+#### 19.1.2 rpm 包的简单查询指令
+
+- 查询已安装的 rpm 列表：`rpm –qa|grep xx`
+- 举例：查看系统是否安装了 firefox：`rpm -qa | grep firefox`
+
+#### 19.1.3 rpm 包名基本格式
+
+一个 rpm 包名例子：`firefox-60.2.2-1.el7.centos.x86_64`
+
+- 名称：firefox
+- 版本号：60.2.2-1
+- 适用操作系统：el7.centos.x86_64
+  - 表示 CentOS 7.x 的 64 位系统
+  - 如果是 i686、i386 表示 32 位系统，noarch 表示通用
+
+#### 19.1.4 rpm 包的其它查询指令
+
+- `rpm -qa`：查询所有安装的 rpm 软件包
+- `rpm -qa | more`
+- `rpm -qa | grep X`：如 `rpm -qa | grep firefox`
+- `rpm -q 软件包名`：查询软件包是否安装，如 `rpm -q firefox`
+- `rpm -qi 软件包名`：查询软件包信息，如 `rpm -qi firefox`
+- `rpm -ql 软件包名`：查询软件包中的文件，如 `rpm -ql firefox`
+- `rpm -qf 文件全路径名`：查询文件所属的软件包，如 `rpm -qf /etc/passwd`
+
+
+
+常用的rpm命令选项：
+
+- `-ivh`：安装软件包。`i` 代表 install，`v` 代表 verbose（显示详细信息），`h` 代表 hash（显示安装进度条）。
+- `-q`：查询软件包。单独使用时，`-q` 查询一个软件包是否安装。
+- `-qa`：查询所有已安装的软件包。
+- `-qi`：显示指定已安装软件包的详细信息。
+- `-ql`：列出指定已安装软件包中的所有文件。
+- `-qf`：查询指定文件属于哪个软件包。
+- `-e`：卸载（erase）一个已安装的软件包。
+- `-Uvh`：更新软件包，如果软件包尚未安装，则安装它。`U` 代表 upgrade。
+- `--nodeps`：安装或卸载软件包时忽略依赖性检查，不推荐使用，因为可能会破坏系统依赖关系。
+- `--force`：强制安装软件包，即使这可能会覆盖已安装的文件。
+
+使用rpm进行软件包管理时，通常需要有管理员权限。
+
+
+
+问题说明：
+
+1. **使用 `-ivh` 选项进行 RPM 包的安装时，通常需要先将包下载到本地文件系统。**这个选项的组合表示安装（`i`），并在安装过程中显示详细输出（`v`），同时显示一个进度条（`h`），以便用户可以看到安装的进度。
+
+   例如，如果您有一个名为 `package.rpm` 的软件包文件，您将使用以下命令安装它：
+
+   ```bash
+   rpm -ivh package.rpm
+   ```
+
+   这条命令会从您的本地存储中查找 `package.rpm` 文件，并执行安装过程。
+
+   如果您不想手动下载 RPM 包并希望自动解决依赖性问题，通常会使用 `yum` 或 `dnf`（在较新的 Fedora 和某些 Red Hat Enterprise Linux 版本中）等包管理工具，这些工具会从配置的软件仓库中下载并安装包及其所有依赖项。
+
+
+
+2. **不会自动找到安装包。**在使用 `rpm -ivh package.rpm` 命令时，您需要确保已经在命令行的当前工作目录下有 `package.rpm` 文件，或者您需要指定包的完整路径。如果包不在当前目录下，就必须提供完整的路径。例如，如果您的包在 `/home/user/downloads` 目录中，命令应该是这样的：
+
+   ```bash
+   rpm -ivh /home/user/downloads/package.rpm
+   ```
+
+   如果不提供完整路径，并且包也不在当前目录中，`rpm` 将会报错，提示找不到该文件。
+
+   
+
+3. **`rpm` 命令本身并不直接支持指定软件包的安装位置，因为 RPM 包中包含了软件应该被安装到的位置信息。**通常情况下，软件包的构建者已经在构建 RPM 包时指定了软件的安装路径，遵循的是 Linux 文件系统的标准结构。
+
+   如果你需要安装到一个自定义的目录，你可能需要考虑使用 `relocate` 选项，但这只适用于软件包构建时被标记为可重定位的。即使如此，也不是所有的软件包都支持这个选项，因为它可能会破坏软件的功能。使用这个选项的基本语法如下：
+
+   ```bash
+   rpm -ivh --relocate /原始路径=/新路径 package.rpm
+   ```
+
+   但请注意，这种方法并不常见，也不推荐使用，除非你非常清楚自己在做什么，而且软件包明确支持重定位。
+
+   通常来说，如果需要将软件安装到非标准目录，更常见的做法是通过编译源代码时指定安装前缀，或者使用容器技术（如 Docker）来隔离安装环境。
+
+#### 19.1.5 卸载 rpm 包
+
+- 基本语法：`rpm -e RPM包的名称`（e 是erase  意思是“擦除”或“删除”）
+- 应用案例：`rpm -e firefox`  指定安装包的名字即可，不用是全的安装包名，firefox 即可
+- 注意：如果其他软件包依赖于要卸载的包，会产生错误信息。可用 `--nodeps` 强制删除，但不推荐。
+
+#### 19.1.6 安装 rpm 包
+
+- 基本语法：`rpm -ivh RPM包全路径名称`
+- 参数说明：
+  - `i`=install 安装
+  - `v`=verbose 提示
+  - `h`=hash 进度条
+- 应用实例：安装或卸载 firefox 浏览器
+  - `rpm -e firefox`
+  - `rpm -ivh firefox`
+
+### 19.2 yum
+
+#### 19.2.1 介绍
+
+Yum 是一个基于 RPM 包管理的 Shell 前端软件包管理器。能够自动下载 RPM 包并且安装，自动处理依赖性关系，并一次性安装所有依赖的软件包。
+
+### 19.2.2 查询
+
+- 查询 yum 服务器是否有需要安装的软件：`yum list|grep xx`
+  - 例如，列出所有可安装或更新的软件包：`yum list`
+  - 查询特定软件：`yum list | grep firefox`
+
+### 19.2.3 安装指定的 yum 包
+
+- 基本语法：`yum install 包名`
+  - 例如，下载并安装软件包：`yum install firefox`
+
+### 19.2.4 yum 应用实例
+
+- 安装 firefox 浏览器的案例：
+  1. 卸载现有的 firefox 版本（如果有）：`rpm -e firefox`
+  2. 查询可用的 firefox 包：`yum list | grep firefox`
+  3. 安装 firefox 浏览器：`yum install firefox`
+
+[注意：使用 yum 进行软件包管理时，它会自动处理软件之间的依赖关系，相对于直接使用 rpm 命令更加方便。]
+
+
+
+
+
+## 20. JavaEE 开发环境的搭建
+
+### 20.1 概述
+
+在 Linux 下进行 JavaEE 开发需要安装一系列软件。
+
+### 20.2 安装 JDK
+
+#### 20.2.1 安装步骤
+
+1. 创建目录 `/opt/jdk`
+2. 使用 xftp6 上传到 `/opt/jdk`
+3. 进入目录 `cd /opt/jdk`
+4. 解压 JDK `tar -zxvf jdk-8u261-linux-x64.tar.gz`
+5. 创建目录 `/usr/local/java`
+6. 移动解压后的 JDK 到目标目录 `mv /opt/jdk/jdk1.8.0_261 /usr/local/java`
+7. 配置环境变量 `vim /etc/profile`
+8. 设置 JAVA_HOME `export JAVA_HOME=/usr/local/java/jdk1.8.0_261`
+9. 更新 PATH `export PATH=$JAVA_HOME/bin:$PATH`
+10. 应用配置 `source /etc/profile`
+
+#### 20.2.2 测试安装
+
+编写并运行一个简单的 Hello.java 程序。
+
+### 20.3 安装 Tomcat
+
+#### 20.3.1 安装步骤
+
+1. 上传并解压 Tomcat 至 `/opt/tomcat`
+
+2. 进入 `/opt/tomcat/bin`，启动 Tomcat `./startup.sh`
+
+   ![image-20240128030030959](D:\TyporaPhoto\image-20240128030030959.png)
+
+3. 开放 8080 端口，回顾 `firewall-cmd` 指令
+
+~~~
+[root@hspEdu100 bin]# firewall-cmd --permanent --add-port=8080/tcp
+success
+[root@hspEdu100 bin]# firewall-cmd --reload
+success
+[root@hspEdu100 bin]# firewall-cmd --query-port=8080/tcp
+yes
+~~~
+
+![image-20240128031424957](D:\TyporaPhoto\image-20240128031424957.png)
+
+
+
+#### 20.3.2 测试安装
+
+在浏览器中访问 `http://linuxip:8080` 测试 Tomcat。
+
+http://192.168.200.130:8080
+
+![image-20240128031759720](D:\TyporaPhoto\image-20240128031759720.png)
+
+
+
+http://192.168.200.130:8080/hsp.html
+
+![image-20240128032045697](D:\TyporaPhoto\image-20240128032045697.png)
+
+### 20.4 安装 IntelliJ IDEA 2020
+
+#### 20.4.1 安装步骤
+
+1. 下载地址：[JetBrains 官网](https://www.jetbrains.com/idea/download/#section=windows)
+2. 解压至 `/opt/idea`
+3. 启动 IDEA `bin/idea.sh` 并配置 JDK
+
+**Linux中SDK的选择，就指定到jdk1.8安装目录文件夹即可，不需要指定到bin目录**
+
+![image-20240128034210204](D:\TyporaPhoto\image-20240128034210204.png)
+
+1. 编写并测试 Hello World 程序
+
+### 20.5 安装 MySQL 5.7
+
+#### 20.5.1 安装步骤
+
+1. 按照文档进行安装步骤
+2. 准备相关安装软件
+3. 根据老师的演示和文档进行安装
+
+
+
+注意：mysql 在命令行使用时，注意分号`;`结尾退出指令为`quit`
+
+ 
+
+修改过mysql5.7自动分配的默认密码后，这里在Linux中安装的mysql5.7密码是:  **hspedu100**
+
+~~~shell
+[root@hspEdu100 mysql]# mysql -u root -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 5
+Server version: 5.7.26 MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2019, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use hspedu
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> select * from myorder
+    -> ;
+Empty set (0.00 sec)
+
+mysql> insert into myorder values(100,'dog');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from myorder;
++------+------+
+| id   | name |
++------+------+
+|  100 | dog  |
++------+------+
+1 row in set (0.00 sec)
+
+mysql> insert into myorder values(200,"cat");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from myorder;
++------+------+
+| id   | name |
++------+------+
+|  100 | dog  |
+|  200 | cat  |
++------+------+
+2 rows in set (0.00 sec)
+
+mysql> quit
+Bye
+[root@hspEdu100 mysql]# 
+~~~
 
 
 
@@ -4316,8 +5100,898 @@ centos7图形界面上的两个控制台终端，这里要查询Linux控制台�
 
 
 
+# 第 17 章大数据定制篇 - Shell 编程
+
+## 17.1 为什么要学习 Shell 编程
+- Linux 运维工程师在进行服务器集群管理时，需要编写 Shell 程序来进行服务器管理。
+- 对于 JavaEE 和 Python 程序员来说，工作的需要，你的老大会要求你编写一些 Shell 脚本进行程序或者是服务器的维护，比如编写一个定时备份数据库的脚本。
+- 对于大数据程序员来说，需要编写 Shell 程序来管理集群。
+
+## 17.2 Shell 是什么
+Shell 是一个命令行解释器，它为用户提供了一个向 Linux 内核发送请求以便运行程序的界面系统级程序，用户可以用 Shell 来启动、挂起、停止甚至是编写一些程序。
+
+## 17.3 Shell 脚本的执行方式
+### 17.3.1 脚本格式要求
+- 脚本以 `#!/bin/bash` 开头
+- 脚本需要有可执行权限
+
+### 17.3.2 编写第一个 Shell 脚本
+需求说明：创建一个 Shell 脚本，输出 "hello world!"
+```bash
+vim hello.sh
+#!/bin/bash
+echo "hello,world~"
+```
+
+### 17.3.3 脚本的常用执行方式
+- 方式 1 (输入脚本的绝对路径或相对路径)
+  - 说明：首先要赋予 `helloworld.sh` 脚本的 +x 权限，再执行脚本。比如 `./hello.sh` 或者使用绝对路径 `/root/shcode/hello.sh`
+- 方式 2 (`sh` + 脚本)
+  - 说明：不用赋予脚本 +x 权限，直接执行即可。比如 `sh hello.sh`，也可以使用绝对路径。
+
+## 17.4 Shell 的变量
+### 17.4.1 Shell 变量介绍
+- Linux Shell 中的变量分为系统变量和用户自定义变量。
+- 系统变量：`$HOME`、`$PWD`、`$SHELL`、`$USER` 等等。比如：`echo $HOME`。
+- 显示当前 shell 中所有变量：`set`
+
+### 17.4.2 自定义 Shell 变量 
+- 基本语法：
+  - 定义变量：`变量名=值` ，**注意等号两边没有空格**
+  - 撤销变量：`unset 变量`
+  - 声明静态变量：`readonly 变量`，注意：不能 `unset`
+  
+  
+
+**将指令返回的结果赋给变量**
+
+ ~~~
+ # 将指令返回的结果赋给变量
+ C=`date`
+ D=$(date)
+ ~~~
 
 
+
+- 快速入门：
+  - 案例 1：定义变量 A
+  - 案例 2：撤销/销毁变量 A
+  - 案例 3：声明静态的变量 B=2，不能 `unset`
+
+
+```bash
+#!/bin/bash
+# 案例 1：定义变量 A
+A=100
+# 输出变量需要加上$
+echo "A=$A"
+# 案例 2：撤销变量 A
+unset A
+echo "A=$A"
+# 案例 3：声明静态的变量 B=2，不能 unset
+readonly B=2
+echo "B=$B"
+# 将指令返回的结果赋给变量
+C=`date`
+D=$(date)
+echo "C=$C"
+echo "D=$D"
+# 使用环境变量 TOMCAT_HOME
+echo "tomcat_home=$TOMCAT_HOME"
+```
+
+###  
+
+### 17.4.3 Shell 变量的定义规则
+- 变量名称可以由字母、数字和下划线组成，但是不能以数字开头。例如 `5A=200` 是不允许的。
+- 等号两侧不能有空格。
+- 变量名称一般习惯为大写，这是一个规范，我们遵守即可。
+
+## 17.5 设置环境变量
+### 17.5.1 基本语法
+- `export 变量名=变量值`：将 shell 变量输出为环境变量/全局变量
+- `source 配置文件`：让修改后的配置信息立即生效
+- `echo $变量名`：查询环境变量的值
+
+### 17.5.2 快速入门
+- 在 `/etc/profile` 文件中定义 `TOMCAT_HOME` 环境变量
+- 查看环境变量 `TOMCAT_HOME` 的值
+- 在另外一个 shell 程序中使用 `TOMCAT_HOME`
+- 注意：在输出 `TOMCAT_HOME` 环境变量前，需要让其生效：`source /etc/profile`
+
+## 17.6 位置参数变量
+### 17.6.1 介绍
+当我们执行一个 shell 脚本时，如果希望获取到命令行的参数信息，就可以使用到位置参数变量。
+
+### 17.6.2 基本语法
+- `$n`：n 为数字，`$0` 代表命令本身，`$1-$9` 代表第一到第九个参数，十以上的参数需要用大括号包含，如 `${10}`
+- `$*`：这个变量代表命令行中所有的参数，`$*` 把所有的参数看成一个整体
+- `$@`：这个变量也代表命令行中所有的参数，不过 `$@` 把每个参数区分对待
+- `$#`：这个变量代表命令行中所有参数的个数
+
+## 17.7 预定义变量
+
+### 17.7.1 基本介绍
+就是 shell 设计者事先已经定义好的变量，可以直接在 shell 脚本中使用。
+
+### 17.7.2 基本语法
+- `$$`：当前进程的进程号（PID）
+- `$!`：后台运行的最后一个进程的进程号（PID）
+- `$?`：最后一次执行的命令的返回状态。如果这个变量的值为 0，证明上一个命令正确执行；如果这个变量的值为非 0（具体是哪个数，由命令自己来决定），则证明上一个命令执行不正确了。
+
+## 17.8 运算符
+### 17.8.1 基本介绍
+学习如何在 shell 中进行各种运算操作。
+
+### 17.8.2 基本语法
+- `$((运算式))` 或 `$[运算式]` 或 `expr m + n`：进行加法运算
+- 注意：`expr` 运算符间要有空格，如果希望将 `expr` 的结果赋给某个变量，使用反引号
+- `expr m - n`：进行减法运算
+- `expr \*, /, %`：进行乘、除、取余运算
+
+ 
+
+## 17.9 条件判断
+### 17.9.1 判断语句
+- 基本语法：`[ condition ]` 注意 condition 前后要有空格。
+- `[ hspEdu ]` 返回 true，`[ ]` 返回 false。
+- `[ condition ] && echo OK || echo notok`：条件满足，执行后面的语句。
+
+### 17.9.2 常用判断条件
+- `=`：字符串比较。
+- `-lt`：小于。
+- `-le`：小于等于。
+- `-eq`：等于。
+- `-gt`：大于。
+- `-ge`：大于等于。
+- `-ne`：不等于。
+
+**按文件权限判断**
+- `-r`：有读权限。
+- `-w`：有写权限。
+- `-x`：有执行权限。
+
+**按文件类型判断**
+- `-f`：文件存在并且是一个常规文件。
+- `-e`：文件存在。
+- `-d`：文件存在并是一个目录。
+
+**应用实例**
+- 判断 "ok" 是否等于 "ok" 使用 `=`。
+
+~~~shell
+#!/bin/bash
+#案例 1："ok"是否等于"ok" 判断语句：使用 =
+#if [ "ok"="ok" ]
+#注意这里等号两边可以没有空格，也可以有空格，但是中括号相邻的一定要有空格
+if [ "ok" = "ok" ]
+then
+        echo "equal"
+fi
+
+~~~
+
+
+
+- 判断 23 是否大于等于 22 使用 `-ge`。
+
+~~~shell
+#案例 2：23 是否大于等于 22 判断语句：使用 -ge
+
+if [ 23 -ge 22 ]
+then
+        echo "大于"
+fi
+
+~~~
+
+
+
+- 检查 `/root/shcode/aaa.txt` 文件是否存在使用 `-f`。
+
+~~~shell
+#案例 3：/root/shcode/aaa.txt 目录中的文件是否存在 判断语句： 使用 -f
+
+if [ -f /root/shcode/aaa.txt ]
+then
+        echo "存在"
+elif [ ! -f /root/shcode/aaa.txt ]
+then
+        echo "不存在"
+fi
+#案例空的为假，必须打一个空格，否则报错
+
+#if [] 语法错误
+#if [ ] 语法正确，但是判断为假
+#if [ ! ] 语法正确，判断为真
+if [ ! ]
+then
+        echo "空的，打一个空格，为假,叹号取反为真"
+fi
+#非空判断为真
+if [ hspedu ]
+then
+        echo "hello,hspedu,为真"
+fi
+~~~
+
+
+
+## 17.10 流程控制
+### 17.10.1 if 判断
+**基本语法**
+- `if [ 条件判断式 ]` 然后 `then` 执行代码，结束以 `fi`。
+- 多分支语法：`if [ 条件判断式 ]` 然后 `then` 执行代码，`elif [条件判断式]` 然后 `then` 执行代码，最终 `fi`。
+
+**注意事项**
+- `[ 条件判断式 ]`，中括号和条件判断式之间必须有空格。
+
+**应用实例**
+- 判断输入的参数，如果大于等于 60，则输出 "及格了"，小于 60 则输出 "不及格"。
+
+~~~shell
+#!/bin/bash
+#案例：请编写一个 shell 程序，如果输入的参数，大于等于 60，则输出 "及格了"，如果小于 60,则输出 "不及格"
+if [ $1 -ge 60 ]
+then
+        echo "及格了"
+elif [ $1 -lt 60 ]
+then
+        echo "不及格"
+fi
+~~~
+
+
+
+### 17.10.2 case 语句
+**基本语法**
+- 使用 `case $变量名 in` 开始，对不同值进行匹配和操作，以 `esac` 结束。
+
+**应用实例**
+- 当命令行参数是 1 时，输出 "周一"，是 2 时，输出 "周二"，其他情况输出 "other"。
+
+~~~shell
+#!/bin/bash
+# 案例 1 ：当命令行参数是 1 时，输出 "周一", 是 2 时，就输出"周二"， 其它情况输出 "other"
+case $1 in
+"1")
+echo "周一"
+;;
+"2")
+echo "周二"
+;;
+*)
+echo "other"
+;;
+esac
+~~~
+
+
+
+### 17.10.3 for 循环
+**基本语法 1**
+
+- `for 变量 in 值1 值2 值3…` 然后 `do` 执行代码，结束以 `done`。
+
+**应用实例**
+- 打印命令行输入的参数，展示 `$*` 和 `$@` 的区别。
+
+~~~shell
+#!/bin/bash
+#案例 1 ：打印命令行输入的参数 [这里可以看出$* 和 $@ 的区别]
+#这里“$*” 是把输入的参数，当作一个整体，所以只会输出一句话
+for i in "$*"
+do
+        echo "num is $i"
+done
+
+#使用 “$@”来获取输入的参数，注意，这里是分别对待的，有几个参数，就输出几句话
+echo "======================================="
+
+for j in "$@"
+do
+        echo "num is $j"
+done
+~~~
+
+~~~
+#输出结果如下：
+[root@hspEdu100 shcode]# ./testFor1.sh 100 200 300
+num is 100 200 300
+=======================================
+num is 100
+num is 200
+num is 300
+~~~
+
+**基本语法 2**
+- `for (( 初始值; 循环控制条件; 变量变化 ))` 然后 `do` 执行代码，结束以 `done`。
+
+
+当在 shell 脚本中使用 `for` 循环时，有几个重要的**注意事项**需要考虑：
+
+1. **引用参数**：当处理传递给脚本的参数时，特别是那些可能包含空格或特殊字符的参数，应该总是使用双引号将 `$@` 或 `$*` 包围起来。这确保了参数作为整体被处理，避免了错误的参数分割。
+2. **`$\*` 与 `$@` 的区别**：
+   - **未加引号时**：`$*` 和 `$@` 无引号时行为相似，会根据内部字段分隔符（IFS，默认为空格）分割参数。
+   - **加引号时**：`"$*"` 将所有参数合并为一个字符串，而 `"$@"` 保留每个参数作为独立的引号包裹的字符串。在大多数情况下，建议使用 `"$@"` 以正确处理每个单独的参数。
+3. **循环变量的命名**：虽然通常使用 `i` 作为循环变量，但可以根据上下文使用更有意义的名称，以提高脚本的可读性。
+4. **循环体的执行次数**：循环的执行次数取决于 `in` 关键词后面的元素数量。这些元素可以是静态列表、数组元素、或者是像 `$@` 这样的特殊参数。
+5. **处理特殊字符**：如果参数中可能包含特殊字符（如 `*`、`?` 等），使用双引号是非常重要的，以确保这些字符不会被 shell 解释或展开。
+6. **循环中的错误处理**：如果循环体内的命令可能失败，应该考虑加入错误检查。例如，你可以检查命令的退出状态，并在必要时退出循环或脚本。
+7. **避免不必要的复杂性**：在编写 `for` 循环时，保持循环体简单和清晰。如果循环体变得过于复杂，考虑将某些逻辑提取到函数中。
+
+遵循这些最佳实践可以帮助你编写更健壮、更易于维护和理解的 shell 脚本。
+
+
+
+
+
+
+
+
+
+
+
+
+
+~~~
+for i in $*; do
+  echo "The parameter is $i"
+done 
+#这样写语法还对吗？
+~~~
+
+是的，这样写语法是正确的。不过，这里使用了 `$*` 而没有加引号。这意味着如果传递给脚本的参数中包含空格，那么空格会被用作分隔符，参数会被拆分。例如，如果你有一个参数是 `"two words"`，在这个 `for` 循环中它会被拆分成两个参数：`two` 和 `words`。
+
+以下是脚本执行的示例：
+
+```bash
+# 假设脚本接收到三个参数：one, two, 和 "three four"
+for i in $*; do
+  echo "The parameter is $i"
+done
+# 可能的输出：
+# The parameter is one
+# The parameter is two
+# The parameter is three
+# The parameter is four
+```
+
+正如你可以看到的，即使 `"three four"` 是作为一个参数传递的，由于没有引号，空格被用来分隔，结果是它被视为了两个不同的参数。这通常不是你想要的结果，特别是在处理文件名或者其他可能包含空格的数据时。
+
+为了更安全地处理参数，特别是当它们包含空格或者特殊字符时，最佳实践是总是在 `$*` 或 `$@` 周围使用双引号：
+
+```bash
+for i in "$@"; do
+  echo "The parameter is $i"
+done
+```
+
+这样每个参数都会被正确地保留和处理，即使它们包含空格。
+
+
+
+
+
+
+
+
+
+
+
+**应用实例**
+- 从 1 加到 100 的值输出显示。
+
+
+
+~~~shell
+#!/bin/bash
+#案例 1 ：从 1 加到 100 的值输出显示
+#定义一个变量SUM
+SUM=0
+for(( i=1; i<=$1; i++ ))
+do
+#写上你的业务代码
+        SUM=$[$SUM+$i]
+done
+
+echo "1到 $1 的和sum=$SUM"
+~~~
+
+~~~
+[root@hspEdu100 shcode]# ./testFor2.sh 100
+1到 100 的和sum=5050
+[root@hspEdu100 shcode]# ./testFor2.sh 10
+1到 10 的和sum=55
+~~~
+
+
+
+
+
+
+
+### 17.10.4 while 循环
+**基本语法**
+- `while [ 条件判断式 ]` 然后 `do` 执行代码，结束以 `done`。
+
+**应用实例**
+- 从命令行输入一个数 n，统计从 1 加到 n 的值。
+
+~~~shell
+#!/bin/bash
+#案例 1 ：从命令行输入一个数 n，统计从 1+..+ n 的值是多少？
+SUM=0
+i=0
+while [ $i -le $1 ]
+do
+        SUM=$[$SUM+$i]
+        #i自增
+        i=$[$i+1]
+done
+echo "执行结果=$SUM"
+~~~
+
+上面的程序第一次累加的结果是0+0 啊，会不会影响最后的结果？这两句话反转一下执行顺序会不会更好？
+
+您提出的一个很好的观察。在脚本中，由于初始 `SUM` 和 `i` 都被设为 0，第一次循环时确实会执行 `0 + 0` 的操作。这一步实际上是多余的，不会改变 `SUM` 的值，但也不会影响最后的结果，因为它只是在 0 的基础上增加了 0。
+
+但您的建议是合理的，更改这两行的顺序会使脚本更加高效，因为它避免了不必要的第一次加法操作。通过首先增加 `i` 的值，然后再执行累加，您可以确保从 1 开始累加到 `n`。修改后的循环部分将如下所示：
+
+```bash
+while [ $i -lt $1 ]
+do
+    # i 自增
+    i=$(($i + 1))
+
+    # 累加
+    SUM=$(($SUM + $i))
+done
+```
+
+注意，我还改用了更现代的 `$((expression))` 语法进行算术运算，它比老式的 `$[expression]` 语法更可取。
+
+同时，我将 `while` 循环的条件从 `-le`（小于等于）改为 `-lt`（小于），因为我们现在在累加之前就已经增加了 `i` 的值。这样，当 `i` 等于 `$1` 时，循环就会停止，确保 `SUM` 只累加到 `n`，而不是 `n+1`。
+
+## 17.11 read 读取控制台输入
+**基本语法**
+- `read (选项) (参数)` 其中 `-p` 指定读取时的提示符，`-t` 指定读取时等待的时间。
+
+**应用实例**
+- 读取控制台输入的数值，并在 10 秒内输入。
+
+~~~shell
+#!/bin/bash
+#案例 1：读取控制台输入一个 NUM1 值
+read -p "请输入一个数NUM1=" NUM1
+echo "你输入的NUM1=$NUM1"
+
+#案例 2：读取控制台输入一个 NUM2 值，在 10 秒内输入。
+read -t 10 -p "请在10s内输入一个数NUM2=" NUM2
+echo "你输入的NUM2=$NUM2"
+~~~
+
+
+
+ 
+
+## 17.12 函数
+
+### 17.12.1 函数介绍
+Shell 编程和其它编程语言一样，有系统函数，也可以自定义函数。系统函数中，我们这里就介绍两个。
+
+### 17.12.2 系统函数
+
+**basename 基本语法**
+功能：返回完整路径最后 / 的部分，常用于获取文件名。
+
+```shell
+basename [pathname] [suffix]
+basename [string] [suffix]
+```
+
+如果 suffix 被指定了，basename 会将 pathname 或 string 中的 suffix 去掉。
+
+**应用实例**
+- 请返回 `/home/aaa/test.txt` 的 "test.txt" 部分。
+  ```shell
+  basename /home/aaa/test.txt
+  ```
+
+**dirname 基本语法**
+功能：返回完整路径最后 / 的前面的部分，常用于返回路径部分。
+```shell
+dirname 文件绝对路径
+```
+从给定的包含绝对路径的文件名中去除文件名（非目录的部分），然后返回剩下的路径（目录的部分）。
+
+**应用实例**
+- 请返回 `/home/aaa/test.txt` 的 `/home/aaa`。
+  ```shell
+  dirname /home/aaa/test.txt
+  ```
+
+### 17.12.3 自定义函数
+
+**基本语法**
+```shell
+[ function ] funname[()]
+{
+    Action;
+    [return int;]
+}
+```
+调用直接写函数名：`funname [值]`
+
+**应用实例**
+- 计算输入两个参数的和(动态的获取)，`getSum`。
+  ```shell
+  #!/bin/bash
+  #案例 1：计算输入两个参数的和(动态的获取)， getSum
+  
+  #定义函数getSum
+  function getSum(){
+  
+          SUM=$[$n1+$n2]
+          echo "和是sum=$SUM"
+  
+  }
+  
+  #输入两个值
+  read -p "请输入一个数n1=" n1
+  read -p "请输入一个数n2=" n2
+  
+  #调用自定义函数
+  getSum $n1 $n2
+  ```
+
+## 17.13 Shell 编程综合案例
+
+### 17.13.1 需求分析
+1. 每天凌晨 2:30 备份数据库 hspedu 到 `/data/backup/db`。
+2. 备份开始和备份结束能够给出相应的提示信息。
+3. 备份后的文件要求以备份时间为文件名，并打包成 `.tar.gz` 的形式，比如：`2021-03-12_230201.tar.gz`。
+4. 在备份的同时，检查是否有 10 天前备份的数据库文件，如果有就将其删除。
+5. 画一个思路分析图。
+
+### 17.13.2 代码 /usr/sbin/mysql_db.backup.sh
+```shell
+# 备份目录
+BACKUP=/data/backup/db
+# 当前时间
+DATETIME=$(date +%Y-%m-%d_%H%M%S)
+echo $DATETIME
+# 数据库的地址
+HOST=localhost
+# 数据库用户名
+DB_USER=root
+# 数据库密码
+DB_PW=hspedu100
+# 备份的数据库名
+DATABASE=hspedu
+
+# 创建备份目录, 如果不存在，就创建
+[ ! -d "${BACKUP}/${DATETIME}" ] && mkdir -p "${BACKUP}/${DATETIME}"
+
+# 备份数据库
+mysqldump -u${DB_USER} -p${DB_PW} --host=${HOST} -q -R --databases ${DATABASE} | gzip > ${BACKUP}/${DATETIME}/$DATETIME.sql.gz
+
+# 将文件处理成 tar.gz
+cd ${BACKUP}
+tar -zcvf $DATETIME.tar.gz ${DATETIME}
+
+# 删除对应的备份目录
+rm -rf ${BACKUP}/${DATETIME}
+
+# 删除 10 天前的备份文件
+find ${BACKUP} -atime +10 -name "*.tar.gz" -exec rm -rf {} \;
+
+echo "备份数据库${DATABASE} 成功~"
+```
+
+
+
+
+
+**问题1：这里可以不写if-then 语句吗？**
+
+答：是的，您可以不使用 `if-then` 语句来创建目录。在 Bash 脚本中，您使用的这行代码：
+
+```bash
+[ ! -d "${BACKUP}/${DATETIME}" ] && mkdir -p "${BACKUP}/${DATETIME}"
+```
+
+这使用了条件执行的概念。`&&` 是一个逻辑 AND 运算符，它在 Shell 脚本中用于组合两个命令。如果左边的命令（`[ ! -d "${BACKUP}/${DATETIME}" ]`）成功执行（即，如果指定的目录不存在，返回 true），那么右边的命令（`mkdir -p "${BACKUP}/${DATETIME}"`）才会执行。
+
+这是一种在 Shell 脚本中常见的简写方法，用于在一个条件为真时执行命令，而不需要完整的 `if-then` 语句。它在脚本中用于简化控制流和节省空间，特别是当后续命令只有一个时非常有用。
+
+完整的 `if-then` 语句对于更复杂的条件测试或者当有多个后续命令需要执行时是有用的。在您的例子中，由于只需要创建一个目录，使用 `&&` 运算符是完全可以的。
+
+
+
+**问题2：`${BACKUP}/${DATETIME}` ，这里为什么使用了大括号？作用是？**
+
+答：在 Bash 脚本中，变量通常是通过在变量名前加上 `$` 符号来引用的。大括号 `${}` 在这里用于**明确变量的界限。**这种语法对于下面这些情况特别有用：
+
+1. **当你需要将变量与其他文字或字符直接相连时，如拼接字符串或添加后缀，大括号可以明确变量名的结束。**例如，如果你有一个名为 `VAR` 的变量，你想打印出 "VAR_value"，那么你可以这样写 `echo ${VAR}_value`。如果不用大括号，直接写 `$VAR_value`，shell 会尝试查找名为 `VAR_value` 的变量，这可能不是你想要的。
+
+2. 大括号还可以在变量替换中使用，执行更复杂的操作，如变量截取、默认值等。
+
+在您的例子 `${BACKUP}/${DATETIME}` 中，虽然没有直接跟随文字或字符，使用大括号也是一种良好的实践，尤其是当变量名与斜杠或其他特殊字符相连时，因为它增加了可读性并避免了解析问题。然而，即使没有大括号，这个表达式也会正确工作，因为斜杠 `/` 明确地标识了变量名的结束。所以，`$BACKUP/$DATETIME` 与 `${BACKUP}/${DATETIME}` 在功能上是等效的。
+
+
+
+
+
+**`> ${BACKUP}/${DATETIME}/${DATETIME}.sql.gz` ，这里相当于给输出的文件重命名吗？**
+
+ChatGPT
+
+是的，这行命令中的重定向操作 `>` 和路径字符串结合起来，确实是在指定输出文件的名称和位置。
+
+在这个脚本中：
+
+- `${BACKUP}/${DATETIME}/` 指定了文件将要被保存的目录。
+- `${DATETIME}.sql.gz` 是文件的命名方式，这里结合了之前定义的 `DATETIME` 变量和 `.sql.gz` 后缀。
+
+所以，完整的路径和文件名 `${BACKUP}/${DATETIME}/${DATETIME}.sql.gz` 指的是在 `${BACKUP}` 目录下，以 `${DATETIME}` 命名的子目录中，创建一个以 `${DATETIME}.sql.gz` 为名称的文件。由于 `mysqldump` 的输出被重定向到了这个路径和文件名，所以这个文件将会包含数据库的压缩备份。
+
+这种命名方式有助于通过文件名就能识别出备份文件的创建时间，对于管理多个备份来说是非常有用的。
+
+
+
+
+
+**如果没有这句话`> ${BACKUP}/${DATETIME}/${DATETIME}.sql.gz` ，默认的命名是什么形式呢?**
+
+ChatGPT
+
+如果您没有在 `mysqldump` 命令中指定输出文件的名称和路径，那么 `mysqldump` 将不会自动生成一个文件。相反，它会将导出的数据库输出到标准输出（通常是您的终端屏幕）。
+
+例如，如果您只是运行：
+
+```
+bashCopy code
+mysqldump -u${DB_USER} -p${DB_PW} --host=${HOST} -q -R --databases ${DATABASE}
+```
+
+这条命令会在命令行界面显示数据库的整个导出，除非您重定向输出到一个文件或者通过管道传递给另一个命令（例如 `gzip`）。
+
+要将输出保存到一个文件，您必须使用重定向符号 `>` 后面跟上您希望保存的文件路径和文件名。在没有指定文件名的情况下，您必须手动执行这个操作，例如：
+
+```
+bashCopy code
+mysqldump -u${DB_USER} -p${DB_PW} --host=${HOST} -q -R --databases ${DATABASE} > my_backup.sql
+```
+
+这里，`my_backup.sql` 就是您自定义的文件名。如果您不这样做，就不会有默认的文件名或路径。
+
+
+
+
+
+**mysqldump 没有提供默认的文件名吗？如果没有  >  默认输出到哪里？**
+
+ChatGPT
+
+正确的，`mysqldump` 没有提供默认的文件名。如果您在使用 `mysqldump` 命令时不使用重定向符号 `>` 来指定一个输出文件，它默认会将导出的数据发送到标准输出，也就是您的命令行终端。
+
+在命令行终端中，标准输出（stdout）通常是屏幕，因此不加重定向的 `mysqldump` 命令会将数据库的内容打印到屏幕上。这可以用于将输出通过管道传递给其他命令，比如 `gzip` 用于压缩或 `mysql` 用于直接将数据导入到另一个数据库中。
+
+例如：
+
+```
+mysqldump -u${DB_USER} -p${DB_PW} --host=${HOST} --databases ${DATABASE} | mysql -u${DB_USER} -p${DB_PW} --host=other_host -C other_database
+```
+
+上面的命令行会将一个数据库的导出直接导入到另一个数据库中。
+
+要保存输出到一个文件，您需要明确地使用 `>` 或 `>>`（追加到文件而不是覆盖文件）将输出重定向到一个文件中。
+
+
+
+
+
+
+
+
+
+**`> ${BACKUP}/${DATETIME}/${DATETIME}.sql.gz `将压缩后的输出重定向到一个文件中，文件名包括时间戳，以 .sql.gz 结尾。这里必须指定以 .sql.gz 结尾吗？**
+
+ChatGPT
+
+不是必须的，指定以 `.sql.gz` 结尾是出于约定和清晰性考虑，但不是技术上的要求。
+
+文件扩展名主要用于帮助用户和操作系统识别文件内容的类型。`.sql` 扩展名通常用于未压缩的 SQL 脚本文件，而 `.gz` 是 Gzip 压缩文件的标准扩展名。将它们组合为 `.sql.gz` 表示文件是一个压缩的 SQL 脚本。这有助于在管理文件时立即识别文件的内容和格式。
+
+在命令 `mysqldump ... | gzip > ${BACKUP}/${DATETIME}/${DATETIME}.sql.gz` 中：
+
+- `mysqldump` 命令生成的是 SQL 语句的纯文本输出。
+- `gzip` 命令将这个纯文本压缩，并且默认的输出是二进制格式的。
+- 重定向符号 `>` 将这个二进制输出写入到指定的文件中。
+
+您可以选择任何文件名和扩展名，但为了维护方便，最好使用描述性的命名，比如包含 `.sql.gz`，这样做可以清晰地表明这是一个压缩的 SQL 数据备份文件。如果您用其他扩展名，将来可能不容易记住每个文件的具体内容。
+
+
+
+**tar命令的选项 -z 可以用来会生成/解压.gz后缀的文件对吗？**
+
+ChatGPT
+
+是的，`tar` 命令的 `-z` 选项用于指定 `tar` 应该通过 `gzip` 程序来压缩或解压缩文件。当创建压缩归档时，通常会将 `-z` 与 `-c`（创建）和 `-f`（文件）选项一起使用，如下所示：
+
+```
+bashCopy code
+tar -czf archive_name.tar.gz directory_to_compress
+```
+
+这将创建一个名为 `archive_name.tar.gz` 的压缩归档文件，其中包含了 `directory_to_compress` 目录的内容。
+
+而在解压缩 `.tar.gz` 文件时，通常会将 `-z` 与 `-x`（解压缩）和 `-f` 选项一起使用，如下所示：
+
+```
+bashCopy code
+tar -xzf archive_name.tar.gz
+```
+
+这将解压缩 `archive_name.tar.gz` 文件。
+
+`-z` 选项告诉 `tar` 命令调用 `gzip` 压缩或解压缩数据。如果不使用 `-z`，`tar` 会创建或提取未压缩的归档文件。在最新版本的 `tar` 中，通常不需要显式指定 `-z` 选项，因为 `tar` 能够自动检测 `.gz` 扩展名并使用适当的压缩/解压缩程序。
+
+---
+
+
+
+~~~shell
+#备份数据库
+mysqldump -u${DB_USER} -p${DB_PW} --host=${HOST} -q -R --databases ${DATABASE} | gzip > ${BACKUP}/${DATETIME}/$DATETIME.sql.gz
+~~~
+
+上面这条命令是用来备份MySQL数据库的，它使用 `mysqldump` 工具进行数据库导出，然后通过 `gzip` 进行压缩。以下是命令中各部分的详细解释：
+
+- `mysqldump`：这是MySQL提供的一个工具，用于创建数据库的备份（导出数据库的数据和结构到标准输出）。
+
+- `-u${DB_USER}`：指定连接数据库的用户名，`${DB_USER}` 是一个变量，其值在脚本的前面部分定义（例如 `root`）。
+
+- `-p${DB_PW}`：指定连接数据库的密码，`${DB_PW}` 是一个变量，包含了数据库用户的密码。出于安全原因，建议在实际使用中不要直接在命令行中包含密码，因为这可能会在系统的历史记录中留下敏感信息。
+
+- `--host=${HOST}`：指定MySQL服务器的主机名或IP地址，`${HOST}` 是一个变量，通常设置为 `localhost`。
+
+- `-q`：表示 "quick"。它会加快导出的速度，尤其是在处理大型数据库时。它通过减少锁定数据库表的时间来实现这一点。
+
+- `-R`：表示导出存储过程和函数。
+
+- `--databases ${DATABASE}`：指定要备份的数据库名称，`${DATABASE}` 是一个变量，其值也是在脚本的前面部分定义的。
+
+- `| gzip`：这个管道命令 (`|`) 将 `mysqldump` 的输出传递给 `gzip` 命令，后者用于压缩数据。`gzip` 将标准输出压缩并输出到它的标准输出。
+
+- `>`：这个是重定向操作符，它将 `gzip` 的压缩输出重定向到一个文件中。
+
+- `${BACKUP}/${DATETIME}/${DATETIME}.sql.gz`：这是压缩文件的完整路径和文件名。`${BACKUP}` 和 `${DATETIME}` 是脚本前面定义的变量，分别代表备份的根目录和当前的日期时间。文件名 `${DATETIME}.sql.gz` 说明了文件是一个压缩的SQL文件，并且通过日期时间进行了命名，以便于知道备份是何时创建的。
+
+总之，这条命令创建了一个压缩的数据库备份文件，该文件包含了指定数据库的所有数据和结构，并以当前的日期和时间命名，存储在指定的备份目录中。
+
+
+
+**`mysqldump` 命令中的 `--databases` 选项确实允许您指定多个数据库进行备份。**当使用这个选项时，您可以在其后列出多个数据库名称，每个名称之间用空格分隔。这将导出每个指定的数据库的完整结构和数据，使得您可以在一个操作中备份多个数据库。
+
+在您的命令中：
+
+```bash
+mysqldump -u${DB_USER} -p${DB_PW} --host=${HOST} -q -R --databases ${DATABASE} | gzip > ${BACKUP}/${DATETIME}/${DATETIME}.sql.gz
+```
+
+如果 `${DATABASE}` 变量包含一个数据库名称，那么它会备份那个单一的数据库。如果 `${DATABASE}` 包含多个数据库名称，用空格分隔，那么它将会备份所有列出的数据库。此外，使用 `--databases` 选项时，`mysqldump` 会在导出的文件中包含 `CREATE DATABASE` 和 `USE` 语句，这使得导出的 `.sql` 文件可以在导入时重新创建数据库。
+
+例如，如果您想备份名为 `db1` 和 `db2` 的数据库，您可以将命令写成：
+
+```bash
+mysqldump -u${DB_USER} -p${DB_PW} --host=${HOST} -q -R --databases db1 db2 | gzip > ${BACKUP}/${DATETIME}/databases_${DATETIME}.sql.gz
+```
+
+在这里，`db1` 和 `db2` 将会被备份，并且备份文件将包含用于创建这些数据库的 SQL 语句。
+
+
+
+**如果您这样定义变量：**
+
+```bash
+DATABASE="db1 db2"
+```
+
+然后在 `mysqldump` 命令中使用 `--databases ${DATABASE}`，在这种情况下，因为变量 `DATABASE` 包含了多个数据库名称，分隔符是空格，`mysqldump` 将会尝试备份这两个数据库。
+
+但是，为了确保这种情况下的正确扩展（特别是在可能包含空格或特殊字符的情况下），最好是在引用时使用引号，如下所示：
+
+```bash
+mysqldump -u"${DB_USER}" -p"${DB_PW}" --host="${HOST}" -q -R --databases ${DATABASE} | gzip > "${BACKUP}/${DATETIME}/${DATETIME}.sql.gz"
+```
+
+当在变量中包含空格时，不加引号可能会导致 shell 错误地将它们解释为分隔的命令行参数。在这种情况下，因为您希望 `mysqldump` 识别 `db1` 和 `db2` 为不同的数据库名称，不加引号通常是可以的。但是，最佳实践是在变量扩展可能包含空格或特殊字符时使用引号，以确保命令按预期方式执行。
+
+在实际的 shell 脚本中，您可能还需要考虑如何安全地处理密码，因为在命令行中直接使用 `-p` 选项可能会暴露密码。一个更安全的做法是将密码存储在客户端配置文件中，或者使用环境变量，而不是直接在命令行中传递。
+
+
+
+## mysqldump指令
+
+`mysqldump` 是一个用于导出 MySQL 数据库的内容到一个文本文件中的强大工具。在您提供的脚本中，`mysqldump` 命令用于备份数据库。以下是该命令中使用的一些常用选项的解释，以及它们的作用：
+
+1. `-u${DB_USER}` 或 `-u [用户名]`
+   - 指定连接到数据库的用户名。例如，`-uroot` 表示以 `root` 用户身份登录。
+
+2. `-p${DB_PW}` 或 `-p[密码]`
+   - 指定连接到数据库的密码。请注意，紧接在 `-p` 后面输入密码是不安全的做法，因为这样密码可能会显示在历史记录中。最佳实践是单独使用 `-p`，系统会提示您输入密码。在脚本中，为了自动化，可能会使用 `-p${DB_PW}` 的形式。
+
+3. `--host=${HOST}` 或 `--host=[主机地址]`
+   - 指定 MySQL 服务器的地址。如果 MySQL 服务器运行在本地机器上，通常使用 `localhost`。
+
+4. `-q` 或 `--quick`
+   - 快速模式。当备份大数据库时非常有用，因为它会减少内存使用量。它通过直接从服务器传输数据到 mysqldump 客户端而不是首先检索到内存中来实现这一点。
+
+5. `-R` 或 `--routines`
+   - 导出存储过程和函数。如果数据库中包含这些元素，您可能希望将它们包含在备份中。
+
+6. `--databases [数据库名]`
+   - 指定要导出的数据库。可以指定一个或多个数据库，数据库名之间用空格分隔。当指定多个数据库时，`mysqldump` 会为每个数据库添加 `CREATE DATABASE` 和 `USE` 语句。
+
+7. `| gzip`
+   - 这不是 `mysqldump` 的选项，而是一个将 `mysqldump` 的输出传递给 `gzip` 命令的管道，用于压缩导出的数据。这在处理大型数据库时非常有用，因为它可以显著减小备份文件的大小。
+
+8. `> ${BACKUP}/${DATETIME}/$DATETIME.sql.gz`
+   - 这也不是 `mysqldump` 的选项，而是一个重定向操作符，用于将 `gzip` 的压缩输出保存到一个文件中。这里指定了文件的存储路径和文件名。
+
+这些选项组合在一起，提供了一个强大的工具来备份 MySQL 数据库，同时优化了速度和存储。通过压缩和指定备份文件的存储位置，您的脚本能够有效地管理备份过程。
+
+
+
+### mysqldump 命令中的用户名和密码选项使用说明及安全性注意事项
+
+在 MySQL 命令行工具（如 `mysqldump` 和 `mysql`）中，`-u` 和 `-p` 选项用于指定数据库的用户名和密码。这里是这些选项的简洁说明以及使用时的注意点：
+
+1. **`-u` 和 `-uroot`**：
+   - **意义**：`-u` 选项后跟着的是要连接到数据库的用户名。例如，`-uroot` 表示使用用户名 `root` 进行连接。
+   - **格式**：选项 `-u` 与用户名之间不需要空格。例如，`-uroot`。
+   - **注意点**：在脚本或命令行中明确指定用户名是安全的。
+
+2. **`-p` 和 `-p密码`**：
+   - **意义**：`-p` 选项用于指定连接数据库的密码。如果直接跟着密码（如 `-p密码`），则表示以该密码登录。
+   - **格式**：当直接在 `-p` 后面跟密码时，两者之间没有空格，例如 `-pYourPassword`。
+   - **注意点**：
+     - **安全性**：直接在命令行中使用 `-p密码` 形式不安全，因为这样密码可能会被记录在命令历史或日志中。
+     - **推荐做法**：最佳实践是仅使用 `-p`，不直接跟密码。这样，在执行命令时，系统会提示您输入密码，从而保护密码不被暴露。
+     - **自动化脚本**：在自动化脚本中，尽管可以使用 `-p密码` 形式来避免交互式输入，但应谨慎处理，确保脚本的安全性。
+
+总结：使用 `-u` 时直接跟用户名（如 `-uroot`）是常见且安全的做法。使用 `-p` 时，出于安全考虑，建议单独使用 `-p` 并在提示时输入密码，而不是直接将密码写在命令行中。
+
+## find指令
+
+~~~shell
+#删除十天前的备份文件
+find ${BACKUP} -atime +10 -name "*.tar.gz" -exec rm -rf {} \;
+~~~
+
+上面这条命令使用 `find` 命令搜索并删除在 `${BACKUP}` 目录下最后访问时间超过十天的 `.tar.gz` 压缩备份文件。下面是对该命令中各个部分的详细解释：
+
+- `find`：这是一个强大的命令行工具，用于在指定目录下查找文件和目录。
+
+- `${BACKUP}`：这是 `find` 命令搜索的目录，变量 `BACKUP` 在脚本的前面定义，代表备份文件存储的根目录。
+
+- `-atime +10`：这个选项指定了 `find` 命令查找那些最后访问时间在当前时间之前至少十天的文件。`atime` 是 "access time" 的缩写，代表文件最后被读取或访问的时间。
+
+- `-name "*.tar.gz"`：这个选项让 `find` 命令只查找那些名称匹配模式 `*.tar.gz` 的文件，也就是以 `.tar.gz` 结尾的文件，这通常是压缩文件的扩展名。
+
+- `-exec rm -rf {} \;`：这个选项定义了一旦找到匹配的文件，`find` 命令就会执行的动作。`-exec` 后面跟着的是要执行的命令，这里是 `rm -rf`，用于删除文件或目录。
+  
+  - `rm` 是 "remove" 的缩写，用于删除文件或目录。
+  - `-r` 或 `-R` 表示递归删除，使得 `rm` 可以删除目录及其所有内容。
+  - `-f` 表示 "force"，用于强制删除，不会询问确认也不会因为特定的错误而停止。
+  
+  `{}` 是 `find` 命令的占位符，它在执行时会被替换为当前找到的文件名。
+  
+  `\;` 是 `-exec` 选项的参数终止符，告诉 `find` 命令 `-exec` 参数到此结束。
+
+总结来说，这条命令的作用是在 `${BACKUP}` 目录下查找所有最后访问时间超过十天的 `.tar.gz` 文件，并将这些文件删除。这是一种清理旧备份的常用方法，以确保不会因为积累过多过时的备份文件而耗尽磁盘空间。
 
 
 
@@ -4332,11 +6006,11 @@ centos7图形界面上的两个控制台终端，这里要查询Linux控制台�
 1、问题阐述与截图
 在桌面虚拟机软件VMVare Workstation中创建新的虚拟机，选择客户机操作系统时，出现“此主机不支持64位客户机操作系统，此系统无法运行”的警告（如图1），
 
-![img](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/format,png.png)
+![img](D:\TyporaPhoto\format,png.png)
 
 如果无视这个问题，直接点击“下一步”，倒也可以完成环境的配置，但是后面想要开启此虚拟机并正式安装红帽系统时，会出现“ VMware Workstation 与 Hyper-V不兼容 ”的提示（如图2），需要移除Hyper-V然后再运行VMWare安装RHEL。
 
-![img](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/20191015114859593.png)
+![img](D:\TyporaPhoto\20191015114859593.png)
 
 
 
@@ -4356,22 +6030,22 @@ bcdedit /set hypervisorlaunchtype off
 
  笔记本新安装的workstation，接着装了centOS-7，开机后无法联网，首先检查下这两个服务，八成是没起来。
 
-![image-20240112193015083](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240112193015083.png)
+![image-20240112193015083](D:\TyporaPhoto\image-20240112193015083.png)
 
 
  VMware DHCP service启动不起来应该是这个地方没勾选,就按照图上勾选就行了，不用改什么配置文件
 
-![img](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/a00e388c2e4a4a2ea3fd42bb685795cf.png)
+![img](D:\TyporaPhoto\a00e388c2e4a4a2ea3fd42bb685795cf.png)
 
 最后   执行下 service network restart  ? 重启虚拟机 ,重启下面两个服务  应该就可以了  。
 
-![img](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/118d5b016765435a90c155d86cb67a1d.png)
+![img](D:\TyporaPhoto\118d5b016765435a90c155d86cb67a1d.png)
 
 
 
 
 
-![image-20240112193015083](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240112193015083.png)
+![image-20240112193015083](D:\TyporaPhoto\image-20240112193015083.png)
 
 
 
@@ -4453,13 +6127,13 @@ sudo systemctl restart network
 
 物理主机F2 IPV4为：192.168.0.12
 
-![image-20240112191215742](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240112191215742.png)
+![image-20240112191215742](D:\TyporaPhoto\image-20240112191215742.png)
 
-![image-20240112194326151](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240112194326151.png)
+![image-20240112194326151](D:\TyporaPhoto\image-20240112194326151.png)
 
 
 
-![image-20240113175635254](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240113175635254.png)
+![image-20240113175635254](D:\TyporaPhoto\image-20240113175635254.png)
 
 **为什么一般不需要为VMNet8勾选共享网络呢？**
 
@@ -4478,7 +6152,7 @@ ChatGPT
 
 
 
-![image-20240112191034031](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240112191034031.png)
+![image-20240112191034031](D:\TyporaPhoto\image-20240112191034031.png)
 
 #### 2.虚拟网卡VMNet8 配置相关:
 
@@ -4486,17 +6160,17 @@ VMware Virtual Ethernet Adapter for VMnet8  IPv4 地址: 192.168.137.1
 
 最好设置为自动获取否则后面会出现宿主机ping不通虚拟机的情况
 
-![image-20240112190631853](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240112190631853.png)
+![image-20240112190631853](D:\TyporaPhoto\image-20240112190631853.png)
 
-![image-20240113174255779](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240113174255779.png)
+![image-20240113174255779](D:\TyporaPhoto\image-20240113174255779.png)
 
 但是在宿主机ping NAT模式的虚拟机时用到了上图的VMnet8，最好不要禁用！！ 
 
 
 
-![image-20240114013433918](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240114013433918.png)
+![image-20240114013433918](D:\TyporaPhoto\image-20240114013433918.png)
 
-![image-20240114011414434](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240114011414434.png)
+![image-20240114011414434](D:\TyporaPhoto\image-20240114011414434.png)
 
 如果宿主机VMNet8配置有误会导致宿主机ping不通虚拟机
 
@@ -4537,7 +6211,7 @@ Ethernet adapter VMware Network Adapter VMnet8:
 
 编辑->虚拟网络编辑器配置如下：
 
-![image-20240112200447804](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240112200447804.png)
+![image-20240112200447804](D:\TyporaPhoto\image-20240112200447804.png)
 
 在许多家庭和小型办公室网络中，网关地址通常被配置为子网中的第一个主机地址，也就是以`.1`结束的地址（例如`192.168.1.1`或`192.168.0.1`）。这是一种常见的约定，但并不是强制性的网络标准。网关地址可以是子网中的任何有效主机地址，这取决于网络管理员的配置。
 
@@ -4545,9 +6219,9 @@ Ethernet adapter VMware Network Adapter VMnet8:
 
 因此，尽管`.1`作为网关是非常普遍的做法，但并不是唯一的选择。网络的实际配置应该总是查阅相关的网络文档或通过网络设置来确定。
 
-![image-20240112204059671](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240112204059671.png)
+![image-20240112204059671](D:\TyporaPhoto\image-20240112204059671.png)
 
-<img src="https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240112200742424.png" alt="image-20240112200742424" style="zoom: 67%;" />
+<img src="D:\TyporaPhoto\image-20240112200742424.png" alt="image-20240112200742424" style="zoom: 67%;" />
 
 
 
@@ -4555,7 +6229,7 @@ Ethernet adapter VMware Network Adapter VMnet8:
 
 虚拟机IPV4: 192.168.100.128
 
-![image-20240112192635021](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240112192635021.png)
+![image-20240112192635021](D:\TyporaPhoto\image-20240112192635021.png)
 
 
 
@@ -4591,6 +6265,14 @@ Ethernet adapter VMware Network Adapter VMnet8:
 
 # 2 Xshell7连接Linux服务器设置
 
+## 0 注意细节 
+
+取消 工具-选项 的勾选，解决“XShell7 使用时复制的内容粘贴到Xshell7时，竟然自动执行了，我还没回车呢。如何解决”
+
+![image-20240128011621661](D:\TyporaPhoto\image-20240128011621661.png)
+
+
+
 ## 1.使用代理时进行Xshell7连接虚拟机Linux，出现连接已经建立，但之后被远程主机关闭
 
 首先不要使用代理！
@@ -4616,7 +6298,7 @@ Type `help' to learn how to use Xshell prompt.
 
 接着会出现下面的问题Xshell7连接虚拟机失败 和 宿主机ping虚拟机请求超时
 
-![image-20240114011533125](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240114011533125.png)
+![image-20240114011533125](D:\TyporaPhoto\image-20240114011533125.png)
 
 ## 2. 宿主机ping虚拟机请求超时
 
@@ -4645,12 +6327,12 @@ Ping statistics for 192.168.2.129:
 
 解决办法
 打开电脑的设置，找到网络
-![在这里插入图片描述](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAX3N0cml2aW5nXw==,size_20,color_FFFFFF,t_70,g_se,x_16.png)
-![在这里插入图片描述](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAX3N0cml2aW5nXw==,size_20,color_FFFFFF,t_70,g_se,x_16-17051654514379.png)
+![在这里插入图片描述](D:\TyporaPhoto\watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAX3N0cml2aW5nXw==,size_20,color_FFFFFF,t_70,g_se,x_16.png)
+![在这里插入图片描述](D:\TyporaPhoto\watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAX3N0cml2aW5nXw==,size_20,color_FFFFFF,t_70,g_se,x_16-17051654514379.png)
 [VMware](https://so.csdn.net/so/search?q=VMware&spm=1001.2101.3001.7020) Network Adapter VMnet1和 VMware Network Adapter VMnet8 分别进行如下操作
 
-![在这里插入图片描述](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAX3N0cml2aW5nXw==,size_20,color_FFFFFF,t_70,g_se,x_16-170516545143710.png)
-![在这里插入图片描述](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAX3N0cml2aW5nXw==,size_14,color_FFFFFF,t_70,g_se,x_16.png)
+![在这里插入图片描述](D:\TyporaPhoto\watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAX3N0cml2aW5nXw==,size_20,color_FFFFFF,t_70,g_se,x_16-170516545143710.png)
+![在这里插入图片描述](D:\TyporaPhoto\watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAX3N0cml2aW5nXw==,size_14,color_FFFFFF,t_70,g_se,x_16.png)
 然后就可以了
 
 ~~~
@@ -4672,9 +6354,9 @@ Approximate round trip times in milli-seconds:
 
 下面是网络适配器的配置
 
-![image-20240114011318880](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240114011318880.png)
+![image-20240114011318880](D:\TyporaPhoto\image-20240114011318880.png)
 
-![image-20240114011414434](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240114011414434.png)
+![image-20240114011414434](D:\TyporaPhoto\image-20240114011414434.png)
 
 
 
@@ -4714,7 +6396,7 @@ Wireless LAN adapter WLAN 2:
    NetBIOS over Tcpip. . . . . . . . : Enabled
 ~~~
 
-![image-20240114013358273](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240114013358273.png)
+![image-20240114013358273](D:\TyporaPhoto\image-20240114013358273.png)
 
 如果宿主机VMNet8配置有误会导致宿主机ping不通虚拟机
 
@@ -4799,6 +6481,8 @@ Approximate round trip times in milli-seconds:
 
 虚拟机ping 外界test:
 
+ 
+
 ~~~
 #虚拟机ping 本身所在的子网网关
 [root@hspEdu01 ~]# ping 192.168.2.2
@@ -4834,7 +6518,7 @@ rtt min/avg/max/mdev = 0.428/0.441/0.459/0.028 ms
 
 此时在进行Xshell7远程连接，连接虚拟机Linux服务器主机成功！
 
-![image-20240114015301812](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240114015301812.png)
+![image-20240114015301812](D:\TyporaPhoto\image-20240114015301812.png)
 
 ---
 
