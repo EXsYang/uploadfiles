@@ -4660,14 +4660,89 @@ cmd命令行中 **`telnet`**指令
 - 打开端口: `firewall-cmd --permanent --add-port=端口号/协议`
 
 - 关闭端口: `firewall-cmd --permanent --remove-port=端口号/协议`
+- 增加服务: `firewall-cmd --add-service=http --permanent #增加了一个 http 服务,理解`
+- 移除服务: `firewall-cmd --remove-service=http --permanent #移除了一个 http 服务`
 - 重新载入, 才能生效: `firewall-cmd --reload`
 - 查询端口是否开放: `firewall-cmd --query-port=端口/协议`
+- 查询和显示当前活动的防火墙区域（zone）的详细信息`firewall-cmd --list-all` 
 
-这里的`协议`可以使用指令 `netstat -anp | more` 来查看
+
+
+`firewall-cmd --list-all`  **用于查询和显示当前活动的防火墙区域（zone）的详细信息。**这个命令是 `firewalld` 服务的一部分，`firewalld` 是现代 Linux 发行版中用于管理网络访问控制的防火墙守护程序。
+
+当您执行 `firewall-cmd --list-all` 命令时，它会提供以下信息：
+
+1. **当前区域（Zone）的名称**：在 `firewalld` 中，区域是用来定义不同的网络信任级别的。每个区域可以有不同的规则和策略。
+2. **接口（Interfaces）**：显示与该区域关联的网络接口。
+3. **源地址（Sources）**：显示已指定为该区域一部分的源 IP 地址。
+4. **服务（Services）**：列出在该区域中允许的服务。服务是预定义的规则集合，例如 HTTP、SSH 等。
+5. **端口（Ports）**：显示在该区域中开放的特定端口。
+6. **协议（Protocols）**：列出在该区域中允许的网络协议。
+7. **转发规则（Forwarding rules）**：显示有关 IPv4 和 IPv6 转发的规则。
+8. **其他规则**：如富规则（rich rules）、ICMP 阻止和允许的类型等。
+
+这个命令非常有用，因为它可以让系统管理员快速查看当前防火墙的配置状态，了解哪些服务和端口是开放的，以及哪些网络接口被包含在特定的防火墙区域中。这对于网络安全和故障排除来说是非常重要的。
+
+![image-20240206032155177](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240206032155177.png)
+
+
+
+
+
+这里的`协议`可以使用指令 `netstat -anp | more` 来查看监听的端口使用的协议
 
 ![image-20240126003744862](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240126003744862.png)
 
 
+
+`netstat` 是一个非常有用的网络工具，用于在 Unix 和 Unix-like 系统（如 Linux）上显示网络连接、路由表、接口统计、伪装连接以及多播成员资格等信息。以下是 `netstat` 的一些主要功能和常用选项的简要说明：
+
+### netstat指令的作用
+
+1. **显示网络连接**：
+   - 查看活动的连接（TCP/UDP）。
+2. **路由表信息**：
+   - 显示路由表，包括目的地、网关等。
+3. **接口统计信息**：
+   - 查看每个网络接口的状态和统计数据。
+4. **监听端口**：
+   - 显示在系统上监听的端口。
+5. **伪装连接**：
+   - 显示伪装（masqueraded）的网络连接。
+6. **多播成员资格**：
+   - 显示多播网络的成员资格信息。
+
+### 常用选项
+
+1. `-a`（all）：
+   - 显示所有选项的默认输出。
+2. `-n`（numeric）：
+   - 显示数字形式的地址和端口号，而不是尝试确定符号名称。
+3. `-p`（program）：
+   - 显示哪个进程正在使用哪个套接字或端口。
+4. `-t`：
+   - 仅显示 TCP 连接。
+5. `-u`：
+   - 仅显示 UDP 连接。
+6. `-l`（listening）：
+   - 仅显示监听的套接字。
+7. `-r`：
+   - 显示路由表。
+8. `-s`：
+   - 按协议显示统计数据（例如 TCP、UDP、ICMP）。
+9. `-i`：
+   - 显示网络接口的统计信息。
+
+### 示例命令
+
+- 查看所有活动连接：`netstat -a`
+- 查看所有活动的 TCP 连接：`netstat -at`
+- 查看哪些端口正在监听：`netstat -l`
+- 显示每个协议的统计数据：`netstat -s`
+- 查看路由表：`netstat -r`
+- 显示所有活动连接的数值地址和端口：`netstat -an`
+
+请注意，`netstat` 命令在一些新的 Linux 发行版中可能已被 `ss` 命令和其他 `iproute2` 工具取代。不过，`netstat` 仍然是一个广泛使用的工具，特别是在那些较旧或保持传统的系统中。
 
 ### 18.6 动态监控进程
 
@@ -4819,6 +4894,18 @@ cmd命令行中 **`telnet`**指令
 - 用法示例：`ping [对方 ip 地址]`
 
 以上内容根据您提供的资料整理而成。如果需要更多详细信息，您可以参考 `man` 页面或其他文档。
+
+
+
+**ping IP ，这里默认ping的是哪一个端口？**
+
+
+
+实际上，`ping` 命令并不使用 TCP 或 UDP 端口。它使用的是 ICMP（Internet Control Message Protocol，互联网控制消息协议），这是一个用于发送诊断消息的网络层协议。
+
+当您执行 `ping` 到一个 IP 地址时，它发送一个 ICMP Echo Request 消息到目标地址，并等待 ICMP Echo Reply 消息作为响应。这种通信机制用于测试目标主机是否可达以及往返通信的延迟。
+
+由于 ICMP 操作在网络协议的较低层次（IP层），而不是在传输层（如 TCP 或 UDP），因此 `ping` 不与特定的端口关联。它直接与 IP 地址进行交互，而不是基于端口的服务。
 
 
 
