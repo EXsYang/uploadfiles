@@ -626,14 +626,33 @@ GitLab （地址： https://about.gitlab.com/ ）是一个用于仓库管理系�
   - -f 表示强制覆盖
 
   - --set-upstream 推送到远端的同时并且建立起和远端分支的关联关系。
+    
     - git push --set-upstream origin master
-
+    
   - 如果**当前分支已经和远端分支关联**，则可以省略分支名和远端名。
-
+  
     <img src="https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20220504201046028.png" alt="image-20220504201046028" style="zoom:80%;" />
-
+  
     - git push 将master分支推送到已关联的远端分支。
-
+  
+    1. `git push --set-upstream origin master`: 这个命令用于将本地的 `master` 分支推送到远程的 `origin` 仓库，并且设置这个远程分支为 `master` 分支的上游（upstream）。这意味着之后您在 `master` 分支上执行 `git push` 或 `git pull` 时，Git 会自动知道您要推送或拉取的是 `origin` 上的 `master` 分支。
+  
+    2. `git branch -vv`: 这个命令显示当前仓库中所有分支的最新提交信息，并且会显示与每个分支关联的远程分支（如果有的话）。例如，在您提供的输出中，`master` 分支已经与远程的 `origin/master` 分支建立了关联。这意味着当您在 `master` 分支上执行 `git push` 或 `git pull` 时，Git 会自动知道目标远程分支是 `origin/master`。
+  
+    所以，如果您的当前分支已经和远程分支建立了关联，您就可以直接使用 `git push` 或 `git pull` 命令而无需指定远程仓库名或分支名。而 `git branch -vv` 可用于确认这种关联是否已经建立。
+  
+   Git 中的本地分支与远程分支的跟踪关系是一对一的。总结如下：
+  
+  1. **一对一跟踪关系**: 一个本地分支可以跟踪一个远程分支。这意味着当你在该本地分支上使用 `git pull` 或 `git push` 时，Git 知道要与哪个远程分支通信。
+  
+  2. **不支持多重跟踪**: Git 不支持一个本地分支同时跟踪多个远程分支。这是因为跟踪关系设计为简单且一致，确保明确性和操作的简便性。
+  
+  3. **查看跟踪关系的命令**:
+     - 使用 `git branch -vv`：这个命令列出所有本地分支及其对应的远程跟踪分支。输出中会包含本地分支名称、最新提交的哈希值、跟踪的远程分支名称以及最近的提交信息。
+     - 使用 `git remote show <remote>`：这个命令显示指定远程仓库的详细信息，包括哪些本地分支跟踪哪些远程分支。
+  
+  这样的设计使得 Git 在处理远程仓库时既灵活又直观，允许用户轻松地管理和同步代码更改。
+  
   - [-f] 表示强制覆盖远程仓库的内容
 
 <img src="https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20220504185249432.png" alt="image-20220504185249432" style="zoom:80%;" /> 

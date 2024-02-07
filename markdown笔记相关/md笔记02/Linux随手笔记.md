@@ -562,7 +562,7 @@ userdel: user mycentos is currently used by process 8188
 
 常用选项：
 
-- `-a`：显示当前目录所有的文件和目录，包括隐藏的。
+- `-a`：显示当前目录所有的文件和目录，e包括隐藏的。
 
 - `-l`：以列表的方式显示信息
 
