@@ -10,6 +10,18 @@
 
 ![image-20230925212010781](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20230925212010781.png)
 
+
+
+#  Tomcat`webapps/ROOT/`目录说明
+
+Tomcat是一个广泛使用的Java Servlet容器和Web服务器。在Tomcat中，`webapps`目录是用来存放所有的Web应用程序的地方，每个Web应用程序都会被放在这个目录下的一个子目录中。
+
+特别地，`webapps/ROOT/`目录在Tomcat服务器中扮演着一个特殊的角色。这个目录用于存放Tomcat的默认或根Web应用程序。当你访问Tomcat服务器的根URL（比如 http://localhost:8080/）时，你实际上是在访问`webapps/ROOT/`目录下的内容。
+
+这意味着，如果你想要你的Web应用程序在不需要任何额外的路径就能直接通过服务器的根URL访问，你可以将其放在`webapps/ROOT/`目录中。这对于想要作为主要或唯一应用程序运行在Tomcat上的Web应用来说很有用。
+
+总结来说，`webapps/ROOT/`目录是用于存放那些希望能够通过服务器根URL直接访问的Web应用程序的内容。
+
 ---
 
 # 1 启动HspTomcatV3 的main 方法时，报错 NoClassDefFoundError: javax/servlet/http/HttpServlet
