@@ -22,6 +22,28 @@
 
 
 
+
+
+## 2 取消搜索时的高亮显示
+
+在`vim`中，如果你使用`/a`进行搜索，所有匹配到的'a'字符会被高亮显示。要取消这种搜索结果的高亮显示，你可以使用以下命令：
+
+```vim
+:noh
+```
+
+或者完整写法为：
+
+```vim
+:nohighlight
+```
+
+这个命令会清除当前的搜索高亮，直到你下次进行搜索。请注意，这个命令只是临时取消高亮显示，而不会影响未来的搜索操作。下一次你使用搜索功能时（例如，再次使用`/`命令进行查找），匹配的文本将再次以高亮形式显示。
+
+如果你希望在每次开始`vim`时自动禁用搜索结果的高亮（但仍然允许通过命令手动高亮），可以考虑在你的`vim`配置文件（通常是`~/.vimrc`）中添加一行设置来清除高亮，但这样做并不会阻止高亮本身，而是每次搜索后需要你手动清除。
+
+对于自动取消高亮的需求，一个简单的方法是在`~/.vimrc`文件中加入一段自动命令，每次搜索完成后自动取消高亮显示可能会有所帮助，但请注意，这可能会影响搜索的可用性，因为你将不再能通过高亮直观地看到所有匹配项。大多数用户可能会选择在需要时手动使用`:noh`命令来清除高亮，以保留搜索高亮的便利性。
+
 ---
 
 
@@ -65,7 +87,7 @@
 
 4. 在文件中**查找**某个单词 [**命令行下** **/关键字** ， 回车 查找 , 输入 **`n`** 就是查找下一个 大写的 **`N`**查找**上一个**]
 
-**命令行下**输入 **`:nohl`** 或**`:nohlsearch`**然后按回车。这会立即**取消当前的搜索**高亮，直到你进行下一次搜索。`nohlsearch` 是 `nohighlightsearch` 的缩写，意为“不高亮搜索”。
+**命令行下**输入 **`:noh`** 或**`:nohl`** 或**`:nohlsearch`**然后按回车。这会立即**取消当前的搜索**高亮，直到你进行下一次搜索。`nohlsearch` 是 `nohighlightsearch` 的缩写，意为“不高亮搜索”。
 
 5. 设置文件的**行号**，取消文件的行号.[**命令行下** **`: set nu `**和**` :set nonu`** ]
 
@@ -3890,13 +3912,22 @@ vi /etc/sysconfig/network-scripts/ifcfg-ens33
 
 
 
-# 网络配置ifcfg-ens33文件中，注意等号右边的值一定要添加引号才能识别，否则会出问题！
+# 1 网络配置ifcfg-ens33文件中，注意等号右边的值一定要添加引号才能识别，否则会出问题！
 
+- 禁用 `NetworkManager` 并启用 `network` 服务：
 
+  ```
+  bashCopy codesudo systemctl stop NetworkManager
+  sudo systemctl disable NetworkManager
+  sudo systemctl enable network
+  sudo systemctl start network
+  ```
 
 **网络配置ifcfg-ens33文件详情：**
 
 vi /etc/sysconfig/network-scripts/ifcfg-ens33
+
+
 
 ~~~
 #注意等号右边的值一定要添加引号才能识别，否则会出问题！
@@ -3925,7 +3956,57 @@ DNS1=192.168.200.2
 #子网掩码，不写默认就是255.255.255.0
 NETMASK=255.255.255.0
 
+# 你希望 NetworkManager 接管并应用 ifcfg-ens33 文件中的配置
+NM_CONTROLLED="yes"
 ~~~
+
+
+
+vi /etc/sysconfig/network-scripts/ifcfg-ens33
+
+IPADDR="192.168.198.135"配置 
+
+~~~
+TYPE="Ethernet"
+PROXY_METHOD="none"
+BROWSER_ONLY="no"
+BOOTPROTO="static"
+DEFROUTE="yes"
+IPV4_FAILURE_FATAL="no"
+IPV6INIT="yes"
+IPV6_AUTOCONF="yes"
+IPV6_DEFROUTE="yes"
+IPV6_FAILURE_FATAL="no"
+IPV6_ADDR_GEN_MODE="stable-privacy"
+NAME="ens33"
+UUID="2e5a5c25-b0b3-489a-aecd-1461cf86d9d8"
+DEVICE="ens33"
+ONBOOT="yes"
+IPADDR="192.168.198.135"
+GATEWAY="192.168.198.2"
+DNS1="192.168.198.2"
+NETMASK="255.255.255.0"
+NM_CONTROLLED="yes"
+~~~
+
+
+
+
+
+
+
+禁用 `NetworkManager` 并启用 `network` 服务：
+
+```
+bashCopy codesudo systemctl stop NetworkManager
+sudo systemctl disable NetworkManager
+sudo systemctl enable network
+sudo systemctl start network
+```
+
+
+
+
 
 **ens33网络配置文件的等号右边的值在添加了引号后，使用ifconfig才会输出ens33网络配置文件中，我们自己手动配置的ipv4地址！！才会生效！此时即使关机在重新启动虚拟机，ens33网络配置文件中自己配置的IPV4地址也生效！**
 
@@ -4165,6 +4246,376 @@ Copy code192.168.1.10    example.com
 此步骤说明了从用户输入域名到浏览器获取 IP 地址的整个过程。如果在本地找到了 DNS 记录，解析过程会很快；如果需要向远程 DNS 服务器请求解析，可能会稍慢，但通常这个过程也非常迅速。
 
 这个过程确保了域名可以被解析成 IP 地址，而 IP 地址是网络上设备的唯一标识，使得浏览器能够连接到正确的服务器，从而加载并显示用户请求的网页。
+
+
+
+# 2 确定当前系统使用的是NetworkManager还是传统的network服务（在某些Linux发行版中称为`networking`服务），以及如何确保只使用NetworkManager并禁用network服务
+
+要确定你的系统当前使用的是NetworkManager还是传统的network服务（在某些Linux发行版中称为`networking`服务），以及如何确保只使用NetworkManager并禁用network服务，你可以按照以下步骤进行：
+
+### 1. 检查服务状态
+首先，我们需要查看NetworkManager和network服务的状态。
+
+#### NetworkManager状态
+打开终端并运行以下命令来检查NetworkManager的状态：
+
+```bash
+sudo systemctl status NetworkManager
+```
+
+#### network服务状态
+同样的，要检查传统的network服务状态，运行：
+
+```bash
+sudo systemctl status network
+```
+
+或者，如果你的系统称之为`networking`，则运行：
+
+```bash
+sudo systemctl status networking
+```
+
+### 2. 禁用network服务
+如果你发现network（或networking）服务正在运行，并且你想确保只使用NetworkManager，你可以使用以下命令来停止并禁用network服务：
+
+```bash
+sudo systemctl stop network
+sudo systemctl disable network
+```
+
+如果服务名为`networking`，则替换上述命令中的`network`为`networking`。
+
+### 3. 确保NetworkManager启用和运行
+接下来，确保NetworkManager服务已经启用并且正在运行：
+
+```bash
+sudo systemctl enable NetworkManager
+sudo systemctl start NetworkManager
+```
+
+这会设置NetworkManager在系统启动时自动启动，并立即启动服务（如果尚未运行）。
+
+### 4. 验证配置
+最后，你可以再次运行`systemctl status`命令来确认network服务已被禁用且NetworkManager正在运行：
+
+- 对于NetworkManager：
+
+```bash
+sudo systemctl status NetworkManager
+```
+
+- 对于network服务：
+
+```bash
+sudo systemctl status network
+```
+或
+```bash
+sudo systemctl status networking
+```
+
+### 注意
+- 在一些Linux发行版中，传统的network服务可能有不同的名称，如`networking`等。确保根据你的系统使用正确的服务名称。
+- 更改网络管理服务可能会影响你的网络连接。在进行这些更改之前，请确保你有另一种方法（如直接访问或者控制台访问）来恢复设置，以防网络连接中断。
+- 在某些系统中，特别是那些可能没有完全集成NetworkManager的服务器环境，彻底移除或禁用传统network服务之前，请确保这不会干扰系统上的其他服务或配置。
+
+这些步骤应该能帮助你确保系统只使用NetworkManager来管理网络，同时禁用任何传统的network服务。
+
+
+
+# 3 修改ens33文件后如何生效？重新加载网络配置，重启NetworkManager
+
+###  方法1：
+
+在Linux系统中，如果你修改了`ens33`文件，这通常意味着你更改了某个网络接口的配置 
+
+vi /etc/sysconfig/network-scripts/ifcfg-ens33
+
+### NetworkManager没有管理该接口
+
+在某些情况下，NetworkManager可能没有管理所有的网络接口。你可以通过运行以下命令来检查NetworkManager是否管理你的`ens33`接口：
+
+```
+nmcli device
+```
+
+如果`ens33`没有出现在列表中，或者出现了但旁边没有表示它由NetworkManager管理的标记（通常是“已管理”状态），那么可能需要通过NetworkManager的配置来确保该接口被管理。
+
+### **强制NetworkManager重新读取配置**
+
+~~~
+sudo nmcli connection down ens33
+sudo nmcli connection up ens33
+或者
+sudo nmcli connection down ens33 && sudo nmcli connection up ens33
+
+sudo ifdown ens33 && sudo ifup ens33
+~~~
+
+### 或者
+
+### 强制NetworkManager重新读取配置
+
+尽管重启NetworkManager服务是一个好的开始，但有时可能需要额外的步骤来强制NetworkManager重新加载配置。你可以尝试重新启动电脑或执行以下命令来重新加载网络配置：
+
+```
+sudo nmcli connection reload
+```
+
+然后，重新启动NetworkManager：
+
+```
+sudo systemctl restart NetworkManager
+```
+
+
+
+在Linux系统中，如果你修改了`ens33`文件，这通常意味着你更改了某个网络接口的配置。重启NetworkManager是一个让这些更改生效的好方法。这里有几种方法来重启NetworkManager：
+
+### 方法1：使用systemctl命令
+1. 打开终端。
+2. 输入以下命令来重启NetworkManager服务：
+
+```bash
+sudo systemctl restart NetworkManager
+```
+
+这个命令会停止NetworkManager服务然后重新启动它。
+
+### 方法2：使用service命令（较老的系统）
+如果你的系统较旧，可能没有`systemctl`命令，可以使用`service`命令：
+
+```bash
+sudo service NetworkManager restart
+```
+
+### 方法3：重启网络接口
+如果你只是想让特定网络接口的更改生效，可以使用`ifdown`和`ifup`命令。这里的`ens33`是你的网络接口名：
+
+```bash
+sudo ifdown ens33 && sudo ifup ens33
+```
+
+注意：`ifdown`和`ifup`命令可能需要`net-tools`包，如果系统中没有，你可能需要先安装它。
+
+### 注意事项
+- 使用`sudo`命令表示你需要管理员权限来执行这些操作。
+- 在进行网络配置更改后重启NetworkManager或网络接口，有助于确保更改正确应用并解决网络连接问题。
+- 如果你不确定自己的操作，可以先备份相关配置文件，以便在配置错误时能够恢复。
+
+这些方法应该可以帮助你重启NetworkManager并应用`ens33`文件的更改。
+
+
+
+下面是详细步骤：
+
+根据你提供的`nmcli device`命令的输出，`ens33`设备确实由NetworkManager管理，并且处于“连接的”状态。这表明NetworkManager已经识别并管理了这个网络接口。既然修改IP地址后重启NetworkManager不起作用，我们可以尝试以下步骤来解决这个问题：
+
+### 步骤1：确认配置文件
+
+首先，确保你修改的是正确的配置文件。对于`ens33`接口，配置文件通常位于`/etc/sysconfig/network-scripts/`目录，并且文件名应该类似于`ifcfg-ens33`。确认文件中的修改已正确保存，特别是IP地址更改为`IPADDR="192.168.198.136"`。
+
+### 步骤2：重新应用配置
+
+由于你已经确认NetworkManager正在管理`ens33`接口，我们可以尝试直接使用`nmcli`命令来重新应用配置，而不是重启整个NetworkManager服务。这可以通过重新启动特定的网络连接来实现：
+
+```bash
+sudo nmcli connection down ens33
+sudo nmcli connection up ens33
+```
+
+这将使`ens33`连接先断开然后重新连接，**强制NetworkManager应用任何配置更改**。
+
+### 步骤3：检查IP地址
+
+更改应用并重新连接后，检查`ens33`接口的IP地址是否已更新为新值：
+
+```bash
+ip addr show ens33
+```
+
+或者
+
+```bash
+nmcli device show ens33 | grep IP4.ADDRESS
+```
+
+这将显示`ens33`接口的当前IP地址配置，你应该能看到设置为`192.168.198.136`的新IP地址。
+
+
+
+
+
+### 方法2：
+
+尽管重启NetworkManager服务是一个好的开始，但有时可能需要额外的步骤来强制NetworkManager重新加载配置。你可以尝试重新启动电脑或执行以下命令来重新加载网络配置：
+
+```
+sudo nmcli connection reload
+```
+
+然后，重新启动NetworkManager：
+
+```
+sudo systemctl restart NetworkManager
+```
+
+---
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 4 `network`网络服务和NetworkManager网络服务说明
+
+> 问题描述：重启计算机后IP总是变来变去，明明在 `/etc/sysconfig/network-scripts/ifcfg-ens33` 配置了静态IP 重启后还是会自动变化
+
+**原因：同时启动了`network` 服务和NetworkManager,冲突了**
+
+解决方案如下
+
+![image-20240209010100520](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240209010100520.png)
+
+`ifcfg-ens33` 文件的配置属于传统的 `network` 服务，这是一种在许多基于 Red Hat 的 Linux 发行版（如 RHEL、CentOS）中使用的网络配置方式。`/etc/sysconfig/network-scripts/ifcfg-ens33` 是一个配置文件，用于定义网络接口 `ens33` 的静态或动态（DHCP）网络设置。
+
+`network` 服务和 `NetworkManager` 是两种不同的网络管理解决方案：
+
+1. **`network` 服务**：是一种较旧的网络管理服务，它直接依赖于 `/etc/sysconfig/network-scripts/` 下的配置文件进行网络配置。它在系统启动时通过一系列脚本配置网络接口，并且比较适合于静态网络配置和服务器环境。
+
+2. **`NetworkManager`**：是一种较新的网络管理工具，旨在简化现代桌面和笔记本电脑的动态网络配置，包括无线网络和VPN连接。`NetworkManager` 提供了命令行界面（`nmcli`）和图形界面（例如 GNOME 的网络设置），以及一个 API 供其他应用程序使用。它更加灵活，支持更多类型的网络配置和自动连接管理。
+
+如果 `network` 服务和 `NetworkManager` 同时运行且试图管理同一个网络接口，它们之间可能会发生冲突，因为每个服务可能会尝试根据其配置应用不同的网络设置。这种冲突可能导致网络接口的配置不稳定，比如 IP 地址经常变化，或者网络设置不按预期工作。
+
+为了避免这种冲突，建议：
+
+- **对于服务器和需要稳定静态IP配置的环境**，可能更倾向于使用 `network` 服务，并且可能需要禁用 `NetworkManager`。
+
+- **对于需要频繁变更网络配置的桌面环境**，如笔记本电脑，`NetworkManager` 提供了更灵活和用户友好的选项。
+
+如果你确定使用哪种服务来管理网络，可以通过以下命令禁用或启用相应的服务：
+
+- 禁用 `NetworkManager` 并启用 `network` 服务：
+  ```bash
+  sudo systemctl stop NetworkManager
+  sudo systemctl disable NetworkManager
+  sudo systemctl enable network
+  sudo systemctl start network
+  ```
+
+- 禁用 `network` 服务并启用 `NetworkManager`：
+  ```bash
+  sudo systemctl stop network
+  sudo systemctl disable network
+  sudo systemctl enable NetworkManager
+  sudo systemctl start NetworkManager
+  ```
+
+确保在做出更改后测试网络配置，以确认网络按照预期工作。
+
+
+
+但是会出现界面显示问题
+
+撤销更改
+
+~~~
+sudo systemctl disable network
+sudo systemctl stop network
+sudo systemctl enable NetworkManager
+sudo systemctl start NetworkManager
+
+~~~
+
+
+
+执行撤销更改命令后是不是相当于禁用 `network` 服务并启用 `NetworkManager`？此时还会使用到我手动配置的ens33文件吗？
+
+
+
+是的，执行这些命令后，你实际上是禁用了传统的 `network` 服务，并启用了 `NetworkManager`。这意味着你的系统将依赖 `NetworkManager` 来管理网络连接，而不是使用 `/etc/sysconfig/network-scripts/` 下的配置文件（例如 `ifcfg-ens33`）来直接控制网络接口。
+
+当 `NetworkManager` 被启用时，它通常不会直接使用 `/etc/sysconfig/network-scripts/ifcfg-ens33` 文件中的配置，除非这个文件被明确地设置为由 `NetworkManager` 管理。这可以通过在该配置文件中添加一行 `NM_CONTROLLED=yes` 来实现。如果没有这行设置，`NetworkManager` 可能会忽略这个文件，而是根据其自身的配置和策略来管理网络接口。
+
+这就意味着，如果你希望 `NetworkManager` 接管并应用 `ifcfg-ens33` 文件中的配置，你需要确保：
+
+1. 文件中包含 `NM_CONTROLLED=yes`，这告诉 `NetworkManager` 该接口应该由它来管理。
+2. 文件的配置符合 `NetworkManager` 的预期，包括正确的BOOTPROTO、IPADDR、NETMASK、GATEWAY、DNS 等设置。
+
+如果没有设置 `NM_CONTROLLED=yes`，或者你更愿意通过 `NetworkManager` 的用户界面（图形或命令行）来管理网络设置，那么可以使用 `nmcli`（命令行工具）或图形界面来配置网络接口。例如，使用 `nmcli` 来配置静态IP可以这样做：
+
+```bash
+nmcli con mod ens33 ipv4.addresses "192.168.198.135/24"
+nmcli con mod ens33 ipv4.gateway "192.168.198.2"
+nmcli con mod ens33 ipv4.dns "192.168.198.2"
+nmcli con mod ens33 ipv4.method manual
+nmcli con up ens33
+```
+
+确保先通过 `nmcli con show` 查找准确的连接名称（可能不是 `ens33`，而是类似于 `Wired connection 1` 的名称）。
+
+总之，一旦启用 `NetworkManager` 并停用 `network` 服务，系统将主要依赖 `NetworkManager` 来管理网络连接，而不是静态配置文件，除非这些文件被配置为由 `NetworkManager` 管理。
+
+
+
+
+
+是的，通过在 `/etc/sysconfig/network-scripts/ifcfg-ens33` 配置文件中添加 `NM_CONTROLLED="yes"` 行，你指示 `NetworkManager` 接管并管理 `ens33` 网络接口。这样配置后，`NetworkManager` 将会根据这个文件中的设置来配置网络接口。
+
+你提供的配置看起来是正确的，包括静态IP地址、网关和DNS服务器的设置。请注意，确实如你所述，**值周围的引号是必需的，这有助于确保配置文件中的值被正确解析。**
+
+确保你的配置文件如下所示：
+
+```ini
+TYPE="Ethernet"
+PROXY_METHOD="none"
+BROWSER_ONLY="no"
+BOOTPROTO="static"
+DEFROUTE="yes"
+IPV4_FAILURE_FATAL="no"
+IPV6INIT="yes"
+IPV6_AUTOCONF="yes"
+IPV6_DEFROUTE="yes"
+IPV6_FAILURE_FATAL="no"
+IPV6_ADDR_GEN_MODE="stable-privacy"
+NAME="ens33"
+UUID="2e5a5c25-b0b3-489a-aecd-1461cf86d9d8"
+DEVICE="ens33"
+ONBOOT="yes"
+IPADDR="192.168.198.135"
+GATEWAY="192.168.198.2"
+DNS1="192.168.198.2"
+NETMASK="255.255.255.0"
+NM_CONTROLLED="yes"
+```
+
+在修改配置文件后，为使更改生效，你可能需要重新启动 `NetworkManager` 服务或重启网络连接：
+
+```bash
+sudo systemctl restart NetworkManager
+```
+
+或者重启指定的网络连接：
+
+```bash
+nmcli con down ens33 && nmcli con up ens33
+```
+
+确保使用正确的连接名称，如果 `ens33` 不是 `NetworkManager` 中的连接名称，你可以通过 `nmcli con show` 命令查看所有已知的网络连接并获取正确的名称。
+
+添加 `NM_CONTROLLED="yes"` 并按照上述步骤操作后，`NetworkManager` 应该会按照 `ifcfg-ens33` 文件中的设置管理 `ens33` 网络接口。
 
 
 
