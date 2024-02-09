@@ -468,7 +468,187 @@ location / {
 
 因此，当你的Nginx配置中没有针对根路径`/`的`location`配置时，确实可能会看到Nginx的默认页面。为了避免这种情况，建议明确配置`location /`块，指定如何处理根路径的请求，无论是通过代理传递给后端应用，还是直接从文件系统中提供静态内容。这样可以确保访问根路径时的行为符合你的预期。
 
-# 10 
+# 10 在浏览器中直接访问http://192.168.198.136/search/cal.jsp，还会去hosts文件找吗？不会
+
+当你在浏览器中直接使用IP地址访问一个网站，如`http://192.168.198.136/search/cal.jsp`，浏览器和底层网络栈通常不会查询`hosts`文件来解析该IP地址。`hosts`文件主要用于将主机名（如`www.example.com`）映射到IP地址。当你使用主机名而不是IP地址访问网站时，系统会首先检查`hosts`文件看是否有对应的条目。如果找到，就使用`hosts`文件中指定的IP地址。如果没有找到，系统则会进一步查询DNS（域名系统）来解析主机名。
+
+因此，当你直接通过IP地址访问时：
+- **不会**查询`hosts`文件，因为没有主机名需要解析。
+- 浏览器会直接使用该IP地址尝试建立连接。
+
+这意味着，如果你希望通过特定的主机名访问而不是IP地址，并且想要控制这个解析过程（比如开发环境中指向不同的测试服务器），你应该在`hosts`文件中添加一个相应的条目。例如：
+
+```
+192.168.198.136 example.com
+```
+
+这样，当你通过浏览器访问`http://example.com/search/cal.jsp`时，系统会查找`hosts`文件并使用里面定义的IP地址（在这个例子中是`192.168.198.136`）来访问服务，而不是通过DNS解析得到的IP。
 
 
 
+# 11 当在浏览器地址栏直接使用IP地址访问Nginx服务器时（例如，通过`http://192.168.198.136/search/cal.jsp`） Nginx 的nginx.conf中 server_name 如何配置
+
+当在浏览器地址栏直接使用IP地址访问Nginx服务器时（例如，通过`http://192.168.198.136/search/cal.jsp`），在`nginx.conf`文件中的`server_name`指令配置需要适当处理以确保Nginx能正确处理该请求。有几种方法可以配置`server_name`以响应基于IP地址的请求：
+
+### 1. 使用下划线作为通配符
+你可以使用`_`（下划线）作为`server_name`的值，这在Nginx中被视为一个通配符，可以匹配任何没有明确列出的主机名或IP地址的请求。
+
+```nginx
+server {
+    listen 80;
+    server_name _;
+
+    location / {
+        # 配置细节
+    }
+}
+```
+
+这种配置方式使得Nginx服务器能够接受通过任意主机名或IP地址发起的请求，包括直接使用IP地址。
+
+### 2. 明确指定IP地址
+如果你打算让Nginx只响应特定IP地址的请求，可以直接将IP地址作为`server_name`的值：
+
+```nginx
+server {
+    listen 80;
+    server_name 192.168.198.136;
+
+    location / {
+        # 配置细节
+    }
+}
+```
+
+这种方式使得Nginx仅响应目标为`192.168.198.136`的请求。
+
+### 3. 使用默认服务器
+另一种方法是配置Nginx的默认服务器（default server）。这可以通过在`listen`指令中添加`default_server`参数来实现，这样即使`server_name`没有直接匹配到请求中的IP地址或主机名，请求也会被发送到这个默认服务器。
+
+```nginx
+server {
+    listen 80 default_server;
+    server_name _;
+
+    location / {
+        # 配置细节
+    }
+}
+```
+
+这会使得这个服务器块成为接收所有未被其他服务器块捕获的请求的默认目的地，包括直接通过IP地址的请求。
+
+### 结论
+选择哪种方法取决于你的具体需求。如果你想让Nginx响应任何IP地址或主机名的请求，使用下划线`_`作为`server_name`的值或配置一个默认服务器是比较灵活的选项。如果你的Nginx服务器只服务于一个特定的IP地址，那么直接在`server_name`中指定该IP地址可能是更直接、更清晰的方法。
+
+
+
+# 12 keepalived 配置文件vrrp_instance VI_1 {    state MASTER    interface ens33    virtual_router_id 51    priority 100 advert_int 1，这里的`state MASTER`，可以随便写吗
+
+
+
+~~~nginx
+[root@hspEdu100 sbin]# vim /etc/keepalived/keepalived.conf 
+
+   vrrp_gna_interval 0
+}
+
+vrrp_instance VI_1 {
+    state MASTER
+    interface ens33
+    virtual_router_id 51
+    priority 100
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass 1111
+    }
+    virtual_ipaddress {
+        192.168.198.18
+    }
+}
+~~~
+
+
+
+在`keepalived`的配置文件中，`vrrp_instance`部分的`state`指令指定了实例启动时的初始状态。这个状态可以是**`MASTER`或`BACKUP`**。这里的配置对于`keepalived`的VRRP（虚拟路由器冗余协议）实例来说是非常重要的，因为它决定了在启动时实例的角色。
+
+- **`MASTER`**：这个状态意味着在`keepalived`启动时，配置为`MASTER`的节点会主动尝试承担虚拟IP（VIP）的责任。它会立即发送VRRP广告，试图成为VIP的主控制者。
+- **`BACKUP`**：这个状态意味着节点在启动时将处于等待状态，监听VRRP广告。如果在预定时间内没有收到`MASTER`的广告，或者`MASTER`节点的优先级比`BACKUP`节点低，`BACKUP`节点可以接管成为新的`MASTER`。
+
+### 可以随便写吗？
+理论上，你可以在配置文件中指定任一节点为`MASTER`或`BACKUP`，但这个选择应该基于你的网络和高可用架构设计。通常，你会根据以下考虑来决定：
+
+- **预期的初始主控节点**：如果你希望某个节点在启动时即尝试成为VIP的控制者，应将其`state`设置为`MASTER`。
+- **高可用性设计**：你可能希望根据服务器的硬件配置、网络连接的可靠性或其他因素来决定哪个节点更适合作为初始的`MASTER`。
+
+### 动态选举
+重要的是要理解，无论初始状态如何设置，`keepalived`都会通过VRRP协议的优先级和健康检查机制来动态选举`MASTER`。这意味着即使一个节点被配置为`MASTER`状态，如果另一个节点的优先级更高，后者也可以在运行时成为`MASTER`。
+
+- **`priority`**：`priority`值（可以是1到254之间的任何值）决定了当有多个节点竞争成为`MASTER`时哪个节点获胜。优先级更高的节点会成为`MASTER`。
+
+因此，虽然`state`指令的初始设置很重要，但`keepalived`会根据实时情况（如节点的可用性和优先级）来动态调整哪个节点应该承担`MASTER`角色。正确配置`priority`和健康检查是确保`keepalived`高可用性的关键。
+
+
+
+# 13 keepalived 配置文件注意细节
+
+
+
+![image-20240210033212628](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240210033212628.png)
+
+
+
+![image-20240210033300735](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240210033300735.png)
+
+**当`keepalived`配置中的`vrrp_instance`的`state`行被注释掉后，不论其下一行是设置为`MASTER`还是`BACKUP`，`keepalived`在启动时将不会使用这个指令来决定初始状态。**而是，`keepalived`将依据其他机制，如优先级（`priority`）、接收到的VRRP广告，以及预设的预先权（preemption）策略来决定节点的角色。
+
+### VRRP优先级和动态选举
+
+在`keepalived`的VRRP实现中，实际的`MASTER`/`BACKUP`角色是通过动态选举过程决定的，这主要基于以下因素：
+
+- **优先级（`priority`）**：各节点通过广播自己的优先级，优先级最高的节点倾向于成为`MASTER`。如果你的`BACKUP`节点设置了较高的优先级（或者由于网络延迟，`MASTER`节点的优先级广告未能及时到达`BACKUP`节点），`BACKUP`节点可能会成为`MASTER`。
+- **预先权（Preemption）**：默认情况下，预先权开启。这意味着，如果一个优先级更高的`MASTER`节点稍后上线，它将会从当前的`MASTER`节点（即便当前`MASTER`是由于优先级较高的`BACKUP`节点提升上来的）接管`MASTER`角色。如果预先权被禁用，即使一个优先级更高的节点后来上线，当前的`MASTER`状态也不会被改变。
+
+### 网络因素和启动时间
+
+网络延迟或节点启动时间的差异也可能影响到`MASTER`/`BACKUP`角色的决定过程。例如：
+
+- 如果`MASTER`节点在启动时网络延迟较大，它发送的VRRP广告可能不会被`BACKUP`节点及时接收到，导致`BACKUP`节点误以为`MASTER`节点不在，从而提升自己为`MASTER`。
+- 同样，如果`BACKUP`节点启动得比`MASTER`节点快很多，并且在一段时间内没有接收到`MASTER`的VRRP广告，它可能也会提升自己为`MASTER`。
+
+### 故障排查建议
+
+- **检查网络配置**：确保两个节点之间的网络连接是稳定的，没有造成数据包延迟或丢失的问题。
+- **检查和调整优先级**：确保`MASTER`节点的优先级高于`BACKUP`节点，并检查配置确保预先权（preemption）是启用的。
+- **日志和监控**：查看`keepalived`的日志可以提供为什么`BACKUP`节点成为`MASTER`的线索。日志通常可以在`/var/log/messages`、`/var/log/syslog`，或者`keepalived`的专用日志文件中找到。
+- **确保配置的一致性**：确认所有的`keepalived`配置都正确无误，特别是在多节点环境中，确保每个节点的配置文件都正确反映了它们的角色和预期行为。
+
+通过上述步骤，你应该能够诊断出为何`BACKUP`节点在某些情况下会被选为`MASTER`，即使你期望的是`MASTER`节点首先承担这一角色。
+
+
+
+# 14 为什么有时会首先访问到BACKUP？和启动顺序有关吗？
+
+ 当**先启动`BACKUP`节点后再启动`MASTER`节点**解决了问题，这实际上揭示了`keepalived`和网络环境在处理VRRP（虚拟路由器冗余协议）选举和ARP（地址解析协议）广播方面的一些细微之处。这种情况可能由几个因素共同作用导致：
+
+### 1. **VRRP选举机制**
+在VRRP协议中，当一个新的`MASTER`节点上线时，它会通过发送VRRP通告来宣告自己的优先级。如果此时`BACKUP`节点已经在运行，并且检测到有一个优先级更高的`MASTER`节点宣告，`BACKUP`节点会将`MASTER`角色让给新上线的节点。这确保了网络中优先级最高的节点总是成为`MASTER`。
+
+### 2. **Gratuitous ARP（GARP）**
+当`MASTER`节点变更时（例如，当你启动`MASTER`节点，它从`BACKUP`节点夺回`MASTER`状态），`MASTER`节点会发送GARP消息，告知网络中的其他设备（如交换机和路由器）关于虚拟IP地址（VIP）的MAC地址已更改。如果先启动`BACKUP`，然后启动`MASTER`，这个过程可能更有可能触发并正确处理GARP消息，从而确保网络流量正确地路由到新的`MASTER`节点。
+
+### 3. **网络设备的ARP缓存更新**
+在某些情况下，网络设备可能在处理ARP缓存更新时表现出一些延迟或不一致性。先启动`BACKUP`节点可能给网络设备提供了额外的时间来处理和应用来自新`MASTER`节点的GARP更新，从而确保流量正确路由。
+
+### 4. **`keepalived`配置和状态同步**
+确保`keepalived`的配置正确，并且状态同步也很重要。在某些情况下，启动顺序可能影响到`keepalived`内部状态的同步过程，尽管这种情况较少见。
+
+### 结论
+虽然在一些情况下，启动顺序影响了期望的行为，但最佳实践仍然是确保`keepalived`配置正确（特别是关于优先级和预先权的设置），并且网络环境能够可靠地处理VRRP通告和GARP消息。如果遇到类似问题，除了调整启动顺序外，还应该检查和优化以上提到的各个方面。
+
+此外，持续监控和测试高可用性设置，确保在各种情况下都能如预期工作，这对于维护网络的稳定性和可靠性至关重要。
+
+
+
+# 15
