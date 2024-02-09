@@ -397,11 +397,78 @@ location ~ /product/ {
 
 
 
-# ^~和正则匹配先后顺序说明
+# 8 ^~和正则匹配先后顺序说明
 
 ![image-20240208040522223](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240208040522223.png)
 
 
+
+# 9 当nginx.conf 中没有配置`location /`配置时，浏览器访问http://www.hspcrm.com/到nginx 监听的端口80 后，回退到默认行为，即显示默认页面
+
+浏览器输入:http://www.hspcrm.com/
+
+显示的界面如下：
+
+
+
+![image-20240208062051830](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240208062051830.png)
+
+ **nginx.conf 配置：**
+
+~~~nginx
+
+#nginx.conf 配置
+
+server {
+        listen       80;
+         
+        location /search/ {
+        #代理到Linux的上游服务器的tomcat,版本号8.5
+            proxy_pass http://hspservers;
+        }
+
+        
+    }
+~~~
+
+
+
+根据你提供的Nginx配置文件内容，没有直接的配置项指定将请求指向Nginx的默认欢迎界面。但是，根据你的配置，存在一些原因可能导致当访问`http://www.hspcrm.com/`时，显示Nginx的默认欢迎界面：
+
+1. **缺少`location /`配置**：在`server`块中，用于处理`www.hspcrm.com`的请求，没有为根路径（`location /`）指定任何处理规则。这意味着对于`www.hspcrm.com`的根URL（`/`）的请求，Nginx没有指定如何处理，因此可能回退到默认行为，即显示默认页面。
+
+2. **缺少`root`指令**：同样，在处理`www.hspcrm.com`的`server`块中，没有看到任何`root`指令，这意味着Nginx不知道从哪个目录中提供文件。通常，对于静态文件的服务或者当使用`proxy_pass`指令外的场景，需要指定`root`指令来定义静态文件的根目录。
+
+3. **配置未生效**：如果你在修改配置后没有重新加载Nginx配置（使用`nginx -s reload`命令），那么更改不会生效。确保每次修改配置后都重新加载。
+
+为了解决这个问题，你可以添加一个针对根URL的`location /`块，并在其中定义如何处理这些请求。例如，如果你想将所有根URL的请求代理到上游服务器，你可以这样配置：
+
+```nginx
+location / {
+    proxy_pass http://hspservers;
+}
+```
+
+或者，如果你有静态文件想要直接由Nginx服务，确保设置了`root`指令，并且有一个默认文件（如`index.html`）作为入口点：
+
+```nginx
+location / {
+    root /path/to/your/static/files;
+    index index.html index.htm;
+}
+```
+
+确保配置正确，并再次重新加载Nginx配置。这样，对于访问`www.hspcrm.com`的请求，Nginx就会按照你的新配置进行处理，而不是显示默认的欢迎界面。
+
+   在Nginx中，如果针对给定的`server`块中的请求（比如对`http://www.hspcrm.com/`的访问），没有找到匹配的`location`指令来处理根路径（`/`），Nginx会回退到其默认行为。这通常意味着：
+
+- **显示默认页面**：如果没有为`/`路径配置具体的处理规则（如通过`location /`指定），Nginx可能会返回默认的欢迎页面或者是一个404页面，这取决于Nginx的具体配置和版本。默认页面是Nginx用来确认服务正常运行的一个简单页面。
+
+- **使用`root`指令的默认路径**：如果`server`块中有`root`指令，但没有为`/`路径配置`location`处理规则，Nginx会试图在`root`指令指定的目录下寻找请求的文件。如果请求的是根路径（即URL为`http://www.hspcrm.com/`），Nginx通常会查找`index`指令指定的文件作为默认页面（如`index.html`）。如果没有找到这样的文件，Nginx可能会返回一个404错误页面。
+
+因此，当你的Nginx配置中没有针对根路径`/`的`location`配置时，确实可能会看到Nginx的默认页面。为了避免这种情况，建议明确配置`location /`块，指定如何处理根路径的请求，无论是通过代理传递给后端应用，还是直接从文件系统中提供静态内容。这样可以确保访问根路径时的行为符合你的预期。
+
+# 10 
 
 
 
