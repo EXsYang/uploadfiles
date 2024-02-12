@@ -611,7 +611,7 @@ Hi EXsYang! You've successfully authenticated, but GitHub does not provide shell
 ssh-keygen -t ed25519 -C "Gitee User A" -f ~/.ssh/gitee_user_a_ed25519
 ```
 
-
+![image-20240212110520938](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240212110520938.png)
 
 1. 生成帐号 B 的 SSH-Key，并在帐号 B 的 Gitee 设置页面添加 SSH 公钥：
 
@@ -754,12 +754,13 @@ Host gt_a
 
 ![image-20240212103938206](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240212103938206.png)
 
-测试ssh免密登录是否成功如下：
+### 测试ssh免密登录是否成功如下：
 
 ~~~
 yangda@F2 MINGW64 /d/Java_developer_tools/GiteeRepository/gitee_hsp_java/新建文件夹/daqiao-java-project-001 (master)
 $ ssh -T gt_a
 Hi CodeYang(@kapaiya)! You've successfully authenticated, but GITEE.COM does not provide shell access.
+#注意这里使用ssh -T git@gitee.com进行测试也可以
 
 ~~~
 
@@ -781,9 +782,59 @@ Host gt_a
 
 
 
+# 5 密钥类型`-t rsa`和`-t ed25519`解释：
+
+~~~
+ssh-keygen -t rsa -C 'Github_Email_yangda27@aliyun.com' -f ~/.ssh/github01_id_rsa
+~~~
 
 
-## 5 C:\Users\yangd\.ssh\config 文件的最终配置
+
+命令 `ssh-keygen -t rsa -C 'Github_Email_yangda27@aliyun.com' -f ~/.ssh/github01_id_rsa` 用于生成一个新的SSH密钥对，通常用于安全地与远程服务器（如GitHub）进行通信。下面是命令各部分的详细解释：
+
+- `ssh-keygen`: 这是一个用于生成、管理和转换SSH密钥的工具。它是SSH套件的一部分，可以创建新的密钥对或操作现有的密钥。
+
+- `-t rsa`: 指定生成密钥的类型。`rsa` 是目前最广泛使用的一种公钥加密算法，用于SSH连接。这个选项告诉 `ssh-keygen` 使用RSA算法生成密钥对。
+
+- `-C 'Github_Email_yangda27@aliyun.com'`: 这个选项允许你为生成的密钥对添加一个注释，通常是一个邮箱地址。这个邮箱地址没有技术上的作用，但它可以帮助你标识和管理使用特定邮箱创建的密钥。这里使用的邮箱地址 `'Github_Email_yangda27@aliyun.com'` 应该是你的GitHub账户邮箱，用于帮助识别这个密钥是为GitHub服务生成的。
+
+- `-f ~/.ssh/github01_id_rsa`: 指定生成的密钥存储的文件名和位置。`~/.ssh` 是用户主目录下的一个隐藏目录，通常用于存储SSH密钥和配置。`github01_id_rsa` 是私钥文件的名称，意味着这个文件包含密钥的私有部分。默认情况下，`ssh-keygen` 会在同一位置生成一个公钥文件，文件名为`github01_id_rsa.pub`。
+
+执行这个命令后，系统会在 `~/.ssh` 目录下生成一对密钥文件：私钥文件 `github01_id_rsa` 和公钥文件 `github01_id_rsa.pub`。私钥文件应该保密，不应该泄露或分享；而公钥文件则可以安全地添加到GitHub账户中，用于建立安全的SSH连接，以便无需密码即可推送和拉取代码。
+
+
+
+~~~
+ssh-keygen -t ed25519 -C "Gitee User A" -f ~/.ssh/gitee_user_a_ed25519
+~~~
+
+
+
+命令 `ssh-keygen -t ed25519 -C "Gitee User A" -f ~/.ssh/gitee_user_a_ed25519` 用于生成一个新的SSH密钥对，这次使用的是Ed25519算法，专门为SSH连接而设计。下面是命令各部分的详细解释：
+
+- `ssh-keygen`: 这是生成、管理和转换SSH密钥的工具，是SSH工具集的一部分。
+
+- `-t ed25519`: 指定生成密钥的类型为Ed25519，这是一种使用EdDSA签名方案的公钥加密算法。Ed25519被认为比传统的RSA算法更安全、更高效，特别是在抵抗侧通道攻击方面。
+
+- `-C "Gitee User A"`: 为生成的密钥对添加一个注释，通常是一个邮箱地址或者用户标识。这里的注释是 `"Gitee User A"`，用于帮助识别这个密钥是为哪个用户或用途生成的。注释在技术上没有特定的作用，但有助于管理多个密钥。
+
+- `-f ~/.ssh/gitee_user_a_ed25519`: 指定生成的密钥存储的文件名和位置。`~/.ssh` 是用户主目录下的一个隐藏目录，通常用于存储SSH密钥和配置。`gitee_user_a_ed25519` 是私钥文件的名称，意味着这个文件包含密钥的私有部分。默认情况下，`ssh-keygen` 也会在同一位置生成一个公钥文件，文件名为`gitee_user_a_ed25519.pub`。
+
+执行此命令后，系统会在 `~/.ssh` 目录下生成一对密钥文件：私钥文件 `gitee_user_a_ed25519` 和公钥文件 `gitee_user_a_ed25519.pub`。私钥文件应该被保密处理，不应泄露或分享；而公钥文件可以被添加到Gitee（或其他支持SSH的服务）账户中，以便建立安全的SSH连接进行代码推送和拉取操作，无需使用密码。这种方式特别适合于提高开发者在使用Git仓库时的安全性和便捷性。
+
+# 6 `-C` 在 `ssh-keygen` 命令中是一个缩写，代表 `comment`（注释）。
+
+是的，`-C` 在 `ssh-keygen` 命令中是一个缩写，代表 `comment`（注释）。它用于为生成的SSH密钥对添加一个注释字符串。这个注释通常包含在公钥文件的末尾，形式上看起来像这样：
+
+```
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAI... 用户提供的注释
+```
+
+在实际使用中，注释通常包含用于标识密钥所有者的信息，比如邮箱地址或用户名。虽然这个注释在技术上不影响密钥的功能，但它可以帮助用户在管理多个密钥时区分它们。例如，如果你为不同的服务生成了多个SSH密钥，可以通过在生成密钥时使用不同的注释来帮助记住每个密钥的用途或服务。
+
+在你提供的命令 `ssh-keygen -t ed25519 -C "Gitee User A" -f ~/.ssh/gitee_user_a_ed25519` 中，`-C "Gitee User A"` 就是为生成的密钥对添加了一个标识为“Gitee User A”的注释，帮助用户识别这个密钥是专门为“Gitee User A”这个用途或身份创建的。
+
+## 7 C:\Users\yangd\.ssh\config 文件的最终配置
 
 ~~~
 #Windows用户，注意替换你的端口号和connect.exe的路径
