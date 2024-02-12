@@ -231,9 +231,39 @@ https\://repo.maven.apache.org/maven2/.error=Could not transfer artifact org.spr
 
 ---
 
-# 6 
-
- 
+# 6 中央仓库明明有对应的jar包，但是刷新maven,导入失败 “Plugin 'com.spotify:docker-maven-plugin:0.4.14' not found”
 
 
 
+ ![image-20240212220141206](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240212220141206.png)
+
+
+
+![image-20240212220334462](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240212220334462.png)
+
+
+
+![image-20240212215613461](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240212215613461.png)
+
+
+
+![image-20240212220038363](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240212220038363.png)
+
+
+
+# 7 Maven Lifecycle中的clean和package是什么意思。有时项目报错，执行这两个后就好了，为什么
+
+![image-20240213022310286](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240213022310286.png)
+
+在Maven的构建生命周期中，`clean` 和 `package` 是两个不同的阶段，它们有特定的目的：
+
+1. **clean**: 这个阶段是用来清理之前构建生成的文件。在你开始一个新的构建前，你通常会运行 `mvn clean` 来删除 `target` 目录，确保你的新构建不会包含任何旧的或者腐败的数据。这可以帮助避免编译和打包过程中的一些常见问题，如遗留的编译产物导致的不一致性。
+
+2. **package**: 这个阶段是用来将编译后的代码打包成可分发的格式，如 JAR、WAR等。这个过程会包含编译你的代码（如果尚未编译），执行单元测试，然后创建 JAR 或 WAR 文件。这个包是可以部署到服务器上或者用于其他项目作为依赖的。
+
+当你的项目报错时，运行 `mvn clean package` 可以帮助解决问题，因为：
+
+- `mvn clean` 会移除所有之前可能导致问题的旧文件。
+- `mvn package` 会重新编译代码和重新打包应用，这意味着它会创建一个全新的构建环境。
+
+这两个命令的组合确保了你从一个干净的状态开始构建项目，这样可以减少因为旧的构建残留物导致的问题。
