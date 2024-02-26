@@ -6758,7 +6758,7 @@ find ${BACKUP} -atime +10 -name "*.tar.gz" -exec rm -rf {} \;
 
 
 
-# 1.VM虚拟机网络连接问题
+# 1.VM虚拟机网络连接问题（这里是学习Liunx网络连接之前的，自己机器出现的各种问题，不可以当作参考，网络连接准确的知识，请看前面的章节 `17 Linux 实操篇-网络配置 ~第 17 章大数据定制篇 - Shell 编程 `）
 
 ## 1.1 VMware中出现“此主机不支持64位客户机操作系统，此系统无法运行” 或者 “VMware Workstation 与 Hyper-V不兼容 ”的问题
 
@@ -6921,9 +6921,11 @@ VMware Virtual Ethernet Adapter for VMnet8  IPv4 地址: 192.168.137.1
 
 ![image-20240112190631853](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240112190631853.png)
 
-![image-20240113174255779](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240113174255779.png)
+![image-20240226142632197](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240226142632197.png)
 
-但是在宿主机ping NAT模式的虚拟机时用到了上图的VMnet8，最好不要禁用！！ 
+# 不能禁用VMnet8
+
+但是在宿主机ping NAT模式的虚拟机时**用到了上图的VMnet8，不能禁用！！** 
 
 
 
