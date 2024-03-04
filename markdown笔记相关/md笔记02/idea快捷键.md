@@ -213,3 +213,11 @@ Evaluate评价;评估;估计
 **改成Git操作友好的bash**
 
 ![image-20240131151747133](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240131151747133.png)
+
+# 14 取消Vue中的变量提示
+
+![image-20240303211654801](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240303211654801.png)
+
+点开设置如下操作即可
+
+![image-20240303211550714](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240303211550714.png)
