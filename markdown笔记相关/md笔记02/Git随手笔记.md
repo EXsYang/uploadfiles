@@ -86,6 +86,7 @@ $ git clone url
 #文件状态，使用 git add 文件从 Untracked(未跟踪) -> Staged(暂存)
 $ git status ABC.txt
 
+# `git add .` 需要在.git根目录下执行，如果在子目录执行，则会将该子目录之外的文件未添加追踪！
 $ git add .
 
 $ git commit -m 'commit 1'

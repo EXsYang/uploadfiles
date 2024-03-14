@@ -482,6 +482,11 @@ SELECT ename
  SELECT ename
 	FROM emp
 	WHERE ename NOT LIKE '%R%'; -- % 不限个数任意字符（0个也包含），_ 一位任意字符
+	
+SELECT * FROM `commodity_category` WHERE `name` LIKE '%灯%';
+# WHERE `name` LIKE '%%'; 相当于查询所有
+SELECT * FROM `commodity_category` WHERE `name` LIKE '%%';
+	
 -- 模糊查询忽略大小写
  SELECT ename
 	FROM emp
