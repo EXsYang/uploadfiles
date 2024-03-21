@@ -56,10 +56,82 @@ VALUES (42,'灯具',2,2,1,0,'','',0);
 INSERT INTO `commodity_category`(`id`,`name`,`parent_id`,`cat_level`,`is_show`,`sort`,`icon`,`pro_unit`,`pro_count`)
 VALUES (651,'台灯',42,3,1,0,'','',0);
 INSERT INTO `commodity_category`(`id`,`name`,`parent_id`,`cat_level`,`is_show`,`sort`,`icon`,`pro_unit`,`pro_count`)
-VALUES (652,'节能灯',42,3,1,0,'','',0);
+VALUES (659,'西瓜灯',42,3,1,0,'','',0);
 
 SELECT * FROM `commodity_category`;
 
 SELECT * FROM `commodity_category` WHERE `name` LIKE '%灯%';
 # WHERE `name` LIKE '%%'; 相当于查询所有
 SELECT * FROM `commodity_category` WHERE `name` LIKE '%%';
+
+
+
+
+# COMMENT，它是用来添加对列或表的注释，方便开发者和其他人员理解该列或表的作用、规则或其他相关信息。
+# 在你的语句中，'id' 这个注释提供了关于 id 列的额外说明，这在维护和理解数据库结构时可能会很有用。
+## 家居品牌表
+USE hspliving_commodity
+CREATE TABLE `commodity_brand` (
+id BIGINT NOT NULL AUTO_INCREMENT COMMENT 'id', 
+`name` CHAR(50) COMMENT '品牌名',
+logo VARCHAR(1200) COMMENT 'logo',
+description LONGTEXT COMMENT '说明',
+isShow TINYINT COMMENT '显示',
+first_letter CHAR(1) COMMENT '检索首字母',
+sort INT COMMENT '排序',
+PRIMARY KEY (id)
+)CHARSET=utf8mb4 COMMENT='家居品牌';
+
+# 家居品牌
+# sort 排序值, 有时很难确定，不管给什么 int 值,都不是很合适,这里给 null
+# 家居品牌测试数据
+INSERT INTO
+`commodity_brand` (id,`name`, logo,description,isShow,first_letter,sort)
+VALUES(1, '海信','','',1,'',NULL);
+SELECT * FROM `commodity_brand`;
+
+
+
+
+# 家居商品属性分组表
+USE hspliving_commodity;
+CREATE TABLE `commodity_attrgroup` (
+id BIGINT NOT NULL AUTO_INCREMENT COMMENT 'id', 
+`name` CHAR(20) COMMENT '组名', 
+sort INT COMMENT '排序', 
+description VARCHAR(255) COMMENT '说明',
+icon VARCHAR(255) COMMENT '组图标', 
+category_id BIGINT COMMENT '所属分类 id', 
+PRIMARY KEY (id)
+)CHARSET=utf8mb4 COMMENT='家居商品属性分组';
+
+# 测试数据【后面我们通过管理系统来完成增删改查】, 我们的家居商品属性分组
+#，是针对第三级家居分类的, 第一级和第二级没有商品属性分组信息
+INSERT INTO
+`commodity_attrgroup` (id,`name`, sort,description,icon,category_id)
+VALUES(1, '主体',0,'主体说明','',301);
+INSERT INTO
+`commodity_attrgroup` (id,`name`, sort,description,icon,category_id)
+VALUES(2, '规格',0,'规格说明','',301);
+INSERT INTO
+`commodity_attrgroup` (id,`name`, sort,description,icon,category_id)
+VALUES(3, '功能',0,'功能说明','',301);
+## 测试数据
+SELECT * FROM `commodity_attrgroup`;
+
+#SELECT id,icon,name,description,sort,category_id FROM commodity_attrgroup WHERE id=4
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

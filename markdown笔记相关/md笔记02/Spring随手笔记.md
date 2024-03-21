@@ -839,3 +839,152 @@ Process finished with exit code -1
 
 ~~~
 
+
+
+# 16 开启声明式事务的两种方式 xml和注解
+
+xml方式的开启方式可以参考spring的学习项目
+
+在这两段代码中，`@EnableTransactionManagement` 注解和 XML 配置 `<tx:annotation-driven transaction-manager="dataSourceTransactionManager"/>` 实际上是同一功能的两种不同表现形式，它们都用于启用 Spring 的声明式事务管理。这就是它们之间的关联。
+
+
+
+
+
+~~~
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+
+
+    <!-- 想要
+    @Resource
+    private JdbcTemplate jdbcTemplate;  生效
+    首先要在.java 文件中加上自动装配的注解 @Resource , 还要在ioc容器的.xml文件中如下配置
+    -->
+    <!-- 配置要扫描的包-->
+    <context:component-scan base-package="com.hspedu.spring.tx.homework.dao"/>
+    <context:component-scan base-package="com.hspedu.spring.tx.homework.service"/>
+
+    <!--配置JdbcTemplate-->
+    <!--首先要配置一个数据源对象-->
+    <!--引入外部的jdbc.properties文件-->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+    <!--配置数据源对象DataSource-->
+    <bean class="com.mchange.v2.c3p0.ComboPooledDataSource" id="dataSource">
+        <!--给数据源对象配置属性值-->
+        <property name="user" value="${jdbc.user}"/>
+        <property name="password" value="${jdbc.pwd}"/>
+        <property name="driverClass" value="${jdbc.driver}"/>
+        <property name="jdbcUrl" value="${jdbc.url}"/>
+    </bean>
+
+    <!--再正式配置JdbcTemplate-->
+    <bean class="org.springframework.jdbc.core.JdbcTemplate" id="jdbcTemplate">
+        <!--给JdbcTemplate对象配置dataSource属性
+        name="dataSource" 是JdbcTemplate对象的一个属性
+        ref="dataSource" 指的是上面配置好的 id="dataSource" 的一个bean
+        -->
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!--配置@Transactional 要想让声明式事务的注解好用需要配置下面liangz
+     相关的配置 (1)配置事务管理器对象 (2)开启基于注解的声明式事务管理功能-->
+    <!--配置事务管理器对象  数据源事务管理器
+        1.DataSourceTransactionManager 这个对象是进行事务管理
+        2.一定要配置数据源属性，这样指定该事务管理器 是对哪个数据源进行事务控制
+        -->
+    <bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager" id="dataSourceTransactionManager">
+        <!--指定dataSource 要指定的数据源dataSource和jdbcTemplate
+        的数据源dataSource必须是同一个！！ 数据源事务管理器最终能够控制事务
+        能够提交能够回滚 还是针对数据源中取出来的连接 -->
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <!--配置/开启基于注解的声明式事务管理功能 并指定你启用的是哪一个数据源事务管理器/对象
+        一定要引入结尾为 tx 包下的driven
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    -->
+    <tx:annotation-driven transaction-manager="dataSourceTransactionManager"/>
+
+
+</beans>
+~~~
+
+
+
+
+
+~~~
+package com.hspedu.hspliving.commodity.config;
+
+import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+/**
+ * @author yangda
+ * @create 2024-03-19-17:14
+ * @description:
+ */
+@Configuration
+@EnableTransactionManagement //开启事务
+@MapperScan("com.hspedu.hspliving.commodity.dao")
+public class MyBatisConfig {
+
+    //引入分页插件
+    @Bean
+    public PaginationInterceptor paginationInterceptor(){
+        PaginationInterceptor paginationInterceptor =
+                new PaginationInterceptor();
+
+        //做基本设置
+        // 这个设置是指当当前页码超出总页数时，是否自动跳转回第一页。设置为 true 表示允许这样做。
+        paginationInterceptor.setOverflow(true);
+        //单页限制 100 条，小于 0 如 -1 不受限制
+        paginationInterceptor.setLimit(100);
+
+        return paginationInterceptor;
+    }
+}
+
+~~~
+
+
+
+1. **XML 配置方式**：
+    - 在 XML 文件中，通过 `<tx:annotation-driven transaction-manager="dataSourceTransactionManager"/>` 来启用基于注解的声明式事务管理。
+    - 这个配置指示 Spring 使用 `<bean id="dataSourceTransactionManager">` 中定义的事务管理器来处理标有 `@Transactional` 注解的类或方法。
+    - 这是传统 Spring 项目中常用的配置方式。
+
+2. **Java 配置方式**：
+    - 在 Java 配置类中，通过添加 `@EnableTransactionManagement` 注解来启用基于注解的声明式事务管理。
+    - 当你使用这个注解时，Spring 会在背景中进行和 XML 方式相同的配置。
+    - `@EnableTransactionManagement` 是 Spring Boot 和现代 Spring 应用推荐的方式，因为它减少了配置的复杂性，并且更加符合 Java 配置的风格。
+
+两种方式都可以实现相同的功能，即启用 Spring 的声明式事务管理。你可以根据自己的项目需求和个人喜好选择使用哪一种。如果你的项目完全基于 Java 配置（常见于 Spring Boot 项目），那么使用 `@EnableTransactionManagement` 会更加方便。如果你的项目是基于传统的 XML 配置，那么使用 XML 方式会更熟悉。但是，在一个项目中，通常只需要选择一种方式来启用事务管理。
+
+因此，`@EnableTransactionManagement` 注解和 XML 中的 `<tx:annotation-driven>` 实际上是两种实现相同功能的不同方法，它们都用于开启 Spring 的声明式事务管理支持。
+
+# 17 `<tx:annotation-driven>` 和 @EnableTransactionManagement这两种方式底层都是通过org.springframework.jdbc.datasource.DataSourceTransactionManager 进行事务控制的吗？
+
+是的，无论是通过 `@EnableTransactionManagement` 注解还是通过 XML 配置的 `<tx:annotation-driven>` 来启用 Spring 的声明式事务管理，底层默认都是使用 `DataSourceTransactionManager` （对于 JDBC 或者 MyBatis）进行事务控制的，当然这也取决于你的具体配置和所使用的数据访问技术。
+
+1. **DataSourceTransactionManager**:
+    - 主要用于 JDBC 或 MyBatis 等基于数据源的事务管理。
+    - 当你配置了一个 `DataSourceTransactionManager` 并启用了声明式事务管理，Spring 会使用这个事务管理器来管理与指定数据源相关的事务。
+
+2. **使用 `@EnableTransactionManagement` 注解**:
+    - 当你在配置类上使用此注解时，Spring 会自动检测到应用上下文中可用的 `PlatformTransactionManager` 实现。
+    - 如果你有自定义的事务管理器 bean（如 `DataSourceTransactionManager`），Spring 会使用它；如果没有，Spring 将尝试自动配置一个默认的事务管理器。
+    - 在大多数基于 Spring Boot 的应用中，如果你配置了数据源，Spring Boot 会自动配置 `DataSourceTransactionManager`。
+
+3. **使用 XML 配置**:
+    - 在 XML 中，你可以通过 `<bean>` 元素明确地声明一个 `DataSourceTransactionManager` 实例，并通过 `<tx:annotation-driven>` 元素将其指定为要使用的事务管理器。
+    - 你需要确保 `<tx:annotation-driven>` 元素的 `transaction-manager` 属性引用的是你声明的事务管理器的 bean ID。
+
+无论哪种方式，最终 Spring 都需要一个 `PlatformTransactionManager` 实现来实际管理事务。`DataSourceTransactionManager` 只是 `PlatformTransactionManager` 的一个具体实现，主要用于 JDBC 访问数据库。如果你使用其他数据访问技术，例如 JPA 或 Hibernate，那么可能会用到 `JpaTransactionManager` 或 `HibernateTransactionManager` 等其他实现。但在具体使用 JDBC 或 MyBatis 时，通常是 `DataSourceTransactionManager` 被用于事务控制。
