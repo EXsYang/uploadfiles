@@ -1,4 +1,117 @@
+# 
+
+# git报错总结
+
+# 1 git push报错`error: failed to push some refs to `
+
+~~~
+yangda@F2 MINGW64 /d/Java_developer_tools/uploadfiles (master)
+$ git commit -m 'commit6'
+[master 5144cb9] commit6
+ 8 files changed, 10164 insertions(+)
+ create mode 100644 md笔记02/Redis随手笔记.md
+ create mode 100644 md笔记02/SSM整合项目随手笔记.md
+ create mode 100644 md笔记02/Springmvc随手笔记.md
+ create mode 100644 md笔记02/Spring随手笔记.md
+ create mode 100644 md笔记02/sb随手笔记.md
+ create mode 100644 md笔记02/springcloud随手笔记.md
+ create mode 100644 md笔记02/分布式微服务项目随手笔记.md
+ create mode 100644 md笔记02/单词.md
+
+yangda@F2 MINGW64 /d/Java_developer_tools/uploadfiles (master)
+$ git-log
+* 5144cb9 (HEAD -> master) commit6
+* 95e2ce5 (origin/master) commit5
+* e76c59c commit4
+* c1722fe commit3
+* 2c9b49f 2
+* b07a09a Initial commit
+
+yangda@F2 MINGW64 /d/Java_developer_tools/uploadfiles (master)
+$ git push
+Enumerating objects: 13, done.
+Counting objects: 100% (13/13), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (10/10), done.
+Writing objects: 100% (11/11), 139.66 KiB | 389.00 KiB/s, done.
+Total 11 (delta 2), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (2/2), completed with 1 local object.
+remote: fatal error in commit_refs
+To github.com:EXsYang/uploadfiles2.git
+ ! [remote rejected] master -> master (failure)
+error: failed to push some refs to 'github.com:EXsYang/uploadfiles2.git'
+
+yangda@F2 MINGW64 /d/Java_developer_tools/uploadfiles (master)
+$ git reset --hard HEAD~1
+HEAD is now at 95e2ce5 commit5
+
+yangda@F2 MINGW64 /d/Java_developer_tools/uploadfiles (master)
+$ git-log
+* 95e2ce5 (HEAD -> master, origin/master) commit5
+* e76c59c commit4
+* c1722fe commit3
+* 2c9b49f 2
+* b07a09a Initial commit
+
+yangda@F2 MINGW64 /d/Java_developer_tools/uploadfiles (master)
+
+~~~
+
+
+
+> 问题描述: 推测是提交的这几个文件中有特殊字符，导致生成的`commit6`不正常，从而push失败
+
+解决方案:
+
+使用 ` git reset --hard HEAD~1`  删除上一次提交记录`commit6`  , 注意这条语句会导致版本回退，后来的修改都会回退到` commit5`什么都没新增的状态，注意一定要备份`commit5`->`commit6`之间的新增/修改的文件！否则会丢失！
+
+~~~
+#删除上一条历史并回退
+git reset --hard HEAD~1
+~~~
+
+检查是哪一个文件格式/有特殊字符，进行调整
+
+
+
+
+
+
+
 # 命令总结
+
+建立一个新的基本git仓库,所需的指令
+
+~~~
+git init
+
+git remote add origin git@gitee.com:czbk_zhang_meng/git_test.git
+
+git remote -v
+
+# --set-upstream 推送到远端的同时并且建立起和远端分支的关联关系。如果当前分支已经和远端分支关联，# 则可以省略分支名和远端名。
+git push --set-upstream origin master
+
+git status
+
+git add .
+
+git status
+
+git commit -m 'commit'
+
+git push origin master:master
+git push 
+
+~~~
+
+
+
+
+
+
+
+
 
 当然，根据您提供的命令历史记录，这里是按类别整理且去重的正确命令列表：
 

@@ -659,3 +659,46 @@ spring:
 
 ---
 
+# 17 关于 MyBatis 和 MyBatis Plus 以及特定代码片段 `SFunction<Furn, Object> sf = Furn::getName; lambdaQueryWrapper.like(sf, search);` 的概念和区别的整理
+
+当然可以。以下是关于 MyBatis 和 MyBatis Plus 以及特定代码片段 `SFunction<Furn, Object> sf = Furn::getName; lambdaQueryWrapper.like(sf, search);` 的概念和区别的整理：
+
+# MyBatis vs MyBatis Plus
+
+## MyBatis
+
+- **基本概念**：
+  MyBatis 是一个基于 Java 的持久层框架，使用 XML 或注解来配置和映射原生信息，将对象与数据库中的记录关联起来。
+
+- **映射方式**：
+  通常使用 XML 文件或注解来定义 SQL 语句和结果映射。例如，通过 `<mapper>` XML 文件中的 `<resultMap>` 来实现 Java 对象属性和数据库表字段之间的映射。
+
+- **操作方式**：
+  编写 SQL 语句进行数据操作，需要手动编写大量的 SQL 代码和映射配置。
+
+## MyBatis Plus
+
+- **基本概念**：
+  MyBatis Plus 是 MyBatis 的一个增强工具，在 MyBatis 的基础上只做增强不做改变，为简化开发、提高效率而设计。
+
+- **映射方式**：
+  支持使用注解如 `@TableName` 和 `@TableField` 来定义实体类与数据库表及字段之间的映射关系。如果遵循默认命名策略（如驼峰命名转换为下划线命名），甚至可以省略这些注解。
+
+- **操作方式**：
+  提供了大量的 CRUD 方法，支持 Lambda 表达式和链式调用，大大减少了重复的 SQL 代码和映射配置的需要。
+
+## LambdaQueryWrapper 与 SFunction
+
+- **LambdaQueryWrapper**：
+  是 MyBatis Plus 中用于构建 Lambda 表达式查询的类。它允许开发者使用 Java 8 的 Lambda 表达式来构建类型安全的查询条件，而无需直接编写数据库字段字符串，减少了错误的可能性。
+
+- **SFunction**：
+  在 `SFunction<Furn, Object> sf = Furn::getName;` 中，`SFunction` 是 MyBatis Plus 中的一个函数式接口，用于在 `LambdaQueryWrapper` 中引用实体类的属性。`Furn::getName` 是一个方法引用，它被 MyBatis Plus 解析为对应的数据库字段名。
+
+- **混淆点**：
+  在传统 MyBatis 中，不存在类似 `LambdaQueryWrapper` 或 `SFunction` 的概念。这些都是 MyBatis Plus 特有的功能，目的是为了提高代码的类型安全性和减少编写 SQL 字符串的错误。
+
+- **代码示例解释**：
+  - 在 MyBatis Plus 中使用 `lambdaQueryWrapper.like(sf, search);` 其中 `sf` 通过 `Furn::getName` 引用，这意味着创建一个条件，使得 `Furn` 表中的 `name` 字段应当模糊匹配 `search` 参数。这种方式依赖于 MyBatis Plus 的自动映射，不需要在 XML 文件中定义映射关系。
+
+希望这个整理能帮助你更清楚地理解 MyBatis 和 MyBatis Plus 之间的区别，以及特定的 Lambda 表达式在 MyBatis Plus 中如何使用。
