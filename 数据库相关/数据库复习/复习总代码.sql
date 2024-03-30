@@ -1424,15 +1424,57 @@ INSERT INTO t14(birthday,job_time)
 -- 如果更新，t14表的某条记录，login_time列会自动地以当前时间进行更新
  	
 
+-- 批量删除 (两个删除条件的)
+
+#SQL 语句 `DELETE FROM your_table_name WHERE (condition1_A AND condition1_B) OR (condition2_A AND condition2_B) OR (condition3_A AND condition3_B);` 的执行效果确实相当于以下三个 `DELETE` 语句的联合效果，但是它们是在一个单一的操作中完成的：
+
+-- 1. `DELETE FROM your_table_name WHERE condition1_A AND condition1_B;`
+-- 2. `DELETE FROM your_table_name WHERE condition2_A AND condition2_B;`
+-- 3. `DELETE FROM your_table_name WHERE condition3_A AND condition3_B;`
+-- 
+-- 但这里有重要的区别：
+-- 
+-- - 当使用 `OR` 将条件组合在一起时，数据库会在单次查询中查看每条记录，判断它是否满足任一条件组合。如果满足任一组合（即任一组中的所有条件），那么该记录将被删除。这是一次操作，效率更高，特别是在涉及到大量数据时。
+-- 
+-- - 相反，如果你将它们分解成三个独立的 `DELETE` 语句并逐个执行，每个 `DELETE` 操作都需要单独访问数据库，进行索引查找、锁定等操作。如果这些操作在大量数据上分别执行，可能会更慢，并且增加数据库的负担。
+-- 
+-- 在 Java 中，逻辑运算符 `||` 的确是这样工作的：如果第一个条件为 `true`，那么整个表达式立即确定为 `true`，不再评估后续条件。SQL 中的 `OR` 也类似，但在处理 `DELETE` 语句时，数据库需要评估所有记录，查看它们是否满足 `WHERE` 子句中指定的任一条件组合。
+-- 
+-- 所以，虽然逻辑上 "这个或那个或另一个"（`OR` 连接）的确意味着多个条件之间有选择性的满足关系，但在批量删除操作的上下文中，使用 `OR` 连接多个条件组合可以在单次操作中完成，这通常比分开执行多个删除更有效率。
+-- 
+-- 总结来说，将这些条件用 `OR` 组合在一个 `DELETE` 语句中，是在告诉数据库：“检查每一条记录，如果它符合这些条件组中的任何一个，那么删除它。”这在效率和事务完整性方面通常是更优的选择。希望这可以帮助你更好地理解这些概念！
+-- 
+
+
+# 在 SQL 中执行批量删除操作时，通常推荐使用 `IN` 子句而不是 `OR` 连接。
+
+-- 在 SQL 中执行批量删除操作时，通常推荐使用 `IN` 子句而不是 `OR` 连接。使用 `IN` 子句可以更简洁、更高效地指定多个要删除的记录的标识符（如 ID）。这种方式在处理大量数据时通常也更高效。
+-- 
+-- 下面是一个使用 `IN` 子句进行批量删除的例子：
+-- 
+-- ```sql
+-- DELETE FROM your_table_name WHERE id IN (1, 2, 3, 4);
+-- ```
+-- 
+-- 在这个例子中，`your_table_name` 是你想要从中删除记录的表的名称，而 `(1, 2, 3, 4)` 是你想要删除的记录的 ID 列表。使用 `IN` 可以一次性删除所有列出的 ID 对应的记录。
+-- 
+-- 相比之下，使用 `OR` 连接来完成同样的任务会更冗长和复杂，尤其是当需要删除的记录很多时。例如：
+-- 
+-- ```sql
+-- DELETE FROM your_table_name WHERE id = 1 OR id = 2 OR id = 3 OR id = 4;
+-- ```
+-- 
+-- 这种方式在逻辑上是等效的，但随着要删除的记录数量的增加，SQL 语句会变得越来越长，且可能影响性能。
+-- 
+-- 因此，一般建议使用 `IN` 子句进行批量删除操作，这不仅使 SQL 语句更简洁，而且在大多数数据库管理系统中，使用 `IN` 子句的效率也更高。
+-- 
 
 
 
-
-
-
-
-
-
+# sql语句查询是，IN语句 中如果没有指定任何值，查询会报错，语法错误You have an error in your SQL syntax;
+SELECT id,isshow,NAME,description,logo,sort,first_letter FROM commodity_brand WHERE (id IN ()); 
+# sql语句查询是，IN语句 中如果指定值不存在，查询不会报错，只是查询结果为空
+SELECT id,isshow,NAME,description,logo,sort,first_letter FROM commodity_brand WHERE (id IN (1000,2000)); 
 
 
 
