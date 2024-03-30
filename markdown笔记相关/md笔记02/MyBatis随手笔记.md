@@ -702,3 +702,290 @@ spring:
   - 在 MyBatis Plus 中使用 `lambdaQueryWrapper.like(sf, search);` 其中 `sf` 通过 `Furn::getName` 引用，这意味着创建一个条件，使得 `Furn` 表中的 `name` 字段应当模糊匹配 `search` 参数。这种方式依赖于 MyBatis Plus 的自动映射，不需要在 XML 文件中定义映射关系。
 
 希望这个整理能帮助你更清楚地理解 MyBatis 和 MyBatis Plus 之间的区别，以及特定的 Lambda 表达式在 MyBatis Plus 中如何使用。
+
+# 18 动态sql语句，关于 `#{}` 的使用场景
+
+是的，这里的 `#{age}` 是用来取得方法的形参 `findMonsterByAge(@Param("age") Integer age)` 上传入的值。在这种情况下，使用 `@Param("age")` 注解，`age` 就成为了 MyBatis SQL 映射文件中可用的一个参数名。这意味着当 `findMonsterByAge` 方法被调用时，传给该方法的实参将被 MyBatis 用来替换 SQL 语句中的 `#{age}` 占位符。
+
+### 关于 `#{}` 的使用场景：
+
+`#{}` 在 MyBatis 中用于预编译 SQL 语句中的参数，这有几个重要的使用场景和好处：
+
+1. **防止 SQL 注入**：通过使用 `#{}`，MyBatis 为每个参数生成一个预处理语句（PreparedStatement），这意味着参数值是绑定的而不是直接拼接到 SQL 语句中的，这可以有效防止 SQL 注入攻击。
+
+2. **类型匹配**：MyBatis 根据参数的 Java 类型自动匹配数据库中对应的类型，确保数据的类型安全。
+
+3. **简化 SQL 编写**：使用 `#{}` 可以让 SQL 映射文件更加简洁，因为你不需要手动拼接字符串来构造 SQL 语句。
+
+4. **支持复杂类型**：`#{}` 不仅可以引用简单类型的参数，还可以引用 Java Beans 或 Map 类型参数的属性。例如，如果你有一个名为 `user` 的 JavaBean 参数，那么你可以在 SQL 中使用 `#{user.name}` 来引用它的 `name` 属性。
+
+5. **动态 SQL**：在使用 MyBatis 动态 SQL 功能时（如 `<if>`、`<choose>`、`<foreach>` 等），`#{}` 参数占位符用于在满足特定条件时动态插入参数值。
+
+### 示例：
+
+如果你有一个 `Monster` 类的实例 `monster` 并希望在 MyBatis 映射文件中引用它的属性，你的方法签名应该像这样：
+
+~~~java
+public Monster findMonsterByName(Monster monster);
+~~~
+
+在这种情况下，因为你没有使用 `@Param` 注解，整个 `Monster` 对象作为一个单一的参数传递给方法。在 MyBatis 的 XML 映射文件中，你可以直接使用 `#{属性名}` 来访问 `Monster` 实例的属性。例如，如果 `Monster` 类有一个名为 `name` 的属性，你可以在 SQL 映射中这样使用它：
+
+```xml
+<!-- 假设传入的参数是一个 Monster 对象 -->
+<select id="findMonsterByName" resultType="Monster">
+    SELECT * FROM `monster` WHERE name = #{name}
+</select>
+```
+
+这里，`#{name}` 会被 MyBatis 替换为方法参数 `monster` 实例的 `name` 属性的值。当你调用 `findMonsterByName(monster)` 方法时，你提供的 `Monster` 实例中的 `name` 属性将用于查询。
+
+注意，这种用法是基于假设方法参数是一个含有相应属性（例如，`name`）的 `Monster` 对象。如果 `Monster` 对象确实有这样的属性，那么 MyBatis 将能够正确解析和使用它。
+
+
+
+如果调用的方法如下：
+
+```java
+public Monster findMonsterByName(@Param("monster") Monster monster);
+```
+
+那么你需要在 SQL 中这样引用它的属性：
+
+```xml
+<select id="findMonsterByName" resultType="Monster">
+    SELECT * FROM `monster` WHERE name = #{monster.name}
+</select>
+```
+
+在这里，`#{monster.name}` 引用的是传给 `findMonsterByName` 方法的 `monster` 对象的 `name` 属性。
+
+
+
+# 19 在 MyBatis 中，使用 #{xxx} 参数的传递和在 SQL 映射文件中的引用可以根据参数的类型和上下文有不同的表现。
+
+在 MyBatis 中，参数的传递和在 SQL 映射文件中的引用可以根据参数的类型和上下文有不同的表现。这里我们分类总结，并提供示例及解释：
+
+### 1. 传入单一的简单类型或包装类型参数：
+
+**举例**：
+Java 方法：
+```java
+public List<Monster> findMonsterByAge(@Param("age") Integer age);
+```
+
+MyBatis 映射文件：
+```xml
+<select id="findMonsterByAge" resultType="Monster">
+    SELECT * FROM monster WHERE age = #{age}
+</select>
+```
+
+**解释**：
+这里 `age` 是一个简单类型的包装类 `Integer`。在 SQL 映射文件中，你使用 `#{age}` 来直接取值。使用 `@Param("age")` 注解是为了在 SQL 映射文件中清晰地引用方法参数，尤其是当只有一个参数且为简单类型时。
+
+### 2. 传入 POJO（Plain Old Java Object）类型：
+
+**举例**：
+Java 方法：
+```java
+public List<Monster> findMonsterByDetails(Monster monster);
+```
+
+MyBatis 映射文件：
+```xml
+<select id="findMonsterByDetails" resultType="Monster">
+    SELECT * FROM monster
+    <where>
+        <if test="name != null and name != ''">
+            AND name = #{name}
+        </if>
+        <if test="age != null and age >= 0">
+            AND age = #{age}
+        </if>
+    </where>
+</select>
+```
+
+**解释**：
+在这里，`monster` 是一个对象，但在 MyBatis 的 `<if>` 测试表达式中，你直接使用属性名（如 `name`, `age`），因为 MyBatis 通过反射自动匹配对象的属性。在 SQL 中，你同样使用 `#{name}` 和 `#{age}` 来取值。
+
+### 3. 传入 Map 类型：
+
+**举例**：
+Java 方法：
+```java
+public List<Monster> findMonsterByMap(@Param("params") Map<String, Object> params);
+```
+
+MyBatis 映射文件：
+```xml
+<select id="findMonsterByMap" resultType="Monster">
+    SELECT * FROM monster
+    <where>
+        <if test="params.name != null and params.name != ''">
+            AND name = #{params.name}
+        </if>
+        <if test="params.age != null and params.age >= 0">
+            AND age = #{params.age}
+        </if>
+    </where>
+</select>
+```
+
+**解释**：
+当使用 Map 作为参数传递时，你需要在 `<if>` 测试表达式中使用 `params.key` 的形式来引用 Map 中的元素，这里的 `params` 是 Map 参数的注解名称，而 `key` 是 Map 中的键。在 SQL 中，使用 `#{params.key}` 来取值。
+
+### 4. 传入 List 类型（通常结合 `<foreach>` 标签使用）：
+
+**举例**：
+Java 方法：
+```java
+public List<Monster> findMonsterByIds(@Param("idList") List<Integer> idList);
+```
+
+MyBatis 映射文件：
+```xml
+<select id="findMonsterByIds" resultType="Monster">
+    SELECT * FROM monster WHERE id IN
+    <foreach item="id" collection="idList" open="(" separator="," close=")">
+        #{id}
+    </foreach>
+</select>
+```
+
+**解释**：
+当传入一个 List 类型的参数时，在 SQL 映射文件中通常结合 `<foreach>` 标签来遍历每一个元素。在这里，`idList` 是传入的 List 类型的参数名称，`id` 是在 `<foreach>` 中迭代时使用的单个元素的别名，在 SQL 中，使用 `#{id}` 来取值。
+
+总结：MyBatis 提供了灵活的参数传递方式，确保在动态 SQL 中正确引用参数对提高代码的可读性和维护性非常关键。在 `<if>` 测试表达式中直接使用属性或键名称来建立条件，而在 SQL 取值时使用 `#{}` 来引用具体的值或属性。
+
+# 20 在 MyBatis 的动态生成Sql语句， `<foreach>` 标签中，`collection` 属性的含义会根据传入参数的类型而改变
+
+### 1. 如果传入的值是 List 类型：
+
+当你直接传入一个 List 类型的参数（不是封装在 Map 里的），并且在 MyBatis 映射方法中没有使用 `@Param` 注解来命名这个 List，你通常会在 MyBatis 的配置中使用 `collection="list"`（或者在较新版本的 MyBatis 中，这可能不是必须的，因为它可以自动推断出来）：
+
+**Java 方法示例**：
+
+```java
+public List<Monster> findMonsterByIdList(List<Integer> ids);
+```
+
+**MyBatis 映射文件示例**：
+
+```xml
+<select id="findMonsterByIdList" resultType="Monster">
+    SELECT * FROM monster
+    <where>
+        <if test="ids != null">
+            `id` IN
+            <foreach collection="ids" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+    </where>
+</select>
+```
+
+在这个例子中，由于传入的参数是 List 类型，所以在 `<foreach>` 中直接使用 `collection="ids"` 来遍历这个 List。这里的 `"ids"` 对应的是方法参数的名称（如果你用的是 MyBatis 3.0 以上版本，在单参数传递时不需要 `@Param` 注解也可以直接使用参数名）。
+
+### 2. 如果传入的值是 Map 类型：
+
+当你传入一个 Map 类型的参数时，`collection` 应该是这个 Map 中的一个键名，该键对应的值是需要被遍历的集合。这时，`collection` 表示的确实是 Map 的某个 key 的值，这个值应该是一个 List 或 Array。
+
+**Java 方法示例**：
+
+```java
+public List<Monster> findMonsterByIdsMap(@Param("params") Map<String, Object> params);
+```
+
+**MyBatis 映射文件示例**：
+
+```xml
+<select id="findMonsterByIdsMap" parameterType="map" resultType="Monster">
+    SELECT * FROM monster
+    <where>
+        <if test="params.ids != null">
+            `id` IN
+            <foreach collection="params.ids" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+    </where>
+</select>
+```
+
+在这个例子中，`collection="params.ids"` 表示从 Map 参数 `params` 中取出键名为 `"ids"` 的 List 或 Array 来遍历。
+
+总的来说，`collection` 的值取决于传入参数的类型和结构，它可以是直接的列表（如 List 类型参数），也可以是 Map 中的一个键（键的值为 List 或 Array）。
+
+# 21 两个条件的批量删除
+
+~~~mysql
+# 这些条件用 OR 组合在一个 DELETE 语句中，是在告诉数据库：
+# “检查每一条记录，如果它符合这些条件组中的任何一个，那么删除它。
+<delete id="deleteBatchRelation">
+    DELETE FROM `commodity_attr_attrgroup_relation` WHERE
+    <foreach collection="entities" item="item" separator="OR">
+        (`attr_id`=#{item.attrId} AND `attr_group_id`=#{item.attrGroupId})
+    </foreach>
+</delete>
+
+~~~
+
+
+
+确实，之前我们讨论了在 SQL 中使用 `OR` 条件来组合多个条件，特别是在 `DELETE` 语句中，这种做法是用来指示：如果记录符合任何一个条件组合，则应该被删除。这是 SQL 语法和逻辑的标准用法，并且完全正确。
+
+在之前的上下文中，这是在讨论 `OR` 的逻辑用法 —— 如果有多个条件，且你想从数据库中删除匹配任何一个条件的记录，你确实会使用 `OR`。
+
+然而，回到你最初的 MyBatis `<foreach>` 示例中，使用 `OR` 的场景是特定的，我们讨论的是批量删除多个特定条件的情况。在这种场景下：
+
+- 如果你有多个特定的关系对，每对 `attr_id` 和 `attr_group_id` 都标识一个独立的关系，你想删除满足**任何一对**条件的记录，则使用 `OR` 是正确的。
+
+- 但是，这种用法在实际的数据库操作中比较少见，因为通常当我们说“批量删除”，意思往往是指定一个条件列表（如 IDs 列表），然后删除所有匹配这个列表中任一 ID 的记录，这通常通过 `IN` 操作符实现。
+
+所以，如果你的意图是删除所有符合**列表中任一**特定 `attr_id` 和 `attr_group_id` 对的记录，那么，在 `<foreach>` 中使用 `OR` 条件是正确的：
+
+```xml
+<delete id="deleteBatchRelation">
+    DELETE FROM `commodity_attr_attrgroup_relation` WHERE
+    <foreach collection="entities" item="item" separator="OR">
+        (`attr_id`=#{item.attrId} AND `attr_group_id`=#{item.attrGroupId})
+    </foreach>
+</delete>
+```
+
+在这种情况下，确实，每个条件之间用 `OR` 分隔表示“删除数据库中任何匹配这些条件组中任一组合的记录”。
+
+我向你道歉如果之前的解释导致了任何混淆。希望这次解释能够更清晰地说明何时以及如何使用 `OR` 条件。如果有任何进一步的问题或疑问，请继续提问。
+
+普通的批量删除一个条件的情况下使用IN 更多一些对吗？但是我这里需要满足两个条件，并且只要包含这些条件中的任何一组就将其删除
+
+对，你完全正确。在普通的批量删除操作中，尤其是当只有一个条件（如一组 ID）时，使用 `IN` 是更常见和直观的方法。这样做可以简化 SQL 语句并提高执行效率，因为它允许数据库一次性检查并删除所有匹配给定列表中任一项的记录。
+
+例如，如果你想删除多个特定 ID 的记录，你可能会写成这样：
+
+```xml
+<delete id="deleteByIds">
+    DELETE FROM `table_name` WHERE `id` IN
+    <foreach collection="idList" item="id" open="(" separator="," close=")">
+        #{id}
+    </foreach>
+</delete>
+```
+
+在上述情况中，所有匹配列表中任一 ID 的记录都将被删除。
+
+但是，根据你的需求，如果需要同时满足两个条件，并且你希望删除符合这些条件**中任何一组**的记录，那么你的方法是正确的。这种情况下，使用 `OR` 来连接每组 `attr_id` 和 `attr_group_id` 的条件是合适的，因为你希望删除所有符合任何一对条件的记录。
+
+```xml
+<delete id="deleteBatchRelation">
+    DELETE FROM `commodity_attr_attrgroup_relation` WHERE
+    <foreach collection="entities" item="item" separator="OR">
+        (`attr_id`=#{item.attrId} AND `attr_group_id`=#{item.attrGroupId})
+    </foreach>
+</delete>
+```
+
+在这种特定情况下，使用 `OR` 正确地反映了你的需求——即检查每条记录是否符合列出的任何一组条件，并删除所有匹配的记录。尽管在批量删除中这种情况比较少见，但如果这符合你的业务逻辑，那么这是完全合适的。

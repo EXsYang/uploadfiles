@@ -124,13 +124,114 @@ SELECT * FROM `commodity_attrgroup`;
 
 
 
+#1. 创建数据表
+/*==============================================================*/
+/*1. 品牌分类关联表
+/*2. 一个分类下可以对应多个品牌，比如 电视，可以对应海信、小米、夏普品牌
+/*3. 一个品牌可以对应多个分类，比如 小米品牌，可以对应电视，空调, 电热水器等
+/*4. 对于两种表 brand 和 category 是多对多的关系时，通常数据库的设计会搞一个中间
+表，关联二者的关系
+/*5. 注意，对于大表，会根据需要设计一些冗余字段来提高效率，比如这里的 brand_name
+和 category_name
+/*==============================================================*/
+USE hspliving_commodity;
+
+# 创建品牌分类关联表 `commodity_category_brand_relation`
+CREATE TABLE `commodity_category_brand_relation`
+(
+id BIGINT NOT NULL AUTO_INCREMENT,
+brand_id BIGINT COMMENT '品牌 id',
+category_id BIGINT COMMENT '分类 id',
+brand_name VARCHAR(255) COMMENT '品牌名称',
+category_name VARCHAR(255) COMMENT '分类名称',
+PRIMARY KEY (id)
+)CHARSET=utf8mb4 COMMENT='品牌分类关联表';
+
+SELECT * FROM `commodity_category_brand_relation`;
+
+
+
+/*===================================================*/
+/* 1. 商品属性表
+/* 2. 商品属性分为(业务设计): 销售属性[比如颜色，尺寸等], 基本属性 [比如: 质保年限，上市时间]
+/* 3. 重要说明(我们的业务重要规定): 对于 基本属性 一般是归属于/关联一个商品属性组 ,(而且只能被关联 1 次)
+/*==================================================*/
+
+USE hspliving_commodity;
+
+CREATE TABLE commodity_attr
+(
+attr_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '属性 id',
+attr_name CHAR(30) COMMENT '属性名',
+search_type TINYINT COMMENT '是否需要检索[0-不需要，1-需要]',
+icon VARCHAR(255) COMMENT '图标',
+value_select CHAR(255) COMMENT '可选值列表[用逗号分隔]',
+attr_type TINYINT COMMENT '属性类型[0-销售属性，1-基本属性]',
+ENABLE BIGINT COMMENT '启用状态[0 - 禁用，1 - 启用]',
+category_id BIGINT COMMENT '所属分类',
+show_desc TINYINT COMMENT '快速展示【是否展示在介绍上；0-否 1-是】
+',
+PRIMARY KEY (attr_id)
+)CHARSET=utf8mb4 COMMENT='商品属性表';
+SELECT * FROM `commodity_attr`;
+
+
+
+/*===================================================*/
+/*1. 创建数据表 , 保存 商品属性(基本属性)和商品属性组的关联关系
+/*
+/* 1. 商品属性和商品属性组的关联表 */
+/*===================================================*/
+USE hspliving_commodity;
+CREATE TABLE `commodity_attr_attrgroup_relation`
+(
+id BIGINT NOT NULL AUTO_INCREMENT COMMENT 'id',
+attr_id BIGINT COMMENT '属性 id',
+attr_group_id BIGINT COMMENT '属性分组 id',
+attr_sort INT COMMENT '属性组内排序',
+PRIMARY KEY (id)
+)CHARSET=utf8mb4 COMMENT='商品属性和商品属性组的关联表';
+
+SELECT * FROM `commodity_attr_attrgroup_relation`;
+
+
+# 批量删除属性组和属性的关联关系的sql语句
+# 这些条件用 OR 组合在一个 DELETE 语句中，是在告诉数据库：
+# “检查每一条记录，如果它符合这些条件组中的任何一个，那么删除它。
+DELETE FROM `commodity_attr_attrgroup_relation` 
+WHERE (`attr_id`=10 AND `attr_group_id` = 10) 
+OR (`attr_id`=20 AND `attr_group_id` = 20);
+
+# sql语句查询是，IN语句 中如果没有指定任何值，查询会报错，语法错误You have an error in your SQL syntax;
+SELECT id,isshow,NAME,description,logo,sort,first_letter FROM commodity_brand WHERE (id IN ()); 
+# sql语句查询是，IN语句 中如果指定值不存在，查询不会报错，只是查询结果为空
+SELECT id,isshow,NAME,description,logo,sort,first_letter FROM commodity_brand WHERE (id IN (1000,2000)); 
 
 
 
 
+/*==============================================================*/
+/* 1. 保存商品 spu 信息
+/* 2. 1 个 spu 信息可能对于多个 sku
+/* 3. 1 个 spu+1 个 sku 就是一个商品的组合关系()
+*/
+/*==============================================================*/
+USE hspliving_commodity;
+CREATE TABLE `commodity_spu_info`
+(
+id BIGINT NOT NULL AUTO_INCREMENT COMMENT '商品 id',
+spu_name VARCHAR(200) COMMENT '商品名称',
+spu_description VARCHAR(1000) COMMENT '商品描述',
+catalog_id BIGINT COMMENT '所属分类 id',
+brand_id BIGINT COMMENT '品牌 id',
+weight DECIMAL(18,4),
+publish_status TINYINT COMMENT '上架状态[0 - 下架，1 - 上架]',
+create_time DATETIME,
+update_time DATETIME,
+PRIMARY KEY (id)
+)CHARSET=utf8mb4 COMMENT='商品 spu 信息';
 
-
-
+SELECT * FROM commodity_spu_info;
 
 
 
