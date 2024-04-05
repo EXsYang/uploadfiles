@@ -246,3 +246,14 @@ return value.toString().matches(regStr);
 对于这个正则表达式，由于使用了开始`^`和结束`$`定界符，它确实要求整个字符串必须是`0`或`1`，这是一种整体匹配。
 
 综上所述，如果你的意图是检查字符串是否完全匹配正则表达式（在这个例子中是只包含单个字符`0`或`1`），那么你应该在使用第一种写法时使用`matcher.matches()`而不是`matcher.find()`。而如果你选择简便的第二种写法，记住它适用于不需要频繁匹配的场景。
+
+# 7 String.join(",",decript) 的使用
+
+该方法 会遍历 decript 并使用第一个形参作为分隔符进行拼接
+
+~~~
+//String.join(",",decript) 该方法 会遍历 decript 并使用第一个形参作为分隔符进行拼接
+spuInfoDescEntity.setDecript(String.join(",",decript));
+~~~
+
+# 8 

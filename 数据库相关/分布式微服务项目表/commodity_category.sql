@@ -225,7 +225,7 @@ spu_description VARCHAR(1000) COMMENT '商品描述',
 catalog_id BIGINT COMMENT '所属分类 id',
 brand_id BIGINT COMMENT '品牌 id',
 weight DECIMAL(18,4),
-publish_status TINYINT COMMENT '上架状态[0 - 下架，1 - 上架]',
+publish_status TINYINT COMMENT '上架状态[0 - 新建,1 - 上架,2 - 下架]',
 create_time DATETIME,
 update_time DATETIME,
 PRIMARY KEY (id)
@@ -233,6 +233,116 @@ PRIMARY KEY (id)
 
 SELECT * FROM commodity_spu_info;
 
+UPDATE `commodity_spu_info` SET publish_status = 0,update_time=NOW() WHERE id = 100
+
+/*======================================================*/
+/* 1. 保存商品 spu 的介绍图片,单独创建一张表, 可能有多张图片路径(使用,隔开)，也可以没有*/
+/* 2. 这里的主键 商品 id 即spu_id 和前面的表commodity_spu_info的id关联，因此这里没有设置为自增长的
+/*=====================================================*/
+USE hspliving_commodity;
+CREATE TABLE `commodity_spu_info_desc`
+(
+spu_id BIGINT NOT NULL COMMENT '商品 id', 
+decript LONGTEXT COMMENT '商品介绍图片', 
+PRIMARY KEY (spu_id)
+)CHARSET=utf8mb4 COMMENT='商品 spu 信息介绍';
+
+SELECT * FROM commodity_spu_info_desc;
 
 
 
+/*======================================================*/
+/* 1. 保存商品 spu 的介绍图片集, 就是商品最前面的按一组图片来展示图片的集合 , 点击可以切换图片
+/*======================================================*/
+USE hspliving_commodity;
+CREATE TABLE `commodity_spu_images`
+(
+id BIGINT NOT NULL AUTO_INCREMENT COMMENT 'id', spu_id BIGINT COMMENT 'spu_id',
+img_name VARCHAR(200) COMMENT '图片名',
+img_url VARCHAR(255) COMMENT '图片地址',
+img_sort INT COMMENT '顺序', 
+default_img TINYINT COMMENT '是否默认图', 
+PRIMARY KEY (id)
+)CHARSET=utf8mb4 COMMENT='spu 图片集';
+
+SELECT * FROM commodity_spu_images;
+
+
+
+/*====================================================*/
+/* 1. 保存商品 spu 基本属性值, 有多个 */
+/*====================================================*/
+USE hspliving_commodity;
+CREATE TABLE `commodity_product_attr_value`
+(
+id BIGINT NOT NULL AUTO_INCREMENT COMMENT 'id', 
+spu_id BIGINT COMMENT '商品 id', 
+attr_id BIGINT COMMENT '属性 id', 
+attr_name VARCHAR(200) COMMENT '属性名', 
+attr_value VARCHAR(200) COMMENT '属性值', 
+attr_sort INT COMMENT '顺序', 
+quick_show TINYINT COMMENT '快速展示【是否展示在介绍上；0-否 1-是】', 
+PRIMARY KEY (id)
+)CHARSET=utf8mb4 COMMENT='spu 基本属性值';
+
+SELECT * FROM `commodity_product_attr_value`;
+
+
+#创建保存 sku 的基本信息的表
+
+USE hspliving_commodity;
+CREATE TABLE `commodity_sku_info`
+(
+sku_id BIGINT NOT NULL AUTO_INCREMENT COMMENT 'skuId', 
+spu_id BIGINT COMMENT 'spuId', 
+sku_name VARCHAR(255) COMMENT 'sku 名称', 
+sku_desc VARCHAR(2000) COMMENT 'sku 介绍描述', 
+catalog_id BIGINT COMMENT '所属分类 id', 
+brand_id BIGINT COMMENT '品牌 id', 
+sku_default_img VARCHAR(255) COMMENT '默认图片', 
+sku_title VARCHAR(255) COMMENT '标题', 
+sku_subtitle VARCHAR(2000) COMMENT '副标题', 
+price DECIMAL(18,4) COMMENT '价格',
+sale_count BIGINT COMMENT '销量', 
+PRIMARY KEY (sku_id)
+)CHARSET=utf8mb4 COMMENT='sku 信息';
+
+SELECT * FROM commodity_sku_info;
+
+
+
+
+/*==============================================================*/
+/* 1. 保存 某一个 sku 对应的图片[1 个 sku 可能有多个图片]
+/*=====================================================*/
+USE hspliving_commodity;
+CREATE TABLE `commodity_sku_images`
+(
+id BIGINT NOT NULL AUTO_INCREMENT COMMENT 'id', 
+sku_id BIGINT COMMENT 'sku_id',
+img_url VARCHAR(255) COMMENT '图片地址',
+img_sort INT COMMENT '排序', 
+default_img INT COMMENT '默认图[0 - 不是默认图，1 - 是默认图]', 
+PRIMARY KEY (id)
+)CHARSET=utf8mb4 COMMENT='sku 图片';
+
+SELECT * FROM commodity_sku_images;
+
+
+/*====================================================*/
+/* 1.保存 sku 的销售属性/值, 一个 sku 可以有多个销售属性/值
+/* 2.比如 1 个 sku 有颜色(黑色)和尺寸(100*300)两个销售属性
+/*=====================================================*/
+USE hspliving_commodity;
+CREATE TABLE `commodity_sku_sale_attr_value`
+(
+id BIGINT NOT NULL AUTO_INCREMENT COMMENT 'id', 
+sku_id BIGINT COMMENT 'sku_id', 
+attr_id BIGINT COMMENT 'attr_id', 
+attr_name VARCHAR(200) COMMENT '销售属性名', 
+attr_value VARCHAR(200) COMMENT '销售属性值', 
+attr_sort INT COMMENT '顺序', 
+PRIMARY KEY (id)
+)CHARSET=utf8mb4 COMMENT='sku 的销售属性/值表';
+
+SELECT * FROM commodity_sku_sale_attr_value;
