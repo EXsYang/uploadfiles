@@ -61,7 +61,7 @@ yangda@F2 MINGW64 /d/Java_developer_tools/uploadfiles (master)
 
 > 问题描述: 推测是提交的这几个文件中有特殊字符，导致生成的`commit6`不正常，从而push失败
 
-## 解决方案:移除敏感信息
+# 解决方案:移除敏感信息
 
 使用 ` git reset --hard HEAD~1`  删除上一次提交记录`commit6`  , 注意这条语句会导致版本回退，后来的修改都会回退到` commit5`什么都没新增的状态，注意一定要备份`commit5`->`commit6`之间的新增/修改的文件！否则会丢失！
 
@@ -71,6 +71,97 @@ git reset --hard HEAD~1
 ~~~
 
 检查是哪一个文件格式/有特殊字符，进行调整
+
+
+
+
+
+# git reset --hard HEAD~1 执行了这条语句，如何恢复？
+
+
+
+~~~
+git reflog
+
+git reset --hard 39128d1
+
+
+
+
+
+yangda@F2 MINGW64 /d/Java_developer_tools/DistributedMicroservicesProject/hspedu_hspliving/hspliving (master)
+$ git reflog
+07a5352 (HEAD -> master, origin/master, origin/develop, origin/HEAD) HEAD@{0}: reset: moving to HEAD~1
+39128d1 HEAD@{1}: commit: commit4.6
+07a5352 (HEAD -> master, origin/master, origin/develop, origin/HEAD) HEAD@{2}: clone: from https://gitee.com/kapaiya/hspliving.git
+
+git reset --hard 39128d1
+
+~~~
+
+
+
+
+
+当你执行 `git reset --hard HEAD~1`，Git 会将当前分支的 HEAD（也就是最新的提交）回退到前一个提交，同时重置工作目录和暂存区的状态以匹配那个提交。这意味着最新的提交会从分支的历史中移除，以及工作目录中的任何未提交的更改也会被清除。如果你想恢复到执行这个命令之前的状态，你可以通过以下几种方式之一来尝试：
+
+### 1. 使用 `git reflog` 找到丢失的提交
+Git 的引用日志（reflog）是一个记录了本地仓库 HEAD 和分支引用更新记录的日志。即使提交被 `reset` 命令移除了，这些操作也会被记录在 reflog 中，允许你找回丢失的提交。
+
+首先，使用 `git reflog` 命令查看最近的仓库操作历史：
+
+```bash
+git reflog
+```
+
+这个命令会列出你最近的 Git 操作，包括提交、重置和合并等。找到执行 `git reset --hard HEAD~1` 操作之前的那个提交的引用。它可能看起来像这样：
+
+```
+abcdefg HEAD@{1}: commit: your commit message
+```
+
+这里，`abcdefg` 是你想要恢复的提交的哈希值（实际上会是一个更长的哈希值）。
+
+### 2. 重置到你想恢复的提交
+找到了你想要恢复的提交的哈希值之后，使用 `git reset --hard` 加上那个哈希值来恢复：
+
+```bash
+git reset --hard abcdefg
+```
+
+请确保将 `abcdefg` 替换为实际的提交哈希值。这会将 HEAD 指向你选择的那个提交，同时重置工作目录和暂存区的状态以匹配那个提交。
+
+### 警告
+使用 `git reset --hard` 会丢弃工作目录和暂存区中的所有更改，所以在执行这个命令之前请确保没有需要保留的未提交更改。如果你不确定，可以先使用 `git stash` 来保存这些更改。
+
+### 总结
+通过以上步骤，你应该能够恢复到之前因为 `git reset --hard HEAD~1` 而丢失的提交。记住，`git reflog` 是一个非常有用的工具，可以在很多看似数据丢失的情况下帮助你恢复数据。
+
+
+
+~~~
+yangda@F2 MINGW64 /d/Java_developer_tools/DistributedMicroservicesProject/hspedu_hspliving/hspliving (master)
+$ git reflog
+07a5352 (HEAD -> master, origin/master, origin/develop, origin/HEAD) HEAD@{0}: reset: moving to HEAD~1
+39128d1 HEAD@{1}: commit: commit4.6
+07a5352 (HEAD -> master, origin/master, origin/develop, origin/HEAD) HEAD@{2}: clone: from https://gitee.com/kapaiya/hspliving.git
+~~~
+
+根据你提供的 `git reflog` 输出，你可以看到最近的几个操作记录。这里的关键是，你想恢复到 `git reset --hard HEAD~1` 执行之前的状态。在你的 `git reflog` 输出中，`39128d1` 是执行 reset 操作前的最后一个提交（即你想要恢复到的提交）。而 `07a5352` 是当前的 HEAD 位置，也就是执行 reset 之后的状态。
+
+要恢复到 `39128d1` 这个提交，你需要执行以下命令：
+
+```bash
+git reset --hard 39128d1
+```
+
+这会将你的 HEAD、索引（暂存区）和工作目录都重置到 `39128d1` 这个提交的状态。执行这个命令后，你之前因为执行 `git reset --hard HEAD~1` 而丢失的更改会被恢复。
+
+请记得，`git reset --hard` 是一个强制性命令，会丢弃所有工作目录中的更改。所以在执行这个命令之前，请确保你没有未保存的工作。如果有未提交的更改你想保留，考虑先使用 `git stash` 来保存这些更改。
+
+一旦你执行了 `git reset --hard 39128d1`，你的仓库会回到那个提交的状态，就好像之前执行 `git reset --hard HEAD~1` 的操作没有发生过一样。
+
+
 
 
 
@@ -121,7 +212,12 @@ git reset --hard HEAD~1
 ~~~
 git init
 
+git remote add origin git@github.com:EXsYang/hspedu_hspliving2.git
 git remote add origin git@gitee.com:czbk_zhang_meng/git_test.git
+
+#使用 git remote set-url 命令来更新 origin  
+git remote set-url origin git@github.com:EXsYang/hspliving2.git
+
 
 git remote -v
 
@@ -142,6 +238,133 @@ git push
 ~~~
 
 
+
+
+
+
+
+
+
+# git在主模块中添加子模块,即在下级目录下也含有.git文件夹，即在仓库下包含另一个仓库
+
+
+
+~~~
+# 在主模块中添加子模块
+git submodule add git@github.com:EXsYang/hspliving2.git hspliving
+
+
+~~~
+
+既然你已经做好了**备份**，并且希望完成子模块 `hspliving2` 的添加，你可以按照以下步骤来操作。这里假设你已经在父仓库 `hspedu_hspliving` 的根目录下：
+
+### 1. 删除已存在的 `hspliving` 目录
+
+首先，从 Git 索引和文件系统中删除 `hspliving` 目录。这一步确保添加子模块时不会出现冲突。
+
+```bash
+git rm -r --cached hspliving
+rm -rf hspliving
+```
+
+### 2. 添加子模块
+
+然后，使用 `git submodule add` 命令添加 `hspliving2` 作为子模块。你提供的子模块仓库地址为 `git@github.com:EXsYang/hspliving2.git`，我们将其添加到当前父仓库中名为 `hspliving` 的路径下：
+
+```bash
+git submodule add git@github.com:EXsYang/hspliving2.git hspliving
+```
+
+这条命令会克隆 `hspliving2` 仓库到 `hspliving` 目录，并在父仓库中创建一个 `.gitmodules` 文件（如果它还不存在的话），记录子模块的信息。
+
+### 3. 提交更改
+
+添加子模块后，你需要提交这些更改到父仓库中，包括 `.gitmodules` 文件和子模块的添加：
+
+```bash
+git add .gitmodules hspliving
+git commit -m "Add hspliving2 submodule"
+```
+
+### 4. 推送更改到远程仓库
+
+最后，将这些更改推送到父仓库的远程仓库：
+
+```bash
+git push
+```
+
+完成这些步骤后，`hspliving2` 将作为一个子模块被成功添加到 `hspedu_hspliving` 仓库中。任何克隆父仓库的人现在可以通过运行 `git submodule update --init` 来获取子模块的内容。
+
+
+
+
+
+
+
+如果运行 `cat .gitmodules` 时显示“`No such file or directory`”，这意味着当前仓库（在这个情况下，是 `hspedu_hspliving`）中不存在 `.gitmodules` 文件。`.gitmodules` 文件在仓库中用于跟踪子模块的信息，包括每个子模块的路径和对应的远程仓库 URL。如果这个文件不存在，那么可能有以下几种情况：
+
+### 1. 子模块未被添加
+
+如果你期望 `hspedu_hspliving` 包含子模块，但 `.gitmodules` 文件不存在，可能是因为子模块还没有被正确添加到仓库中。添加子模块的正确命令是：
+
+```bash
+git submodule add <repository-url> <path-to-submodule>
+```
+
+例如：
+
+```bash
+git submodule add https://github.com/username/submodule-repository.git path/to/submodule
+```
+
+这将会创建 `.gitmodules` 文件（如果它还不存在的话），并向其中添加刚刚添加的子模块信息。
+
+### 2. `.gitmodules` 文件被删除或未提交
+
+如果之前添加过子模块，但现在 `.gitmodules` 文件不见了，可能是因为这个文件被删除或者从未被提交到仓库中。检查仓库的提交历史，看是否可以找到关于 `.gitmodules` 文件的任何提交。如果文件被误删除，你可能需要从历史中恢复它或重新添加子模块。
+
+### 3. 你不在仓库的根目录
+
+确认你当前的工作目录是仓库的根目录。`.gitmodules` 文件位于仓库的根目录下。如果你在子目录中，可能会看到 “No such file or directory” 错误。使用 `pwd` 命令确认你的当前目录，并使用 `cd` 命令必要时更改目录到仓库的根目录。
+
+### 解决建议
+
+- 确认你在仓库的根目录。
+- 如果你想添加子模块，使用 `git submodule add` 命令。
+- 如果 `.gitmodules` 应该存在，尝试从仓库的历史中恢复这个文件，或检查是否在某个分支中忘记合并它。
+- 确认你的子模块和 `.gitmodules` 文件都已经被提交并推送到了远程仓库。
+
+
+
+## 解释`<repository-url>` 和 `<path-to-submodule>`
+
+当你使用 `git submodule add` 命令来添加一个子模块到你的 Git 仓库时，这个命令需要两个主要参数：`<repository-url>` 和 `<path-to-submodule>`。这两个参数的含义如下：
+
+### `<repository-url>`
+
+这是你想要添加为子模块的 Git 仓库的 URL。这个 URL 指向子模块的远程仓库位置，可以是 HTTPS 或 SSH 格式的 URL。例如：
+
+- 对于 GitHub 上的一个仓库，HTTPS 格式的 URL 可能看起来像 `https://github.com/username/repository.git`。
+- 使用 SSH 格式的 URL，则可能是 `git@github.com:username/repository.git`。
+
+这个 URL 允许你的 Git 仓库知道从哪里获取子模块的数据。
+
+### `<path-to-submodule>`
+
+这是在你的主仓库中想要放置子模块的本地路径。这个路径相对于你的主仓库的根目录，指定了子模块在你的仓库结构中的位置。这个路径不应该指向一个已经存在的目录，因为 Git 会在这个位置创建一个包含子模块内容的新目录。例如，如果你想将子模块放在 `libs/my-submodule` 目录下，`<path-to-submodule>` 应该被设置为 `libs/my-submodule`。
+
+这个路径不仅定义了子模块在你的项目中的物理位置，而且这个信息也会被记录在 `.gitmodules` 文件中，这样 Git 就知道如何将子模块的远程仓库与你的主仓库关联起来。
+
+### 示例命令
+
+将上面的信息结合起来，添加一个子模块的命令看起来可能是这样的：
+
+```bash
+git submodule add https://github.com/username/repository.git path/to/submodule
+```
+
+在这个例子中，`https://github.com/username/repository.git` 是子模块的远程仓库 URL，而 `path/to/submodule` 是你想在你的主仓库中放置子模块的路径。执行这个命令后，Git 会在指定的路径下创建一个新目录，其中包含了子模块的内容，并且更新 `.gitmodules` 文件，包括子模块的路径和 URL。
 
 
 

@@ -44,6 +44,38 @@
 
 对于自动取消高亮的需求，一个简单的方法是在`~/.vimrc`文件中加入一段自动命令，每次搜索完成后自动取消高亮显示可能会有所帮助，但请注意，这可能会影响搜索的可用性，因为你将不再能通过高亮直观地看到所有匹配项。大多数用户可能会选择在需要时手动使用`:noh`命令来清除高亮，以保留搜索高亮的便利性。
 
+
+
+## 3 vim文件中跳转行
+
+在 Vim 编辑器中，跳到文件末尾的快捷键主要有以下几种：
+
+1. **`G`** - 在普通模式下，按下 `G` 键可以直接跳转到文件的最后一行。
+
+2. **`:end` 或 `:$`** - 输入这些命令后按回车，也可以移动到文件的最后一行。这是一种在命令行模式下使用的方法。
+
+3. **`Ctrl + End`** - 在一些配置或特定的环境中（如在使用 GVim 或 Vim 在图形界面环境中时），使用 `Ctrl + End` 组合键可以跳到文件的最末尾。
+
+这些方法可以根据你的具体使用环境和习惯进行选择。在大多数情况下，`G` 是最快捷的方式。
+
+
+
+在 Vim 编辑器中，跳到文件首行的快捷键也有几种方法，方便快速导航到文档的开始位置：
+
+1. **`gg`** - 在普通模式下，按下 `gg` 可以直接跳转到文件的第一行。这是最常用的方法。
+
+2. **`:1` 或 `:0`** - 输入 `:1` 后按回车可以移动到文件的第一行。而输入 `:0` 时会移动到文件的第一行的前一行（实际上是不存在的），因此通常使用 `:1`。
+
+3. **`1G`** - 在普通模式下，`1G` 也会将光标移动到文件的第一行。这实际上是 `G` 命令的一个变体，其中 `1` 是行号参数。
+
+4. **`Ctrl + Home`** - 在使用 GVim 或者在某些支持键盘快捷键的图形界面中，使用 `Ctrl + Home` 可以跳转到文档的开始位置。
+
+这些方法提供了不同的选项，以适应不同用户的使用习惯和环境配置。通常，`gg` 是最简单和最常用的方式。
+
+
+
+
+
 ---
 
 
@@ -63,6 +95,10 @@
 2.  **删除**当前行 **`dd`** , 删除当前行向下的 5 行 5dd, 在**一般模式**下,
 
 
+
+`:0` 命令行模式跳转到文档的第一行
+
+`:$` 命令行模式跳转到文档的最后一行
 
 3. **剪切**
 
@@ -85,11 +121,11 @@
    剪切后的内容可以通过 `p` 命令粘贴到光标之后或通过 `P` 命令粘贴到光标之前。记住，在 `vim` 中，剪切实际上是一种 "删除" 操作，它会将删除的内容存储在剪贴板中，供之后粘贴使用。
    ~~~
 
-4. 在文件中**查找**某个单词 [**命令行下** **/关键字** ， 回车 查找 , 输入 **`n`** 就是查找下一个 大写的 **`N`**查找**上一个**]
+4. 在文件中**查找**某个单词 [**命令行下** **/关键字** ， 回车 查找 , 输入 **`n`** 就是查找下一个 大写的 **`N`**查找**上一个**]或者查找**上一个**`shift+n 或 ?bind`
 
 **命令行下**输入 **`:noh`** 或**`:nohl`** 或**`:nohlsearch`**然后按回车。这会立即**取消当前的搜索**高亮，直到你进行下一次搜索。`nohlsearch` 是 `nohighlightsearch` 的缩写，意为“不高亮搜索”。
 
-5. 设置文件的**行号**，取消文件的行号.[**命令行下** **`: set nu `**和**` :set nonu`** ]
+5. 设置文件的**行号**，取消文件的行号.[**命令行下** **`: set nu `**和**` :set nonu`** ] 或者`:set number`
 
 6. 编辑 /etc/profile 文件，在**一般模式**下, 使用快捷键到该文档的最末行[G]和最首行[gg]
 
@@ -3859,13 +3895,13 @@ ChatGPT
 
 ###  17. 网络配置和主机名解析
 
-### Linux 网络配置原理图
+#### 0 Linux 网络配置原理图和配置静态IP地址
 
 
 
 ![image-20240122224959655](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240122224959655.png)
 
-#### 17.1 配置静态IP地址
+### 17.1 配置静态IP地址
 
 
 
@@ -3912,7 +3948,7 @@ vi /etc/sysconfig/network-scripts/ifcfg-ens33
 
 
 
-# 1 网络配置ifcfg-ens33文件中，注意等号右边的值一定要添加引号才能识别，否则会出问题！
+### 1 网络配置ifcfg-ens33文件中，注意等号右边的值一定要添加引号才能识别，否则会出问题！
 
 - 禁用 `NetworkManager` 并启用 `network` 服务：
 
@@ -4181,7 +4217,7 @@ rtt min/avg/max/mdev = 0.185/0.220/0.305/0.050 ms
 
 
 
-#### 17.2 设置主机名和 hosts 映射
+### 17.2 设置主机名和 hosts 映射
 
 - **17.2.1 设置主机名**：
   - 为方便记忆和管理，可以给 Linux 系统设置或修改主机名。
@@ -4249,11 +4285,61 @@ Copy code192.168.1.10    example.com
 
 
 
-# 2 确定当前系统使用的是NetworkManager还是传统的network服务（在某些Linux发行版中称为`networking`服务），以及如何确保只使用NetworkManager并禁用network服务
+### 2 第一种配置虚拟机固定静态IP的方式【禁用network,只保留NetworkManager】 确定当前系统使用的是NetworkManager还是传统的network服务（在某些Linux发行版中称为`networking`服务），以及如何确保只使用NetworkManager并禁用network服务
+
+第2种配置虚拟机固定静态IP的方式参考第12条网络笔记
+
+
+
+
+
+-----------------------------
+
+#### 第一种配置虚拟机固定静态IP的方式 的虚拟网络编辑器的配置(修改为只是用NetWorkManager后的)最终配置如下 (或者说这是可以配置成功的前提条件)
+
+![image-20240407161125296](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240407161125296.png)
+
+
+
+![image-20240407161347457](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240407161347457.png)
+
+
+
+
+
+![image-20240407161459821](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240407161459821.png)
+
+
+
+![image-20240407170340561](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240407170340561.png)
+
+
+
+![image-20240407172306983](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240407172306983.png)
+
+
+
+------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+vi /etc/sysconfig/network-scripts/ifcfg-ens33
+
+
 
 要确定你的系统当前使用的是NetworkManager还是传统的network服务（在某些Linux发行版中称为`networking`服务），以及如何确保只使用NetworkManager并禁用network服务，你可以按照以下步骤进行：
 
-### 1. 检查服务状态
+#### 1. 检查服务状态
 首先，我们需要查看NetworkManager和network服务的状态。
 
 #### NetworkManager状态
@@ -4264,6 +4350,7 @@ sudo systemctl status NetworkManager
 ```
 
 #### network服务状态
+
 同样的，要检查传统的network服务状态，运行：
 
 ```bash
@@ -4276,7 +4363,7 @@ sudo systemctl status network
 sudo systemctl status networking
 ```
 
-### 2. 禁用network服务
+#### 2. 禁用network服务
 如果你发现network（或networking）服务正在运行，并且你想确保只使用NetworkManager，你可以使用以下命令来停止并禁用network服务：
 
 ```bash
@@ -4286,7 +4373,7 @@ sudo systemctl disable network
 
 如果服务名为`networking`，则替换上述命令中的`network`为`networking`。
 
-### 3. 确保NetworkManager启用和运行
+#### 3. 确保NetworkManager启用和运行
 接下来，确保NetworkManager服务已经启用并且正在运行：
 
 ```bash
@@ -4296,7 +4383,7 @@ sudo systemctl start NetworkManager
 
 这会设置NetworkManager在系统启动时自动启动，并立即启动服务（如果尚未运行）。
 
-### 4. 验证配置
+#### 4. 验证配置
 最后，你可以再次运行`systemctl status`命令来确认network服务已被禁用且NetworkManager正在运行：
 
 - 对于NetworkManager：
@@ -4315,7 +4402,7 @@ sudo systemctl status network
 sudo systemctl status networking
 ```
 
-### 注意
+#### 注意
 - 在一些Linux发行版中，传统的network服务可能有不同的名称，如`networking`等。确保根据你的系统使用正确的服务名称。
 - 更改网络管理服务可能会影响你的网络连接。在进行这些更改之前，请确保你有另一种方法（如直接访问或者控制台访问）来恢复设置，以防网络连接中断。
 - 在某些系统中，特别是那些可能没有完全集成NetworkManager的服务器环境，彻底移除或禁用传统network服务之前，请确保这不会干扰系统上的其他服务或配置。
@@ -4324,15 +4411,15 @@ sudo systemctl status networking
 
 
 
-# 3 修改ens33文件后如何生效？重新加载网络配置，重启NetworkManager
+### 3 修改ens33文件后如何生效？重新加载网络配置，重启NetworkManager
 
-###  方法1：
+####  方法1：
 
 在Linux系统中，如果你修改了`ens33`文件，这通常意味着你更改了某个网络接口的配置 
 
 vi /etc/sysconfig/network-scripts/ifcfg-ens33
 
-### NetworkManager没有管理该接口
+#### NetworkManager没有管理该接口
 
 在某些情况下，NetworkManager可能没有管理所有的网络接口。你可以通过运行以下命令来检查NetworkManager是否管理你的`ens33`接口：
 
@@ -4342,7 +4429,7 @@ nmcli device
 
 如果`ens33`没有出现在列表中，或者出现了但旁边没有表示它由NetworkManager管理的标记（通常是“已管理”状态），那么可能需要通过NetworkManager的配置来确保该接口被管理。
 
-### **强制NetworkManager重新读取配置**
+#### **强制NetworkManager重新读取配置**
 
 ~~~
 sudo nmcli connection down ens33
@@ -4353,9 +4440,9 @@ sudo nmcli connection down ens33 && sudo nmcli connection up ens33
 sudo ifdown ens33 && sudo ifup ens33
 ~~~
 
-### 或者
+#### 或者
 
-### 强制NetworkManager重新读取配置
+#### 强制NetworkManager重新读取配置
 
 尽管重启NetworkManager服务是一个好的开始，但有时可能需要额外的步骤来强制NetworkManager重新加载配置。你可以尝试重新启动电脑或执行以下命令来重新加载网络配置：
 
@@ -4373,7 +4460,7 @@ sudo systemctl restart NetworkManager
 
 在Linux系统中，如果你修改了`ens33`文件，这通常意味着你更改了某个网络接口的配置。重启NetworkManager是一个让这些更改生效的好方法。这里有几种方法来重启NetworkManager：
 
-### 方法1：使用systemctl命令
+#### 方法1：使用systemctl命令
 1. 打开终端。
 2. 输入以下命令来重启NetworkManager服务：
 
@@ -4383,14 +4470,14 @@ sudo systemctl restart NetworkManager
 
 这个命令会停止NetworkManager服务然后重新启动它。
 
-### 方法2：使用service命令（较老的系统）
+#### 方法2：使用service命令（较老的系统）
 如果你的系统较旧，可能没有`systemctl`命令，可以使用`service`命令：
 
 ```bash
 sudo service NetworkManager restart
 ```
 
-### 方法3：重启网络接口
+#### 方法3：重启网络接口
 如果你只是想让特定网络接口的更改生效，可以使用`ifdown`和`ifup`命令。这里的`ens33`是你的网络接口名：
 
 ```bash
@@ -4399,7 +4486,7 @@ sudo ifdown ens33 && sudo ifup ens33
 
 注意：`ifdown`和`ifup`命令可能需要`net-tools`包，如果系统中没有，你可能需要先安装它。
 
-### 注意事项
+#### 注意事项
 - 使用`sudo`命令表示你需要管理员权限来执行这些操作。
 - 在进行网络配置更改后重启NetworkManager或网络接口，有助于确保更改正确应用并解决网络连接问题。
 - 如果你不确定自己的操作，可以先备份相关配置文件，以便在配置错误时能够恢复。
@@ -4412,11 +4499,11 @@ sudo ifdown ens33 && sudo ifup ens33
 
 根据你提供的`nmcli device`命令的输出，`ens33`设备确实由NetworkManager管理，并且处于“连接的”状态。这表明NetworkManager已经识别并管理了这个网络接口。既然修改IP地址后重启NetworkManager不起作用，我们可以尝试以下步骤来解决这个问题：
 
-### 步骤1：确认配置文件
+#### 步骤1：确认配置文件
 
 首先，确保你修改的是正确的配置文件。对于`ens33`接口，配置文件通常位于`/etc/sysconfig/network-scripts/`目录，并且文件名应该类似于`ifcfg-ens33`。确认文件中的修改已正确保存，特别是IP地址更改为`IPADDR="192.168.198.136"`。
 
-### 步骤2：重新应用配置
+#### 步骤2：重新应用配置
 
 由于你已经确认NetworkManager正在管理`ens33`接口，我们可以尝试直接使用`nmcli`命令来重新应用配置，而不是重启整个NetworkManager服务。这可以通过重新启动特定的网络连接来实现：
 
@@ -4427,7 +4514,7 @@ sudo nmcli connection up ens33
 
 这将使`ens33`连接先断开然后重新连接，**强制NetworkManager应用任何配置更改**。
 
-### 步骤3：检查IP地址
+#### 步骤3：检查IP地址
 
 更改应用并重新连接后，检查`ens33`接口的IP地址是否已更新为新值：
 
@@ -4447,7 +4534,7 @@ nmcli device show ens33 | grep IP4.ADDRESS
 
 
 
-### 方法2：
+#### 方法2：
 
 尽管重启NetworkManager服务是一个好的开始，但有时可能需要额外的步骤来强制NetworkManager重新加载配置。你可以尝试重新启动电脑或执行以下命令来重新加载网络配置：
 
@@ -4479,7 +4566,7 @@ sudo systemctl restart NetworkManager
 
 
 
-# 4 `network`网络服务和NetworkManager网络服务说明
+### 4 `network`网络服务和NetworkManager网络服务说明
 
 > 问题描述：重启计算机后IP总是变来变去，明明在 `/etc/sysconfig/network-scripts/ifcfg-ens33` 配置了静态IP 重启后还是会自动变化
 
@@ -4619,7 +4706,9 @@ nmcli con down ens33 && nmcli con up ens33
 
 
 
-# 5 Linux虚拟机ip:192.168.198.130 ,测试网络时，是ping 宿主机VMNet8的ip:192.168.198.130:,还是ping 宿主机实际的上网ip:192.168.0.13?
+### 
+
+### 5 Linux虚拟机ip:192.168.198.130 ,测试网络时，是ping 宿主机VMNet8的ip:192.168.198.130:,还是ping 宿主机实际的上网ip:192.168.0.13?
 
 在测试从Linux虚拟机网络连通性时，通常情况下，你需要根据你想要测试的目标来决定应该ping哪个IP地址。
 
@@ -4635,7 +4724,7 @@ nmcli con down ens33 && nmcli con up ens33
 
 
 
-# 6 如果Liunx虚拟机和Windows宿主机在同一台主机上，是不是只要ping通外部网络，那么ping宿主机也是可以通的？否
+### 6 如果Liunx虚拟机和Windows宿主机在同一台主机上，是不是只要ping通外部网络，那么ping宿主机也是可以通的？否
 
 如果Linux虚拟机和Windows宿主机在同一台物理主机上，并且虚拟机能够ping通外部网络，这通常意味着虚拟机与宿主机之间的网络连接是配置正确的，因为虚拟机访问外部网络往往是通过宿主机的网络接口进行的。然而，能否直接从虚拟机ping通宿主机，还取决于以下几个因素：
 
@@ -4647,13 +4736,13 @@ nmcli con down ens33 && nmcli con up ens33
 
 因此，虽然能够ping通外部网络是一个好迹象，表明至少虚拟机的网络有一部分是配置正确的，但这并不自动保证虚拟机能ping通宿主机。建议检查网络模式、防火墙设置和IP配置，确保它们都配置正确，以便虚拟机和宿主机之间能够顺畅通信。如果你遇到问题，可能需要调整网络设置或防火墙规则。
 
-# 7 ping 命令可以ping端口吗？否
+### 7 ping 命令可以ping端口吗？否
 
 `ping`命令本身不能直接用来ping一个特定的端口。`ping`使用的是ICMP（Internet Control Message Protocol）协议来测试另一台主机是否可达，它并不与TCP或UDP端口直接交互，因此无法指定端口号。
 
 如果你想测试某个特定端口的连通性，你可以使用其他工具，如`telnet`、`nc`（netcat）或`nmap`等，这些工具可以让你指定目标主机的IP地址和端口号。
 
-### 使用`telnet`测试端口
+#### 使用`telnet`测试端口
 
 例如，要测试IP地址为`192.168.1.1`上的80端口，你可以使用：
 
@@ -4663,7 +4752,7 @@ telnet 192.168.1.1 80
 
 如果端口是开放的，`telnet`命令会尝试建立连接。如果连接成功，通常表示该端口是开放的。否则，它会报错或超时。
 
-### 使用`nc`（netcat）测试端口
+#### 使用`nc`（netcat）测试端口
 
 `nc`也是一个非常灵活的网络工具，可以这样使用：
 
@@ -4673,7 +4762,7 @@ nc -zv 192.168.1.1 80
 
 这里，`-z`是扫描模式（不建立实际的连接），`-v`是使操作更加详细（verbose）。
 
-### 使用`nmap`测试端口
+#### 使用`nmap`测试端口
 
 `nmap`是一个更为强大的网络扫描工具，可以这样使用：
 
@@ -4685,11 +4774,11 @@ nmap -p 80 192.168.1.1
 
 请注意，使用这些工具可能需要相应的权限，特别是`nmap`，并且在某些网络环境中，过度扫描可能会被视为恶意行为。确保你有权在目标网络上使用这些命令，并且遵守相关的法律和政策。
 
-# 8 Windows宿主机默认情况下去ping Linux虚拟机IP，正常配置的情况下都可以ping通，难道防火墙默认没有拦截吗？反过来却不行，默认Windows宿主机防火墙打开的，Linux虚拟机ping Windows宿主机IP ping不通
+### 8 Windows宿主机默认情况下去ping Linux虚拟机IP，正常配置的情况下都可以ping通，难道防火墙默认没有拦截吗？反过来却不行，默认Windows宿主机防火墙打开的，Linux虚拟机ping Windows宿主机IP ping不通
 
 在虚拟机和宿主机之间的网络通信中，防火墙的默认配置确实可能影响到ping操作的结果。通常，Linux系统（做为虚拟机）的防火墙默认配置较为开放，特别是对于内部网络（如虚拟机网络）的通信，因此从Windows宿主机ping Linux虚拟机通常能够成功。而Windows防火墙的默认设置往往更加严格，特别是对于入站的ICMP请求（即ping请求），这可能是为什么从Linux虚拟机ping Windows宿主机时ping不通的原因。
 
-### Windows宿主机防火墙配置
+#### Windows宿主机防火墙配置
 
 Windows防火墙默认可能会阻止入站的ICMP请求，这是为了增强系统的安全性。如果你希望从虚拟机ping通Windows宿主机，你需要修改Windows防火墙的设置，允许ICMP请求。以下是开放Windows防火墙以允许ICMP请求的步骤：
 
@@ -4700,7 +4789,7 @@ Windows防火墙默认可能会阻止入站的ICMP请求，这是为了增强系
 
 这样配置后，你的Windows宿主机应该能够响应Linux虚拟机的ping请求了。
 
-### 注意事项
+#### 注意事项
 
 - **网络模式**：确保你的虚拟机网络配置（如NAT、桥接或仅主机网络）适合你的网络通信需求。某些模式下，虚拟机和宿主机之间的直接通信可能受限。
 - **Linux虚拟机防火墙**：虽然Linux默认配置较为开放，但某些发行版或自定义安装可能有不同的防火墙设置。确保检查并适当配置Linux防火墙（如使用`iptables`或`firewalld`）。
@@ -4709,11 +4798,11 @@ Windows防火墙默认可能会阻止入站的ICMP请求，这是为了增强系
 
 
 
-# 9 如何查看当前Linux虚拟机是否可以被Windows宿主机 能否ping通呢？是不是要查看Linux虚拟机上是否配置拒绝ICMP 防火墙规则？
+### 9 如何查看当前Linux虚拟机是否可以被Windows宿主机 能否ping通呢？是不是要查看Linux虚拟机上是否配置拒绝ICMP 防火墙规则？
 
 是的，为了确定当前Linux虚拟机是否可以被Windows宿主机ping通，你需要检查Linux虚拟机上的防火墙配置，特别是与ICMP（用于ping命令）相关的规则。以下是如何检查最常用的几种Linux防火墙工具配置的方法：
 
-### 使用`iptables`检查
+#### 使用`iptables`检查
 
 1. 打开Linux虚拟机的终端。
 2. 输入以下命令来查看当前的`iptables`规则：
@@ -4724,7 +4813,7 @@ Windows防火墙默认可能会阻止入站的ICMP请求，这是为了增强系
 
 3. 仔细检查输出中的规则，特别是在`INPUT`链中查找是否有任何规则明确拒绝或丢弃ICMP请求，例如通过`-p icmp --icmp-type echo-request -j DROP`这样的规则。
 
-### 使用`firewalld`检查
+#### 使用`firewalld`检查
 
 1. 在Linux虚拟机的终端中，运行以下命令来获取当前的防火墙配置：
 
@@ -4734,7 +4823,7 @@ Windows防火墙默认可能会阻止入站的ICMP请求，这是为了增强系
 
 2. 查看输出中的信息，特别是`rich rules`部分，看是否有规则设置为拒绝ICMP请求。
 
-### 使用`ufw`检查
+#### 使用`ufw`检查
 
 对于使用`ufw`的系统：
 
@@ -4747,7 +4836,7 @@ Windows防火墙默认可能会阻止入站的ICMP请求，这是为了增强系
 
 3. 检查是否有拒绝或限制ICMP请求的规则。
 
-### 其他考虑
+#### 其他考虑
 
 除了直接查看防火墙规则外，确保网络配置（如虚拟网络设置、虚拟机网络适配器配置等）允许虚拟机和宿主机之间的通信。如果虚拟机和宿主机处在不同的网络段或通过NAT方式连接，即使没有明确的防火墙规则阻止ICMP请求，ping操作也可能受到影响。
 
@@ -4755,11 +4844,11 @@ Windows防火墙默认可能会阻止入站的ICMP请求，这是为了增强系
 
 
 
-# 10 如何让Windows宿主机 默认情况下去ping Linux虚拟机IP ping不通呢？
+### 10 如何让Windows宿主机 默认情况下去ping Linux虚拟机IP ping不通呢？
 
 要让Windows宿主机默认情况下ping不通Linux虚拟机的IP地址，你可以通过在Linux虚拟机上配置防火墙规则来拒绝ICMP（Internet Control Message Protocol，互联网控制消息协议）请求，这样就能阻止ping操作。不同的Linux发行版可能使用不同的防火墙管理工具，如`iptables`、`firewalld`（在Red Hat系列发行版中常见）或`ufw`（在Debian系列发行版中常见）。以下是一些常见的配置方法：
 
-### 使用`iptables`
+#### 使用`iptables`
 
 如果你的Linux虚拟机使用`iptables`作为防火墙，可以通过以下命令来阻止所有进入的ICMP echo请求（即ping请求）：
 
@@ -4769,7 +4858,7 @@ sudo iptables -A INPUT -p icmp --icmp-type echo-request -j DROP
 
 这条命令会向`iptables`的输入链添加一条规则，拒绝所有ICMP类型为echo请求的数据包，从而使得宿主机无法ping通虚拟机。
 
-### 使用`firewalld`
+#### 使用`firewalld`
 
 对于使用`firewalld`的系统，可以通过以下命令禁用ICMP响应：
 
@@ -4780,7 +4869,7 @@ sudo firewall-cmd --reload
 
 这将创建一个持久化的富规则，拒绝所有ICMP echo请求。
 
-### 使用`ufw`
+#### 使用`ufw`
 
 对于使用`ufw`（Uncomplicated Firewall）的系统，可以通过编辑`/etc/ufw/before.rules`文件来拒绝ICMP请求。你需要找到这个文件中处理ICMP的部分，并添加或修改规则以拒绝echo请求。例如：
 
@@ -4794,13 +4883,464 @@ sudo firewall-cmd --reload
 sudo ufw reload
 ```
 
-### 注意事项
+#### 注意事项
 
 - 这些更改可能会影响到你的网络诊断和监控工具的正常使用，因为它们经常依赖于ping来测试网络连通性。
 - 确保你了解这些命令的作用，并在必要时咨询网络安全政策，以避免不必要的网络安全风险。
 - 如果你的环境中还有其他的安全软件或防火墙设备，也可能需要在那里配置相应的规则。
 
 通过上述任一方法配置后，你的Linux虚拟机应该能够阻止来自Windows宿主机的ping请求。
+
+
+
+### 11 virbr0是什么网卡?这里ens33是我在使用的连接外部网络时的网卡
+
+
+
+~~~
+[root@hspEdu100 ~]# ip addr
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: ens33: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 00:0c:29:62:ec:af brd ff:ff:ff:ff:ff:ff
+    inet 192.168.198.138/24 brd 192.168.198.255 scope global noprefixroute ens33
+       valid_lft forever preferred_lft forever
+    inet6 fe80::e85d:52d3:ddfc:1958/64 scope link noprefixroute 
+       valid_lft forever preferred_lft forever
+3: virbr0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default qlen 1000
+    link/ether 52:54:00:30:61:02 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.122.1/24 brd 192.168.122.255 scope global virbr0
+       valid_lft forever preferred_lft forever
+4: virbr0-nic: <BROADCAST,MULTICAST> mtu 1500 qdisc pfifo_fast master virbr0 state DOWN group default qlen 1000
+    link/ether 52:54:00:30:61:02 brd ff:ff:ff:ff:ff:ff
+[root@hspEdu100 ~]# 
+virbr0是什么网卡?这里ens33是我在使用的连接外部网络时的网卡
+~~~
+
+`virbr0` 是一个虚拟网桥，通常由虚拟化软件（如 KVM、QEMU 或者使用 libvirt 的虚拟机管理程序）创建和管理。它允许虚拟机（VMs）通过这个虚拟网桥与主机系统通信，或者使得虚拟机之间能够互相通信。`virbr0` 通常被配置为 NAT 模式，使得虚拟机可以访问外部网络，而不需要一个物理网络接口。
+
+在你的系统上，`virbr0` 接口被分配了 `192.168.122.1` 的 IP 地址，这表明它被配置为一个虚拟网络的网关。虚拟机默认会被分配到 `192.168.122.0/24` 这个子网中。
+
+`ens33` 是一个物理网络接口，用于你的物理机器与外部网络（如你的局域网或互联网）通信。在你提供的输出中，`ens33` 被分配了 `192.168.198.138` 的 IP 地址，表明你的主机通过这个接口连接到网络。
+
+总结来说：
+- `ens33` 是你的主机连接外部网络的物理网卡。
+- `virbr0` 是一个虚拟网桥，用于虚拟机网络通信，允许它们通过 NAT 访问外部网络或者实现虚拟机之间的网络互联。
+
+
+
+#### 形象的解释
+
+想象你的计算机是一座带有多间房间的大房子（`ens33`），而这座大房子有一个主门（物理网卡），直接通向外面的世界（外部网络）。任何时候，当房子里的人想要出去，他们就通过这个主门。
+
+现在，假设你在这座大房子里搭建了一个模型火车网络（`virbr0`），它连接着房子内的多个小房间（虚拟机）。这个模型火车网络有自己的轨道和小站台，但它不直接通向外面的世界。相反，它在房子内部运行，让小房间里的人可以相互访问和发送信息。
+
+如果模型火车上的某个人想要到外面的世界去，他们首先需要乘坐模型火车到达一个特殊的站台（NAT网关），这个站台有一个通往房子主门的小径。通过这条小径，他们可以出房子，到外面的世界去。回来时也是同样的路径。
+
+在这个比喻中：
+- **大房子的主门（`ens33`）**：这是你的计算机连接到外部世界的物理网络接口。它就像是房子的主门，直接通往外面的世界。
+- **模型火车网络（`virbr0`）**：这是内部虚拟机之间通信的网络，类似于房子内部的模型火车系统。虚拟机可以通过这个网络互相访问，但如果它们想要访问外部网络，就需要通过一个网络地址转换（NAT）网关，这个网关允许它们通过物理网络接口出去。
+
+通过这种设置，你的虚拟机（房间里的人）可以保持与外部世界的通信，同时还可以在内部网络（房子内的模型火车网络）上互相访问，而不需要每个虚拟机都有一个直接通向外部世界的门。
+
+#### 这两个网络不在同一个网络里，IP属于两个不同的网络，虚拟机相对于这两个网络都有一个各自的IP地址，但是用于不同的用途？那为什么每台虚拟机都有一个ens33的地址，难道不可以直接经过ens33网络直接出去大房子吗？还需要走virbr0的网络？
+
+你提出了一个很好的问题，这涉及到虚拟化网络的设计和配置。让我们先澄清一些概念，然后回答你的问题。
+
+#### 虚拟机网络接口和物理机网络接口
+
+- **物理网络接口（比如 `ens33`）**：这是你的主机（物理机）连接到外部网络（比如局域网或互联网）的接口。它是物理存在的，比如网卡。
+
+- **虚拟网络接口**：这是虚拟机内部的网络接口，它模拟了一个物理网络接口的行为。虚拟机内部的操作系统会像处理真实的网络接口一样处理这个虚拟网络接口。
+
+#### 为什么虚拟机需要通过 `virbr0` 网络？
+
+当你的虚拟机配置为通过 `virbr0`（一个虚拟网桥）连接时，目的通常是为了简化网络配置、提高安全性，或者是因为宿主机的网络配置要求。
+
+- **简化网络配置**：使用 `virbr0` 可以让所有虚拟机共享宿主机的一个物理网络接口。这样，虚拟机可以自动通过宿主机访问外部网络，而不需要为每个虚拟机单独配置网络。
+
+- **安全性**：通过 `virbr0` 和 NAT，虚拟机对外界而言是不可见的，只有通过宿主机才能访问。这为虚拟机提供了一层保护。
+
+#### 虚拟机直接使用 `ens33` 网络？
+
+虚拟机确实可以配置为直接使用宿主机的 `ens33` 网络，这通常通过桥接（Bridge）模式实现。在桥接模式下，虚拟机会像宿主机上的物理机一样直接连接到外部网络，拥有独立的IP地址。
+
+- **为什么不总是这么做？** 桥接模式要求网络环境能够分配足够的IP地址给虚拟机，同时，虚拟机会直接暴露在外部网络上，这可能不符合所有场景的安全要求。
+
+#### 总结
+
+`virbr0` 和直接通过 `ens33` 访问外部网络的选择，取决于你的具体需求：
+
+- 如果你想让虚拟机在网络上有自己的独立身份，并且网络环境允许，可以选择桥接模式。
+- 如果你倾向于更简单的配置，或者需要更多的网络隔离，可以使用 `virbr0` 这样的虚拟网络，配合 NAT。
+
+每种配置都有其用途和优势，选择哪一种取决于你的具体需求和网络环境。
+
+#### 也就是说NAT模式同时使用virbr0和ens33？是
+
+是的，当虚拟机配置为使用NAT模式时，实际上是同时利用了`virbr0`（虚拟网桥或虚拟网络接口）和`ens33`（物理网络接口）。这种配置方式允许虚拟机通过宿主机的物理接口访问外部网络，同时保持虚拟机在内部网络中的隔离状态。这里是如何工作的：
+
+1. **内部通信**：虚拟机之间可以通过`virbr0`直接通信，就像它们连接到了同一个交换机一样。这种内部网络是隔离的，外部网络无法直接访问虚拟机。
+
+2. **访问外部网络**：虚拟机想要访问外部网络（互联网或局域网）时，数据包会通过`virbr0`发送到宿主机，然后由宿主机通过NAT（网络地址转换）转发到`ens33`，从而出去到外部网络。
+
+3. **外部到虚拟机的访问**：外部网络上的机器想要访问虚拟机时，必须先到达宿主机的`ens33`接口，然后宿主机通过NAT规则将请求转发给`virbr0`，最后到达指定的虚拟机。这通常需要在NAT配置中设置端口转发规则。
+
+#### 图解示意
+
+这里是一个简化的图解示意，展示了NAT模式下的网络流向：
+
+```
+外部网络
+   |
+[ens33]
+   |  \
+   |   宿主机NAT
+   |  /
+[virbr0]
+   |
+虚拟机A  虚拟机B  ...  虚拟机N
+```
+
+- **数据流**：虚拟机发送到外部网络的数据包会先经过`virbr0`，然后由宿主机NAT处理后通过`ens33`发送出去。从外部网络返回的数据包也会经过相反的路径，通过`ens33`接收，然后由NAT处理并通过`virbr0`转发给相应的虚拟机。
+
+- **隔离与访问控制**：这种配置既保证了虚拟机在内部的互联互通，又通过NAT为虚拟机提供了一定程度的隔离和安全保护。外部网络需要通过宿主机的NAT规则才能访问到虚拟机，而这些规则可以精细地控制访问权限。
+
+总之，NAT模式结合了`virbr0`和`ens33`的使用，提供了一种既方便又安全的方式，让虚拟机能够访问外部网络，同时保持网络的隔离性。
+
+#### 这里不是有一个缺陷?所有的流量都会经过宿主机到外部网络，也就是说，可以追踪到宿主机，那追踪到宿主机不就可以确定是谁了吗？不就没有必要再往下追踪虚拟机了？
+
+你提到了一个重要的观点，确实，当虚拟机配置为通过宿主机的NAT访问外部网络时，所有的网络流量都会经过宿主机。这种配置方式具有其便利性和安全性，但也引入了潜在的隐私和追踪问题，尤其是在需要匿名或保护个人隐私的场景中。
+
+#### 追踪与隐私考虑
+
+- **流量追踪**：由于所有从虚拟机发出的流量都会被NAT处理并从宿主机的物理接口`ens33`发送出去，外部观察者看到的源IP地址将是宿主机的IP，而不是虚拟机的。这意味着，从网络流量上直接区分哪些流量来自宿主机本身，哪些来自虚拟机变得困难。
+
+- **确定身份**：如果攻击者或者监控者能够追踪到宿主机，他们可能无法直接确定流量是从哪个特定的虚拟机发出的。然而，如果宿主机的网络活动已经足够揭示使用者的身份或行为模式，这种追踪可能已经足够满足某些攻击者或监控者的目的。
+
+#### 应对措施
+
+为了提高隐私保护和减少追踪风险，可以考虑以下措施：
+
+- **使用VPN**：在宿主机或虚拟机上配置VPN，以确保所有出站流量都通过加密隧道。这有助于隐藏真实IP地址，并增加追踪的难度。
+- **Tor网络**：对于需要高度匿名的场景，可以在虚拟机内部使用Tor网络。Tor通过分布式网络中继转发流量，大大增加了追踪源头的难度。
+- **隔离网络环境**：为敏感活动使用专用的虚拟机，并且严格控制这些虚拟机的网络访问，比如通过专用的VPN或Tor连接。
+
+#### 结论
+
+虽然所有流量都经过宿主机可能引入一定的追踪风险，但通过合理的网络安全和隐私保护措施，可以有效降低这一风险。选择哪种措施取决于你的具体需求、所面临的威胁模型以及对隐私保护的要求。
+
+
+
+### 12  第二种配置虚拟机固定静态IP的方式【network和NetworkManager都启用，修改虚拟机设置-网络连接模式为自定义模式VMnet8(NAT模式)】 不推荐！！！结果还是需要禁用network！
+
+
+
+vi /etc/sysconfig/network-scripts/ifcfg-ens33
+
+
+
+#### 1 网络连接模式如下:
+
+![image-20240407171026168](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240407171026168.png)
+
+
+
+
+
+#### 2 配置文件
+
+~~~
+[root@hspEdu100 ~]# cat /etc/sysconfig/network-scripts/ifcfg-ens33
+TYPE="Ethernet"
+PROXY_METHOD="none"
+BROWSER_ONLY="no"
+BOOTPROTO="static"
+DEFROUTE="yes"
+IPV4_FAILURE_FATAL="no"
+IPV6INIT="yes"
+IPV6_AUTOCONF="yes"
+IPV6_DEFROUTE="yes"
+IPV6_FAILURE_FATAL="no"
+IPV6_ADDR_GEN_MODE="stable-privacy"
+NAME="ens33"
+UUID="2e5a5c25-b0b3-489a-aecd-1461cf86d9d8"
+DEVICE="ens33"
+ONBOOT="yes"
+#IP 地址
+#IPADDR=192.168.200.130
+#网关
+#GATEWAY=192.168.200.2
+#域名解析器
+#DNS1=192.168.200.2
+#学习Nginx使用的IP 地址
+#IPADDR="192.168.198.138"
+
+#学习Redis使用的IP 地址
+IPADDR="192.168.198.135"
+
+#学习Nginx/Redis使用的网关
+GATEWAY="192.168.198.2"
+
+#学习Nginx使用的域名解析器
+#DNS1="192.168.198.2"
+
+#学习Redis使用的域名解析器
+DNS1="8.8.8.8"
+
+#子网掩码，不写默认就是255.255.255.0
+NETMASK="255.255.255.0"
+
+# 你希望 NetworkManager 接管并应用 ifcfg-ens33 文件中的配置
+#NM_CONTROLLED="yes"
+~~~
+
+
+
+~~~
+[root@hspEdu100 ~]# cat /etc/sysconfig/network-scripts/ifcfg-ens33
+TYPE="Ethernet"
+PROXY_METHOD="none"
+BROWSER_ONLY="no"
+BOOTPROTO="static"
+DEFROUTE="yes"
+IPV4_FAILURE_FATAL="no"
+IPV6INIT="yes"
+IPV6_AUTOCONF="yes"
+IPV6_DEFROUTE="yes"
+IPV6_FAILURE_FATAL="no"
+IPV6_ADDR_GEN_MODE="stable-privacy"
+NAME="ens33"
+UUID="2e5a5c25-b0b3-489a-aecd-1461cf86d9d8"
+DEVICE="ens33"
+ONBOOT="yes"
+#IP 地址
+#IPADDR=192.168.200.130
+#网关
+#GATEWAY=192.168.200.2
+#域名解析器
+#DNS1=192.168.200.2
+
+#IP 地址
+IPADDR="192.168.198.135"
+#网关
+GATEWAY="192.168.198.2"
+#域名解析器
+DNS1="192.168.198.2"
+#域名解析器
+DNS2="8.8.8.8"
+
+#子网掩码，不写默认就是255.255.255.0
+NETMASK="255.255.255.0"
+
+# 你希望 NetworkManager 接管并应用 ifcfg-ens33 文件中的配置
+NM_CONTROLLED="yes"
+
+~~~
+
+
+
+
+
+
+
+#### 配置信息
+
+![image-20240407173704872](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240407173704872.png)
+
+
+
+![image-20240407173753624](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240407173753624.png)
+
+
+
+![image-20240407173845759](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240407173845759.png)
+
+
+
+![image-20240407173930605](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240407173930605.png)
+
+
+
+
+
+---
+
+
+
+
+
+#### 我的Linux禁用了network服务，如何重启该服务，并保持每次启动时该服务都在运行，而不需要再次启动该服务？
+
+在Linux中，管理服务（如network服务）通常使用`systemd`或较旧的`System V init`系统。自从大多数现代Linux发行版采用了`systemd`作为其系统和服务管理器，我将基于`systemd`提供指导。如果你的系统使用的是`System V init`，步骤会有所不同。
+
+#### 使用`systemd`重启并启用网络服务
+
+1. **重启网络服务**：
+   要重启`network`服务，你可以使用`systemctl`命令。打开终端或通过SSH登录到你的Linux系统，然后输入以下命令：
+
+   ```bash
+   sudo systemctl restart network
+   ```
+
+   这条命令会立即重启`network`服务。
+
+2. **设置服务为开机自启**：
+   要确保`network`服务在每次启动时自动运行，使用`systemctl`命令启用该服务：
+
+   ```bash
+   sudo systemctl enable network
+   ```
+
+   这条命令会创建一个符号链接，确保在系统启动时`systemd`会自动启动`network`服务。
+
+3. **检查服务状态**：
+   为了确认`network`服务正在运行，并已设置为开机自启，可以检查其状态：
+
+   ```bash
+   sudo systemctl status network
+   ```
+
+   这会显示`network`服务的当前状态，以及是否已正确配置为在启动时自动运行。
+
+#### 注意事项
+
+- **服务名称**：请注意，服务名称可能因Linux发行版而异。在一些系统中，网络服务可能被称为`networking`而不是`network`。如果你不确定，可以使用`systemctl`列出所有服务来找到确切的服务名称：
+
+  ```bash
+  systemctl list-unit-files | grep network
+  ```
+
+- **权限**：执行上述命令需要有足够的权限。如果你不是以root用户登录，需要在命令前加上`sudo`来获取必要的权限。
+
+- **网络管理器**：一些现代的Linux发行版使用`NetworkManager`服务来管理网络配置，而不是传统的`network`服务。如果你的系统使用`NetworkManager`，你可能需要启动和启用`NetworkManager`服务，而不是`network`服务：
+
+  ```bash
+  sudo systemctl restart NetworkManager
+  sudo systemctl enable NetworkManager
+  ```
+
+按照这些步骤，你应该能够重启并设置`network`服务（或等效服务）在每次系统启动时自动运行。
+
+
+
+
+
+~~~
+[root@hspEdu100 ~]# ip addr
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: ens33: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 00:0c:29:91:a4:70 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.198.135/24 brd 192.168.198.255 scope global noprefixroute ens33
+       valid_lft forever preferred_lft forever
+    inet 192.168.198.128/24 brd 192.168.198.255 scope global secondary dynamic ens33
+       valid_lft 1765sec preferred_lft 1765sec
+    inet6 fe80::e85d:52d3:ddfc:1958/64 scope link noprefixroute 
+       valid_lft forever preferred_lft forever
+3: virbr0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default qlen 1000
+    link/ether 52:54:00:30:61:02 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.122.1/24 brd 192.168.122.255 scope global virbr0
+       valid_lft forever preferred_lft forever
+4: virbr0-nic: <BROADCAST,MULTICAST> mtu 1500 qdisc pfifo_fast master virbr0 state DOWN group default qlen 1000
+    link/ether 52:54:00:30:61:02 brd ff:ff:ff:ff:ff:ff
+
+~~~
+
+
+
+是的，根据你提供的`ip addr`命令输出，你的虚拟机中的`ens33`网络接口确实配置了两个IPv4地址：
+
+1. `192.168.198.135/24`：这个IP地址被标记为`global noprefixroute`，意味着它是手动配置或通过DHCP静态分配的主IP地址。这个地址用于接口的主要通信。
+
+2. `192.168.198.128/24`：这个IP地址被标记为`global secondary dynamic`，意味着它是动态配置的，可能是通过DHCP获取的一个额外地址，并且有一个具体的生存时间（`valid_lft 1765sec`），之后可能会被更新或移除。"secondary"标识意味着这是除了主IP之外的附加地址。
+
+#### 多IP地址配置的目的
+
+一个网络接口上配置多个IP地址有几个常见的用途：
+
+- **服务隔离**：为不同的服务或应用程序在同一网络接口上配置不同的IP地址，以便于管理和隔离流量。
+
+- **网络管理**：某些网络管理任务可能需要额外的IP地址进行特定的配置或测试。
+
+- **IP地址迁移**：在迁移服务或进行网络升级时，可能临时需要在同一个接口上配置多个IP地址。
+
+#### 管理和配置
+
+如果你需要调整或管理这些IP地址配置，可以通过以下方式进行：
+
+- **手动配置**：使用`ip`命令或编辑网络配置文件（取决于你的Linux发行版）手动更改IP地址配置。
+
+- **DHCP客户端配置**：如果这些地址是通过DHCP获取的，你可以重新启动网络服务或DHCP客户端来刷新IP地址分配。对于某些配置，可能还需要检查DHCP服务器的配置。
+
+- **网络接口配置文件**：对于基于`systemd-networkd`或`NetworkManager`的系统，你可能需要查看相应的配置文件或使用图形界面工具来管理网络设置。
+
+如果有特定的需求或问题需要解决，比如移除额外的IP地址或调整网络配置，确保参考你的Linux发行版的文档，因为操作细节可能会有所不同。
+
+
+
+#### 禁用network，解决ens33 有两个ipv4的问题
+
+既然你已经通过 NetworkManager 的图形界面确认了 IPv4 设置为手动，并且 IP 地址设置为 `192.168.198.135/24`，这意味着你的网络连接已经被正确配置为使用静态 IP 地址。
+
+然而，你之前提到的 `ens33` 网络接口上出现了两个 IPv4 地址，其中 `192.168.198.128/24` 被标记为动态分配。这可能是由于以下几个原因：
+
+1. **网络服务重叠**：如果你的系统同时运行了 NetworkManager 和传统的 network 服务（或其他网络管理服务），它们可能会互相干扰，导致网络配置不一致或重复。在大多数现代 Linux 发行版中，推荐只使用 NetworkManager 来管理网络连接。
+
+2. **DHCP 租约未到期**：如果 `ens33` 接口之前配置为自动获取 IP（通过 DHCP），并且后来被改为静态 IP，之前通过 DHCP 获得的 IP 地址可能会因为 DHCP 租约未到期而仍然保留在接口上，直到租约到期。
+
+3. **配置残留**：在某些情况下，旧的 DHCP 配置或 IP 地址可能会在系统配置文件中留下残留，即使在图形界面中看似已经更新了配置。
+
+### 解决步骤
+
+根据你的描述，你可能需要采取以下步骤来解决这个问题：
+
+1. **确认网络管理服务**：确认你的系统只使用一个网络管理服务（推荐为 NetworkManager），如果还在运行其他的网络服务，如传统的 network 服务，考虑停用它：
+
+   ```bash
+   sudo systemctl stop network
+   sudo systemctl disable network
+   ```
+
+   并确保 NetworkManager 是启用并运行的状态：
+
+   ```bash
+   sudo systemctl enable NetworkManager
+   sudo systemctl start NetworkManager
+   ```
+
+2. **释放并续租 DHCP**：如果怀疑是 DHCP 租约导致的问题，可以尝试手动释放并重新获取 IP 地址（这对静态 IP 配置来说通常不是必需的，仅作为排除 DHCP 影响的步骤）：
+
+   ```bash
+   sudo dhclient -r ens33
+   sudo dhclient ens33
+   ```
+
+3. **检查并清理配置文件**：检查 `/etc/sysconfig/network-scripts/`（或你的发行版相应的位置）下是否有针对 `ens33` 的配置文件残留，确保其中的配置与 NetworkManager 的设置一致。
+
+4. **重启 NetworkManager 服务**：
+
+   ```bash
+   sudo systemctl restart NetworkManager
+   ```
+
+5. **重新检查网络配置**：最后，再次检查你的网络配置，确认 `ens33` 接口上只有预期的静态 IP 地址。
+
+如果以上步骤仍然不能解决问题，可能需要进一步检查系统的网络配置详情，包括可能的 DHCP 客户端配置和其他网络管理工具的设置。
+
+
+
+
+
+
 
 
 
