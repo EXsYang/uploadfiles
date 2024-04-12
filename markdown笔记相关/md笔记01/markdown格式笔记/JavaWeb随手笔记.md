@@ -24,6 +24,71 @@ Tomcat是一个广泛使用的Java Servlet容器和Web服务器。在Tomcat中�
 
 ---
 
+
+
+
+
+# Servlet 规范
+
+Servlet 规范是由 Java 社区过程（Java Community Process，JCP）提出的一系列标准，旨在定义 Java Servlet 技术的各种方面，包括 Servlet 的生命周期、与Web容器（如Tomcat, Jetty）的交互方式、目录结构等。Servlet 规范的目的是确保不同开发者开发的 Web 应用组件能够在所有遵循这些规范的 Web 容器上无缝运行。
+
+### 主要内容
+
+#### 1. Servlet 生命周期
+
+- **加载和实例化**：容器负责加载 Servlet 类，并创建其实例。
+- **初始化**：通过调用 `init()` 方法完成初始化。`init` 方法只被调用一次。
+- **请求处理**：每接收一个请求，容器可能使用单独的线程调用 `service()` 方法。`service()` 方法根据请求的类型（GET、POST 等），进一步调用 `doGet()`, `doPost()` 等方法。
+- **销毁**：当容器关闭或容器需要释放资源时，`destroy()` 方法被调用，执行清理工作。
+
+#### 2. 目录结构和特殊文件
+
+Servlet 规范定义了Web应用的标准目录结构，这在部署到任何兼容的Web容器时都是必须遵守的：
+
+- **`/WEB-INF`**：
+  - **`web.xml`**：部署描述文件，定义 Servlet、过滤器、监听器、安全配置等。
+  - **`/classes`**：存放编译后的 `.class` 文件，即 Servlet 和其他类文件。
+  - **`/lib`**：存放应用所需的 JAR 文件。根据规范，这个目录必须命名为 `lib`（而不是 `libs` 或其他任何名称），且所有 JAR 文件必须直接位于此目录下，不支持子目录。
+
+- **静态资源**（HTML, CSS, JavaScript等）和 JSP 文件通常位于 `WEB-INF` 目录外，以便可以直接被客户端请求访问。
+
+#### 3. Servlet 容器和服务器通信
+
+- Servlet 容器负责管理 Servlet 的生命周期，处理请求，以及维护和服务器的通信。
+- 容器也负责会话管理、安全性、多线程管理等。
+
+#### 4. 安全性
+
+- Servlet 规范包括用于声明式安全配置的规则，允许开发者在 `web.xml` 中配置安全约束。
+
+### Servlet API
+
+Servlet API 提供了多个重要的接口和类，包括但不限于：
+
+- `javax.servlet.Servlet`
+- `javax.servlet.http.HttpServlet`
+- `javax.servlet.ServletRequest`
+- `javax.servlet.ServletResponse`
+- `javax.servlet.Filter`
+- `javax.servlet.http.HttpSession`
+
+### 兼容性和版本
+
+- Servlet 技术从 1997 年的 Servlet 1.0 发展至今，最新的主要版本是 Servlet 4.0，随 Java EE 8 一起发布。
+- 每个版本的发布都可能包括新的功能、性能改进、安全性增强以及规范更新。
+
+### 总结
+
+Servlet 规范为 Java Web 开发提供了一套标准的规则和接口，确保开发的 Web 应用可以跨多个服务器和容器平台移植和运行。遵循这些规范可以帮助开发者编写更稳定、更安全、更高效的 Web 应用。
+
+
+
+
+
+
+
+
+
 # 1 启动HspTomcatV3 的main 方法时，报错 NoClassDefFoundError: javax/servlet/http/HttpServlet
 
 ```
@@ -3421,3 +3486,81 @@ mimeType= image/jpeg
 
 **即使不写也会自动补上 但是建议还是写上**
 
+
+
+
+
+# Ajax笔记：
+
+## 1 在 AJAX 发送请求时，它会考虑当前页面地址栏中的 URL
+
+在你的示例中，使用 jQuery 的 `$.post` 方法发送 AJAX 请求时，指定的 URL 是 `"secKillServlet"`。这个 URL 是相对 URL，它的解析会基于当前页面的 URL。让我们详细讨论这个过程以及如何确定最终的请求 URL。
+
+### 如何解析相对 URL
+
+当你在 AJAX 请求中使用一个相对 URL 时，浏览器将这个相对 URL 与当前页面的 URL 结合起来，形成最终的请求 URL。具体来说：
+
+1. **当前页面 URL**：假设你的当前页面地址是 `http://www.example.com/app/page.jsp`。
+2. **相对 URL**：在 `$.post` 中使用的 URL 是 `"secKillServlet"`。
+
+最终的请求 URL 将是 `http://www.example.com/app/secKillServlet`。这是因为 `"secKillServlet"` 将会被追加到当前页面的路径的基目录后面，即 `http://www.example.com/app/`。
+
+### 特殊情况：`<base>` 标签
+
+你的 HTML 中使用了 `<base>` 标签：
+
+```html
+<base href="<%=request.getContextPath() + "/"%>">
+```
+
+`<base>` 标签指定了用于解析页面中所有相对 URL 的基准 URL。如果 `<%=request.getContextPath()%>` 渲染为例如 `/app`，那么 `<base>` 标签的实际内容会是：
+
+```html
+<base href="/app/">
+```
+
+这意味着所有相对 URL，包括从 JavaScript 发出的 AJAX 请求，都将基于 `/app/` 来解析。因此：
+
+- 如果 `<base>` 标签存在并被正确设置，且当前页面的路径为 `http://www.example.com/app/page.jsp`，
+- 那么使用 `"secKillServlet"` 作为 AJAX 请求的 URL，将解析为 `http://www.example.com/app/secKillServlet`。
+
+### 结论
+
+是的，在 AJAX 发送请求时，它会考虑当前页面地址栏中的 URL，或者更具体地说，它会考虑 `<base>` 标签（如果有的话）指定的基本 URL。如果没有 `<base>` 标签，它默认使用当前页面的路径作为基路径。
+
+因此，你的 AJAX 请求的最终 URL 将由页面的 URL 或 `<base>` 标签（如果设置了的话）决定。这样确保了无论页面如何被服务器移动或嵌套，AJAX 请求都能正确指向目标 Servlet。这是 Web 开发中常用的技巧，用于确保资源路径的正确性，特别是在可能存在多个应用上下文或复杂目录结构的大型应用中。
+
+
+
+## 2 如果在 AJAX 的 POST URL 中 URL 最前面是 `/`，它被解析为当前域名（包括端口号，如果有的话）加上该绝对路径。
+
+当你在 AJAX 的 `$.post` 方法中使用 URL，并且该 URL 以斜杠 (`/`) 开头，这种 URL 被称为绝对路径 URL。这意味着 URL 的解析将基于当前页面的域名和端口号，而不是页面的路径或 `<base>` 标签（如果存在）。
+
+### 绝对路径 URL 的行为
+
+如果 URL 开头是一个斜杠（例如 `/secKillServlet`），它指定了从当前域的根目录开始的路径。具体来说：
+
+- **URL 示例**：`/secKillServlet`
+- **当前页面 URL**：假设为 `http://www.example.com/app/page.jsp`
+- **解析的请求 URL**：将会是 `http://www.example.com/secKillServlet`
+
+这里，`/secKillServlet` 会被解析为从 `http://www.example.com/` （即域名根目录）后面直接追加 `secKillServlet`，忽略了任何子目录路径如 `/app/`。
+
+### 影响因素
+
+1. **当前域名**：基于页面当前的域名（如 `www.example.com`）。
+2. **端口号**：如果页面 URL 包含特定的端口，如 `http://www.example.com:8080/app/page.jsp`，那么绝对路径 URL `/secKillServlet` 也将使用此端口，解析为 `http://www.example.com:8080/secKillServlet`。
+3. **`<base>` 标签**：即使页面中定义了 `<base>` 标签，绝对路径 URL（以 `/` 开头）也不会使用 `<base>` 标签的路径。它总是从域名根路径开始解析。
+
+### 使用场景
+
+使用以 `/` 开头的 URL 在多页应用和具有复杂目录结构的应用中非常有用，因为它允许开发者无需担心当前页面的路径，确保 AJAX 请求能够从站点根目录正确地定位到资源或服务。这种方法在以下情况下特别有用：
+
+- **应用使用了多个子目录**：应用的不同部分位于多个子目录中。
+- **避免相对路径的复杂计算**：直接从根路径指定资源，简化开发。
+
+### 总结
+
+是的，如果在 AJAX 的 POST URL 中 URL 最前面是 `/`，它被解析为当前域名（包括端口号，如果有的话）加上该绝对路径。这样的 URL 定义清晰且易于管理，特别是在你需要确保 AJAX 请求指向固定服务器路径的场景中。使用这种 URL 可以避免因当前页面的深层嵌套路径导致的资源定位错误。
+
+3 
