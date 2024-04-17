@@ -92,7 +92,7 @@ C:\用户\yangd\.m2\repository
 
 ---
 
-# 3 Maven 在 dependencyManagement 中导入配置报错Dependency 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.0' not found
+# 3 Maven 在 dependencyManagement 中导入配置报错Dependency 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.0' not found-pom.xml文件爆红
 
 > 问题发生的原因:
 >
@@ -138,6 +138,36 @@ C:\Users\yangd\.m2\settings.xml中的配置如下：
 
 从中央仓库下载依赖的地址是 https://repo.maven.apache.org/maven2
 
+## 3.1 maven中三个和maven中央仓库相关的地址的说明
+
+这三个地址各自的作用和区别如下：
+
+### 1. [MVNRepository (https://mvnrepository.com/)](https://mvnrepository.com/)
+
+- **作用**：这是一个便于浏览和搜索 Maven 项目和其依赖的网站。用户可以通过这个网站方便地查找需要的库及其不同版本的详细信息，包括库的 Maven 坐标（groupId, artifactId, version），依赖关系，以及如何在项目中添加这些依赖。
+- **说明**：虽然这个网站提供了库的详细信息和配置示例，它本身并不是一个仓库服务器，也就是说，它不提供二进制的依赖文件下载服务。它更多的是一个依赖信息的聚合和展示平台。
+
+### 2. 示例仓库 URL (http://my.repository.com/repo/path)
+
+- **作用**：这通常是一个示例或自定义的 Maven 仓库地址，用于企业内部或第三方 Maven 仓库。企业和开发组织通常会设置内部仓库来加速依赖管理过程，保证依赖的可用性，以及控制和优化构建过程中使用的第三方库。
+- **说明**：在 Maven 的 `settings.xml` 或项目的 `pom.xml` 中配置此类 URL，可以让 Maven 用户从指定的仓库地址下载或上传依赖项。这类仓库可能是公开的或需要认证的，具体取决于仓库的设置。
+
+### 3. Maven 中央仓库 (https://repo.maven.apache.org/maven2)
+
+- **作用**：这是 Maven 的官方中央仓库，用于全球范围内的 Maven 用户下载各种开源库的标准版本。几乎所有公开发布的 Java 库都可以在这个仓库中找到。
+- **说明**：当 Maven 构建项目时，除非另有指定，否则它默认从这个地址下载所需的所有依赖项。这个仓库包含了广泛的开源项目，是 Maven 默认的、最基本的依赖来源。
+
+### 检查特定依赖（例如：mybatis-spring-boot-starter）
+
+要查看 `mybatis-spring-boot-starter` 版本 `2.2.0` 是否存在于 Maven 中央仓库，可以通过以下任一方式进行：
+
+- **在 MVNRepository 网站搜索**：通过 [mvnrepository.com](https://mvnrepository.com/) 搜索 `mybatis-spring-boot-starter`，查看其版本列表，确认是否存在版本 `2.2.0`。
+- **直接访问 Maven 中央仓库**：通过构造 URL 访问路径 `https://repo.maven.apache.org/maven2/org/mybatis/spring/boot/mybatis-spring-boot-starter/`，并查看是否有 `2.2.0` 目录存在。
+
+通过以上解释和说明，希望你对这些 Maven 相关的网址和其作用有了清晰的理解。
+
+
+
 ![image-20231227220550063](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20231227220550063.png)
 
 解决方法，新建一个Maven项目 真正的导入一下这个jar
@@ -164,6 +194,224 @@ C:\Users\yangd\.m2\settings.xml中的配置如下：
 2. Maven会去哪里下载依赖的文件会根据Maven配置在C:\Users\yangd\.m2\settings.xml文件中的<mirror>标签的url路径下载文件
 3. 如果Maven刷新失败，可以切换配置在C:\Users\yangd\.m2\settings.xml文件中的<mirror>标签的url路径下载文件的url，比如使用阿里镜像
 4. 如果使用默认的Maven中央仓库注意需要外网，打开TUN模式
+
+
+
+# 3.2 Maven 在pluginManagement -plugins - plugin 中报错解决方案-pom.xml文件爆红
+
+
+
+刷新Maven之前需要注意的几点
+
+1. 如果走的是默认的maven中央仓库配置，则需要配置proxy
+2. 确保网络畅通
+
+![image-20240417135014558](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240417135014558.png)
+
+**上面的猜测错误，主要原因是没有在dependence中导入过该插件导致的，需要导入一次**
+
+![image-20240417140815301](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240417140815301.png)
+
+解决方案和在 dependencyManagement 报错方案解决方式一样，需要在dependence中真正的导入一下该插件即可！！
+
+
+
+插件的导入方式为:在dependencies同一级下面的build中导入插件，如下所示（和解决该问题无关，只是一个插件的导入方式）
+
+![image-20240417141405818](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240417141405818.png)
+
+
+
+### 解决方案(已成功解决):
+
+在dependency导入一下插件，即可解决默认情况下，没有导入过的插件jar
+pluginManagement-plugins中爆红问题，只要导入了一次，即使注销掉插件的导入<dependency>
+在build-pluginManagement-plugins-plugin 的插件也不会报错了，重点即是需要真正的导入过一次
+
+
+
+```
+<!-- 需要使用 dependency 进行真正引入插件依赖后才可以在
+build-plugins-plugin 中使用 groupId、artifactId进行导入插件
+(如分布式项目hspliving->hspliving-commodity->pom.xml中的插件导入方式)
+
+在下面这里dependency导入一下插件，即可解决默认情况下，没有导入过的插件jar
+pluginManagement-plugins中爆红问题，只要导入了一次，即使注销掉插件的导入<dependency>
+在build-pluginManagement-plugins-plugin 的插件也不会报错了，重点即是需要真正的导入过一次
+
+dependency中导入插件后，同时也可以在build-pluginManagement-plugins-plugin 标签下
+仅使用artifactId和version指定插件和插件的版本了
+      <artifactId>maven-clean-plugin</artifactId>
+      <version>3.1.0</version>
+-->
+```
+
+
+
+maven web项目 web-hello-maven 的pom.xml文件如下：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <!--
+  解读:
+  1. groupId、artifactId、version 就是maven项目的坐标
+  2. packaging: 打包方式，默认是jar,因为当前是web项目，所以这里打包成war
+  -->
+  <groupId>com.hspedu</groupId>
+  <artifactId>web-hello-maven</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>war</packaging>
+
+  <name>web-hello-maven Maven Webapp</name>
+  <!-- FIXME change it to the project's website -->
+  <url>http://www.example.com</url>
+
+  <!--
+  maven项目的属性，根据实际情况可以修改,默认的1.7会出现...不兼容.. 等情况，通常改为1.8
+  -->
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!--<maven.compiler.source>1.7</maven.compiler.source>-->
+    <!--<maven.compiler.target>1.7</maven.compiler.target>-->
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
+
+  <dependencies>
+
+
+    <!-- 默认引入的jar,可以调整 -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- 需要使用 dependency 进行真正引入插件依赖后才可以在
+    build-plugins-plugin 中使用 groupId、artifactId进行导入插件
+    (如分布式项目hspliving->hspliving-commodity->pom.xml中的插件导入方式)
+
+    在下面这里导入一下插件，即可解决默认情况下，没有导入过的插件jar
+    pluginManagement-plugins中爆红问题，只要导入了一次，即使注销掉插件的导入<dependency>
+    在build-pluginManagement-plugins-plugin 的插件也不会报错了，重点即是需要真正的导入过一次
+
+    dependency中导入插件后，同时也可以在build-pluginManagement-plugins-plugin 标签下
+    仅使用artifactId和version指定插件和插件的版本了
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>3.1.0</version>
+    -->
+    <!--<dependency>-->
+    <!--  <groupId>org.apache.maven.plugins</groupId>-->
+    <!--  <artifactId>maven-resources-plugin</artifactId>-->
+    <!--  <version>3.0.2</version>-->
+    <!--</dependency>-->
+
+    <!--<dependency>-->
+    <!--  <groupId>org.apache.maven.plugins</groupId>-->
+    <!--  <artifactId>maven-compiler-plugin</artifactId>-->
+    <!--  <version>3.8.0</version>-->
+    <!--</dependency>-->
+
+    <!--<dependency>-->
+    <!--  <groupId>org.apache.maven.plugins</groupId>-->
+    <!--  <artifactId>maven-war-plugin</artifactId>-->
+    <!--  <version>3.2.2</version>-->
+    <!--</dependency>-->
+
+    <!--<dependency>-->
+    <!--  <groupId>org.apache.maven.plugins</groupId>-->
+    <!--  <artifactId>maven-surefire-plugin</artifactId>-->
+    <!--  <version>2.22.1</version>-->
+    <!--</dependency>-->
+
+  </dependencies>
+
+  <!--默认引入的 maven 插件, 前面说过 mvn 的各种指令 compile/install/test 等都是由插件完成的 -->
+  <build>
+    <finalName>web-hello-maven</finalName>
+    <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+      <plugins>
+        <plugin>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>3.1.0</version>
+        </plugin>
+  <!--如果这里报错，是因为这里是在pluginManagement中，以前没有真正的导入过这个版本的插件依赖，
+      需要在dependence中真正的导入过这个插件后idea才不会报红！！！-->
+        <plugin>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>3.0.2</version>
+        </plugin>
+
+        <!--<plugin>-->
+        <!--  <artifactId>maven-compiler-plugin</artifactId>-->
+        <!--  <version>3.8.0</version>-->
+        <!--</plugin>-->
+        <!-- 编译代码 -->
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.8.0</version>
+          <!-- 指定 JDK 版本 -->
+          <configuration>
+            <source>1.8</source>
+            <target>1.8</target>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.22.1</version>
+        </plugin>
+
+
+        <!--<plugin>-->
+        <!--  <artifactId>maven-war-plugin</artifactId>-->
+        <!--  <version>3.2.2</version>-->
+        <!--</plugin>-->
+
+        <!-- 打包为 WAR 文件，专门为 Web 应用 -->
+        <plugin>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>3.2.2</version>
+          <!-- 更多配置可以在这里添加 -->
+        </plugin>
+
+        <!-- 确保依赖安装到本地仓库 -->
+        <plugin>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>2.5.2</version>
+        </plugin>
+
+        <!-- 部署到远程仓库 -->
+        <plugin>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>2.8.2</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
+
+  </build>
+
+
+</project>
+
+```
+
+
+
+解决成功后如下所示:
+
+![image-20240417145151190](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240417145151190.png)
+
+
+
+
 
 ---
 
