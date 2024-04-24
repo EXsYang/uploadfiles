@@ -3856,7 +3856,7 @@ ChatGPT
 
 
 
-## 17 Linux 实操篇-网络配置
+# 17 Linux 实操篇-网络配置
 
 ### NAT知识科普
 
@@ -3962,6 +3962,46 @@ vi /etc/sysconfig/network-scripts/ifcfg-ens33
 **网络配置ifcfg-ens33文件详情：**
 
 vi /etc/sysconfig/network-scripts/ifcfg-ens33
+
+
+
+### 2 尝试快速恢复网络连接的方法：
+
+~~~
+
+#查看ens33网络连接是否已经连接上了
+sudo nmcli device
+
+#强制NetworkManager重新读取配置
+sudo nmcli connection reload
+
+
+#重启NetworkManager
+sudo systemctl restart NetworkManager
+
+#查看ens33网络连接是否已经连接上了
+sudo nmcli device
+
+#这几条管用
+sudo systemctl restart NetworkManager
+sudo ifdown ens33 && sudo ifup ens33
+ip addr
+sudo nmcli device
+~~~
+
+#### 重启网络接口
+
+如果你只是想让特定网络接口的更改生效，可以使用`ifdown`和`ifup`命令。这里的`ens33`是你的网络接口名：
+
+```bash
+sudo ifdown ens33 && sudo ifup ens33
+```
+
+注意：`ifdown`和`ifup`命令可能需要`net-tools`包，如果系统中没有，你可能需要先安装它。
+
+
+
+
 
 
 

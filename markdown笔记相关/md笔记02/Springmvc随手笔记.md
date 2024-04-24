@@ -748,4 +748,81 @@ D:\Java_developer_tools\ssm\my_springmvc\hsp_springmvc\src\test\java\com\hspedu\
 
 ---
 
-# 14
+# 14 在Spring和Spring Boot应用中，`@Valid` 和 `@Validated` 都用于触发数据验证，但它们在使用和支持的功能方面有所不同。下面是这两个注解的主要用法和区别，帮助你选择适合特定场景的注解。
+
+### @Valid
+
+`@Valid` 是由 JSR-303 和 JSR-349 Bean Validation API 定义的标准验证注解。它可以用于任何Java Bean对象上，以触发对其属性的验证约束。
+
+**使用场景**：
+
+- 应用在方法参数上（如控制器方法中的参数），以确保传入的参数满足定义的约束。
+- 可以用在类型级别、属性级别或方法参数级别。
+- 常用在Spring MVC的控制器或JAX-RS中。
+
+### @Validated
+
+`@Validated` 是由Spring框架提供的，作为`@Valid`的一个增强版，支持分组功能。它可以在Spring管理的Bean中使用，不仅限于验证控制器参数，还可以应用于Spring管理的任何Bean。
+
+**使用场景**：
+
+- 支持分组验证，允许在验证时指定一组特定的约束。例如，可以定义一些验证规则仅在创建时应用，而另一些规则仅在更新时应用。
+- 可用于方法级别和类型级别。
+- 常用于Spring服务或组件中，特别是当你需要在不同的上下文中应用不同的验证规则时。
+
+### 示例解析
+
+在你的示例中，使用了`@Valid`来确保传入的`LoginVo`对象满足验证约束：
+
+```java
+@RequestMapping("/doLogin")
+@ResponseBody
+public RespBean doLogin(@Valid LoginVo loginVo,
+                        HttpServletRequest request,
+                        HttpServletResponse response) {
+    log.info("{}", loginVo);
+    return userService.doLogin(loginVo, request, response);
+}
+```
+
+这里`@Valid`用于控制器方法参数`loginVo`，确保在执行`doLogin`方法体之前，`loginVo`已通过验证（例如，检查是否包含有效的手机号码和密码格式）。如果`loginVo`中的数据不符合`@IsMobile`等注解定义的规则，将自动拒绝处理请求，并生成一个响应表示输入错误。
+
+### 选择 @Valid 还是 @Validated？
+
+- 如果你需要在控制器层简单地验证模型数据，且不需要分组功能，使用`@Valid`即可。
+- 如果你需要更复杂的验证逻辑，例如分组验证或在Spring组件之外进行验证（如在服务层），应选择`@Validated`。
+
+通常，在Spring MVC控制器中，`@Valid` 已经足够用于处理大部分常规的数据验证需求。当你的验证需求超出这些基本场景，或者当你想要利用分组特性来执行更细致的控制时，`@Validated`是一个更好的选择。
+
+
+
+## 2 需要分组，此时就不可以使用@Valid了对吗
+
+是的，正如你的示例所示，当你需要进行分组验证时，应使用 `@Validated` 而不是 `@Valid`。这是因为 `@Valid` 注解不支持验证分组功能，它将对所有应用了验证约束的字段进行验证，而无法区分场景。而 `@Validated` 注解支持分组功能，使得你可以根据不同的场景应用不同的验证规则。
+
+### 分组验证的使用场景
+
+分组验证通常在以下情况下非常有用：
+
+- **创建与更新操作**：在创建新记录（如新品牌）时，可能所有字段都需要被验证，但在更新记录时，某些字段（如品牌ID）可能不允许更改，因此不需要验证。
+- **条件验证**：在不同的操作或业务逻辑分支中，可能需要对同一对象的不同字段集进行验证。
+
+### 示例说明
+
+在你的代码中：
+
+```java
+@RequestMapping("/save")
+public R save(@Validated(SaveGroup.class) @RequestBody BrandEntity brand) {
+    // 业务逻辑
+}
+```
+
+这里使用 `@Validated(SaveGroup.class)` 表明在处理 `save` 方法时，只对 `BrandEntity` 实体中属于 `SaveGroup` 这一验证组的属性进行验证。这种方式非常适合处理实体在不同操作（如新增与更新）中的验证需求。
+
+### 关于 @Valid 和 @Validated 的选择
+
+- **@Valid**：适用于简单的验证场景，无需分组。它是标准JSR-303规范的一部分，与Spring的集成自然不如`@Validated`灵活。
+- **@Validated**：Spring特有的验证注解，支持分组功能，更适合复杂的验证场景，如同一个对象在不同的操作中需要不同的验证规则。
+
+因此，当你的验证需求包括分组功能时，你应该选择使用 `@Validated`。这使得在Spring框架中，你可以更灵活地控制验证逻辑，确保根据具体的业务规则对数据进行正确的校验。
