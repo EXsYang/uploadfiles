@@ -389,10 +389,6 @@ public void openSession(){
 
 
 
-
-
-
-
 “ofType” 属性。这个属性非常重要，它用来将 JavaBean（或字段）属性的类型和集合存储的类型区分开来。 所以你可以按照下面这样来阅读映射：
 
 ```xml
@@ -441,7 +437,78 @@ public String toString() {
 
 
 
+# 12.1 MyBatis和MyBatisPlus中 `<resultMap>`映射机制的详细解释
 
+在 MyBatis 中，JavaBean 属性名和数据库字段名的映射非常关键，正确设置这一映射是保证数据正确封装到 JavaBean 中的前提。以下是 MyBatis 映射机制的详细解释：
+
+### 1. 默认映射行为
+
+如果在 MyBatis 的 `<resultMap>` 中没有明确指定映射关系，MyBatis 默认采用属性名与字段名相同的规则来自动匹配。这意味着，JavaBean 的属性名必须与数据库表的字段名完全一致（包括字母的大小写），否则这些字段将无法被正确封装，其对应的属性值会是 `null`。
+
+例如，如果数据库中的字段名为 `wife_name`，而 JavaBean 中的属性名为 `wifeName`，不使用 `<result>` 指定映射关系的话，`wifeName` 属性将会得到 `null` 值。
+
+### 2. 指定映射关系
+
+为了解决字段名与属性名不一致的问题，可以在 `<resultMap>` 中使用 `<result>` 标签明确指定映射关系。例如：
+
+```xml
+<resultMap id="resultWifeMap" type="Wife">
+    <result property="wifeName" column="wife_name"/>
+</resultMap>
+```
+
+这样配置后，`wife_name` 字段的值就会正确地映射到 `wifeName` 属性上。
+
+### 3. MyBatis Plus 的自动映射扩展
+
+MyBatis Plus 是 MyBatis 的一个扩展框架，它提供了更加强大的映射功能，包括自动的驼峰命名转换（即自动将数据库中的下划线分隔命名转换为 JavaBean 中的驼峰式命名）。这意味着，在 MyBatis Plus 中，即便不通过 `<resultMap>` 明确指定映射关系，`wife_name` 也能自动映射到 `wifeName` 属性。
+
+### 4. 总结
+
+- **MyBatis**: 需要属性名和字段名完全一致，或者通过 `<resultMap>` 明确指定映射关系。
+- **MyBatis Plus**: 提供自动的驼峰命名转换，更加灵活。
+
+在实际开发中，建议根据具体需求选择合适的工具和配置。如果是在使用标准的 MyBatis，确保你的 `<resultMap>` 配置正确，或者调整数据库字段名和 JavaBean 属性名使其一致。如果希望有更自动化的映射支持，可以考虑使用 MyBatis Plus。
+
+# 12.2 MyBatis 和 MyBatis Plus 时，对于表名（`tablename`）的处理也存在一些差异，尤其是在映射和使用便捷性方面。
+
+在使用 MyBatis 和 MyBatis Plus 时，对于表名（`tablename`）的处理也存在一些差异，尤其是在映射和使用便捷性方面。让我们一起看看这两个框架是如何处理表名映射的：
+
+### MyBatis 关于表名的映射
+
+在 MyBatis 中，表名通常是硬编码在 XML 映射文件或者注解中的。MyBatis 本身不提供表名的自动映射功能，开发者需要在每个 SQL 映射中明确指定使用的表名。
+
+例如，使用 XML 配置时，你需要在 `<select>`、`<insert>`、`<update>` 或 `<delete>` 标签的 SQL 语句中直接引用表名：
+
+```xml
+<select id="selectWife" resultType="Wife">
+    SELECT * FROM wife WHERE id = #{id}
+</select>
+```
+
+在这种情况下，如果表名变更，你需要手动更新所有引用了该表名的 SQL 映射。
+
+### MyBatis Plus 关于表名的映射
+
+MyBatis Plus 提供了更高级的映射机制，包括对表名的自动映射。这是通过在实体类上使用 `@TableName` 注解来实现的。这样，你可以在一个地方定义表名，MyBatis Plus 会在执行任何 CRUD 操作时自动使用正确的表名。
+
+```java
+@TableName("wife")
+public class Wife {
+    private Integer id;
+    private String name;
+    // getter and setter
+}
+```
+
+使用 MyBatis Plus 的好处是，如果表名发生变化，你只需要更新 `@TableName` 注解中的值即可，无需修改每个 SQL 映射。此外，MyBatis Plus 还支持动态表名，通过实现 `ITableNameHandler` 接口可以在运行时动态改变表名，这对于多租户系统等场景非常有用。
+
+### 总结
+
+- **MyBatis**: 需要在每个 SQL 映射中手动指定表名，没有内置的自动映射功能。
+- **MyBatis Plus**: 通过 `@TableName` 注解提供表名的自动映射，支持动态表名，增加了开发的便利性和灵活性。
+
+根据项目的具体需求选择使用 MyBatis 或 MyBatis Plus。如果项目中表名经常变化，或者需要支持动态表名（如多租户场景），MyBatis Plus 是一个更好的选择。如果项目比较简单，表结构变化不频繁，使用 MyBatis 就已经足够。
 
 ---
 
@@ -989,3 +1056,27 @@ public List<Monster> findMonsterByIdsMap(@Param("params") Map<String, Object> pa
 ```
 
 在这种特定情况下，使用 `OR` 正确地反映了你的需求——即检查每条记录是否符合列出的任何一组条件，并删除所有匹配的记录。尽管在批量删除中这种情况比较少见，但如果这符合你的业务逻辑，那么这是完全合适的。
+
+# 22 mybatis默认不支持驼峰法映射，但是mybatis-plus默认是支持驼峰法映射的
+
+MyBatis 和 MyBatis-Plus 在处理属性和数据库列映射的默认行为上有所不同，这确实影响了是否需要额外配置 `resultMap`。
+
+### MyBatis 的默认行为
+
+- **非自动映射**：MyBatis 默认并不自动进行驼峰命名（camelCase）到下划线（underscore）的转换。如果数据库的列名是下划线风格，而Java实体属性是驼峰风格，开发者通常需要手动配置映射关系，或者在 MyBatis 的配置文件中设置 `mapUnderscoreToCamelCase` 为 `true` 来启用自动映射。
+
+```xml
+<settings>
+    <setting name="mapUnderscoreToCamelCase" value="true"/>
+</settings>
+```
+
+这个设置告诉 MyBatis 在执行 SQL 映射到 Java 实体时，自动把数据库中的下划线命名转换成Java实体的驼峰命名。
+
+### MyBatis-Plus 的默认行为
+
+- **自动映射**：MyBatis-Plus 默认支持驼峰到下划线的自动转换。这意味着在大多数常见场景下，你不需要手动写 `resultMap` 来处理基本的属性映射。此外，MyBatis-Plus 提供了许多方便的功能，如自动的 CRUD 操作和更简单的查询构造，这些都是基于约定优于配置的原则。
+
+因此，如果你在使用 MyBatis-Plus，并且你的数据模型与数据库列直接对应（遵循驼峰和下划线自动映射规则），你可能不需要频繁使用 `resultMap`。但如之前所述，对于复杂的SQL操作，如多表联合、非标准列映射、复杂的聚合或特定的优化需求，自定义 `resultMap` 仍然是有用的。
+
+总结一下，选择使用 MyBatis 还是 MyBatis-Plus 取决于项目的需求以及你对框架提供的便利性和灵活性的需求。如果项目中有大量标准化的数据库操作，并且希望尽可能减少配置的工作量，MyBatis-Plus 是一个很好的选择。但对于需要精细控制SQL表达和数据映射处理的复杂业务场景，MyBatis 提供了更多的控制力和灵活性。
