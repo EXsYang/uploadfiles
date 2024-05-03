@@ -3982,9 +3982,11 @@ sudo systemctl restart NetworkManager
 #查看ens33网络连接是否已经连接上了
 sudo nmcli device
 
-#这几条管用
+#这几条管用!!!
 sudo systemctl restart NetworkManager
 sudo ifdown ens33 && sudo ifup ens33
+ping www.baidu.com
+
 ip addr
 sudo nmcli device
 ~~~

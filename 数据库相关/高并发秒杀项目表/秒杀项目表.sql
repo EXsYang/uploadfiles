@@ -15,7 +15,18 @@ CREATE TABLE `seckill_user` (
 PRIMARY KEY (`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
+SELECT * FROM `seckill_user`;
 
+INSERT INTO `seckill_user` (id, nickname, PASSWORD, salt, head, register_date, login_count)
+VALUES (13300000000, 'tom', '2ef6dd46e8d4ec44f09f4033a59bfbf0', '3cj5tnMw', 'tx', NOW(), 0);
+
+INSERT INTO `seckill_user` (id, nickname, PASSWORD, salt, head, register_date, login_count)
+VALUES (13300000001, 'jack', '2ef6dd46e8d4ec44f09f4033a59bfbf0', '3cj5tnMw', 'tx', NOW(), 0);
+
+DELETE FROM `seckill_user` WHERE id >= 13300000100;
+
+
+SELECT * FROM `seckill_user` WHERE id >= 13300000890;
 
 
 
@@ -31,6 +42,7 @@ CREATE TABLE `t_goods` (
 `goods_stock` INT(11) DEFAULT '0' COMMENT '商品库存', 
 PRIMARY KEY (`id`)
 ) ENGINE=INNODB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+
 
 
 
@@ -54,6 +66,10 @@ PRIMARY KEY (`id`)
 INSERT INTO `t_seckill_goods` VALUES ('1', '1', '5266.00', '0', '2022-11-18 19:36:00', '2022-11-19 09:00:00');
 INSERT INTO `t_seckill_goods` VALUES ('2', '2', '690.00', '10', '2022-11-18 08:00:00', '2022-11-19 09:00:00');
 
+
+SELECT * FROM `t_seckill_goods`;
+#下面这条语句，即使条件不满足，执行之后也不报错，只是影响行数为0而已
+UPDATE t_seckill_goods SET stock_count = stock_count - 1 WHERE goods_id = 1 AND stock_count > 0;
 
 
 #编写sql,可以返回秒杀商品列表/信息
@@ -124,8 +140,8 @@ UNIQUE KEY `seckill_uid_gid` (`user_id`,`goods_id`) USING BTREE COMMENT ' 用户
 
 
 
-
-
+#查看Mysql当前事务隔离级别
+SELECT @@tx_isolation;
 
 
 
