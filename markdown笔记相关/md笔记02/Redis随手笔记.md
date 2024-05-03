@@ -412,6 +412,45 @@ root      29613  0.0  0.0 112724   988 pts/0    S+   19:01   0:00 grep --color=a
 
 
 
+# 6.1 del指令进行模糊匹配删除Redis key 的方法
+
+
+
+~~~
+
+#del 指令不支持 *模糊匹配，会删除失败
+del order:*
+
+#使用管道指令，将keys 查询到的结果作为参数交给下一个指令继续操作,模糊匹配删除Redis key 
+redis-cli keys order:* | xargs redis-cli del
+~~~
+
+
+
+![image-20240502212828158](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240502212828158.png)
+
+
+
+# 6.2 在Redis中，你可以使用`EXISTS`命令来判断某个键是否存在。该命令会返回1表示键存在，返回0表示键不存在。
+
+以下是使用示例：
+
+```
+EXISTS key_name
+```
+
+例如，如果要检查名为`user:12345`的键是否存在，可以执行以下命令：
+
+```
+EXISTS user:12345
+```
+
+如果`user:12345`存在，则会返回1；如果不存在，则返回0。
+
+
+
+
+
 ## String命令 
 
 | 命令        | 缩写全称                    | 中文意思                                                   |
