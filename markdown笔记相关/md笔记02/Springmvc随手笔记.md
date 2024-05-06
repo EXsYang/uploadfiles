@@ -826,3 +826,95 @@ public R save(@Validated(SaveGroup.class) @RequestBody BrandEntity brand) {
 - **@Validated**：Spring特有的验证注解，支持分组功能，更适合复杂的验证场景，如同一个对象在不同的操作中需要不同的验证规则。
 
 因此，当你的验证需求包括分组功能时，你应该选择使用 `@Validated`。这使得在Spring框架中，你可以更灵活地控制验证逻辑，确保根据具体的业务规则对数据进行正确的校验。
+
+
+
+# 15 注入拦截器的方式分析
+
+在Spring框架中，当你在配置类中直接实例化拦截器并将其注册到`InterceptorRegistry`时，实际上并不需要在拦截器类上使用`@Component`注解来注入到Spring的IoC容器中。这是因为在这种情况下，拦截器的实例是在配置类中直接创建的，而不是通过容器自动扫描和管理。
+
+### 解析两种注入拦截器的方式：
+
+1. **直接实例化并注册**：
+   在你的配置类中，你直接使用`new LoginInterceptor()`来创建拦截器的实例，并通过`addInterceptor()`方法注册它。这种方法不依赖于Spring的自动组件扫描，因此不需要`@Component`或其他相关注解。
+
+   ```java
+   @Bean
+   public WebMvcConfigurer webMvcConfigurer(){
+       return new WebMvcConfigurer() {
+           @Override
+           public void addInterceptors(InterceptorRegistry registry) {
+               registry.addInterceptor(new LoginInterceptor())
+                       .addPathPatterns("/**")
+                       .excludePathPatterns("/", "/login", "/images/**");
+           }
+       };
+   }
+   ```
+
+2. **通过组件扫描**：
+   如果你选择使用组件扫描来管理拦截器，那么你可以在拦截器类上使用`@Component`注解。这样，Spring会自动将拦截器类作为一个Bean实例化并管理。但在这种情况下，通常还需要在配置类中引用这个Bean，而不是直接创建新实例。
+
+   ```java
+   @Component
+   public class LoginInterceptor implements HandlerInterceptor {
+       // 实现方法
+   }
+   ```
+
+   然后在配置类中这样引用：
+
+   ```java
+   @Autowired
+   private LoginInterceptor loginInterceptor;
+   
+   @Bean
+   public WebMvcConfigurer webMvcConfigurer(){
+       return new WebMvcConfigurer() {
+           @Override
+           public void addInterceptors(InterceptorRegistry registry) {
+               registry.addInterceptor(loginInterceptor)
+                       .addPathPatterns("/**")
+                       .excludePathPatterns("/", "/login", "/images/**");
+           }
+       };
+   }
+   ```
+
+### 总结
+
+- 当你在配置类中直接新建拦截器实例时，**不需要**使用`@Component`注解。
+- 如果你希望Spring管理拦截器的生命周期，比如当拦截器中需要注入其他Bean或使用Spring的功能（如自动注入，生命周期回调等），则可以使用`@Component`注解，并通过自动注入（如`@Autowired`）来获取拦截器实例。
+
+在你的示例中，第一种方法（直接实例化并注册）是合适的，不需要`@Component`注解，因为拦截器是在配置类中显式创建的。
+
+
+
+## 关键点是确保Spring IoC容器中存在拦截器的一个实例，这样才能在Spring MVC的配置中引用并正确地注册这个拦截器。
+
+是的，你的理解是正确的。无论是使用`@Bean`还是`@Component`注解，关键点是确保Spring IoC容器中存在拦截器的一个实例，这样才能在Spring MVC的配置中引用并正确地注册这个拦截器。这两种方法都可以达到这个目的，但它们在使用场景和控制程度上有所不同：
+
+### 使用`@Bean`在配置类中注册拦截器
+
+- **控制度高**：你可以在创建拦截器实例时进行更详细的配置，比如设置特定的属性或依赖。
+- **明确指定**：在配置类中直接实例化和注册拦截器，可以明确地看到拦截器的使用和配置过程，适合于需要特定配置的情况。
+- **局部应用**：适合于只在特定的配置中需要使用拦截器的场景。
+
+### 使用`@Component`进行组件扫描
+
+- **自动管理**：Spring将自动处理拦截器的生命周期和依赖注入等，适用于拦截器内部需要依赖其他Spring管理的Bean的情况。
+- **全局应用**：拦截器作为组件被Spring管理，可以在多个地方被重用，无需在每个配置类中重复创建实例。
+- **便于维护**：对于大型项目，使用组件扫描可以减少配置的复杂性，使项目结构更清晰。
+
+### 选择使用哪种方式
+
+选择`@Bean`还是`@Component`取决于你的具体需求：
+
+- 如果拦截器的配置和使用非常特定，并且希望避免全局影响，使用`@Bean`可能更合适。
+- 如果拦截器将在应用中广泛使用，或者需要Spring管理其生命周期和依赖，那么使用`@Component`更为合适。
+
+最终，确保IoC容器中存在拦截器的一个实例，并且在Spring MVC的配置中正确注册，是使拦截器生效的关键。这可以通过以上任一方法实现，选择哪种方法取决于你对项目的架构和管理的偏好。
+
+
+
+# 16 
