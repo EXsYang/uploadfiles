@@ -1,8 +1,13 @@
 
+#创建数据库seckill
+DROP DATABASE IF EXISTS `seckill`;
+CREATE DATABASE `seckill`;
+USE `seckill`;
 
 #1. 创建表 seckill_user
 
 DROP TABLE IF EXISTS `seckill_user`;
+
 CREATE TABLE `seckill_user` (
 `id` BIGINT(20) NOT NULL COMMENT '用户 ID, 设为主键, 唯一 手机号', 
 `nickname` VARCHAR(255) NOT NULL DEFAULT '', 
@@ -87,7 +92,7 @@ SELECT g.id, g.goods_name,
 	sg.end_date
 	FROM 
 	t_goods g LEFT JOIN t_seckill_goods AS sg -- 左外连接，左侧的表完全显示
-	ON g.id = sg.goods_id -- ON 后面写条件，相当于where
+	ON g.id = sg.goods_id; -- ON 后面写条件，相当于where
 
 
 -- 获取指定商品详情-根据id
@@ -105,7 +110,7 @@ SELECT g.id, g.goods_name,
             FROM
             t_goods g LEFT JOIN t_seckill_goods AS sg -- 左外连接，左侧的表完全显示
             ON g.id = sg.goods_id -- ON 后面写条件，相当于where
-            WHERE g.id =1
+            WHERE g.id =1;
 
 
 
@@ -113,6 +118,7 @@ SELECT g.id, g.goods_name,
 -- ----------------------------
 -- Table structure for t_order 普通订单表,记录订单完整信息
 -- ---------------------------- DROP TABLE IF EXISTS `t_order`;
+-- AUTO_INCREMENT=600 表示自增的字段从600开始自增长
 CREATE TABLE `t_order` (
 `id` BIGINT(20) NOT NULL AUTO_INCREMENT, 
 `user_id` BIGINT(20) NOT NULL DEFAULT 0, 
@@ -138,15 +144,15 @@ PRIMARY KEY (`id`),
 UNIQUE KEY `seckill_uid_gid` (`user_id`,`goods_id`) USING BTREE COMMENT ' 用户 id，商
 品 id 的唯一索引，解决同一个用户多次抢购' ) ENGINE=INNODB AUTO_INCREMENT=300 DEFAULT CHARSET=utf8mb4;
 
+SELECT * FROM `t_seckill_order`;
 
-
-#查看Mysql当前事务隔离级别
+#在MySQL5.7中查看Mysql当前事务隔离级别
 SELECT @@tx_isolation;
 
+#在MySQL8中查看Mysql当前事务隔离级别
+SELECT @@transaction_isolation;
 
-
-
-
+#REPEATABLE-READ
 
 
 
