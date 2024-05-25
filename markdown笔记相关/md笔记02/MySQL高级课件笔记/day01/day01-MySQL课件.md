@@ -436,6 +436,8 @@ SHOW VARIABLES LIKE '%query_cache_type%';
 
 1、第一次执行查询SQL：
 
+**duration**	持续时间；期间  /djuˈreɪʃn/
+
 ![1695027084044](assets\1695027084044.png)
 
 2、第二次执行相同的SQL：
@@ -1125,7 +1127,7 @@ SHOW GLOBAL STATUS LIKE 'innodb_page_size';
 
 ## 6.2 非聚簇索引
 
-![image-20240521173818330](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240521173818330.png)
+![final_enhanced_image](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/final_enhanced_image.png)
 
 非聚簇索引常常也被称之为：二级索引、辅助索引
 

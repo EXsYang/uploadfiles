@@ -1130,6 +1130,14 @@ SELECT * FROM employee;
  --                67890 => int(2)  67890
  -- 创建表的时候，一定注意当前是DB
  -- 表如果是第一次写项目，表的字段可能会增加,修改，删除
+ 
+--  当你在MySQL中使用 ZEROFILL 修饰符时，对整数字段的确有一些自动的影响：
+-- ZEROFILL 自动设置为无符号：当你为一个整数字段如 INT 指定 ZEROFILL 时，MySQL 会自动将该字段设置为无符号（UNSIGNED）。这是因为 ZEROFILL 本质上是为了在数值前填充零，而负数在这种情况下是没有意义的。无符号的整数不允许负值，这与 ZEROFILL 的行为相匹配。
+ 
+ 
+ 
+ 
+ 
 
 CREATE TABLE `furn`(
 `id` INT UNSIGNED PRIMARY KEY AUTO_INCREMENT, #id
