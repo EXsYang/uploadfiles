@@ -64,10 +64,20 @@ EXPLAIN SELECT * FROM t1;
 多表：关联查询中，显示在执行计划第一行的是驱动表，第二行是被驱动表
 
 ```sql
+#下面这个查询相当于下面的内连接查询，对MySQL来说性能是一样的!!!
 EXPLAIN SELECT * FROM t1, t2 WHERE t1.id = t2.id;
+
+#内连接查询
+EXPLAIN SELECT * FROM t1 INNER JOIN t2 ON t1.id = t2.id;
 ```
 
 ![image-20230626213325950](assets/image-20230626213325950.png)  
+
+
+
+对MySQL来说性能是一样的!!!
+
+![image-20240524163618983](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240524163618983.png)
 
 #### id
 
@@ -79,9 +89,13 @@ EXPLAIN SELECT * FROM t1, t2 WHERE t1.id = t2.id;
 EXPLAIN SELECT * FROM t1, t2, t3;
 ```
 
-![image-20230626213419558](assets/image-20230626213419558.png) 
+![image-20230626213419558](assets/image-20230626213419558.png)
+
+**在id值相同的情况下是按照顺序执行的，即t1、t2、t3** 
 
 **id不同：**三个SELECT，id是1、2、3
+
+子查询（select ...）可以放在`from`和`where`字段后面，这里是放在`where`字段后面
 
 ```sql
 EXPLAIN SELECT t1.id FROM t1 WHERE t1.id =(
@@ -96,6 +110,8 @@ EXPLAIN SELECT t1.id FROM t1 WHERE t1.id =(
 **注意**：如果t3表查询无结果，则table列t1和t2处为NULL
 
 ![image-20230626213522733](assets/image-20230626213522733.png) 
+
+**注意**：**在sql语句中有三个select关键字时，id值不相同的情况下是按照id从大到小的顺序执行的，即id=3先执行、id=2再执行、id=3最后执行** 
 
 
 
@@ -188,11 +204,24 @@ EXPLAIN SELECT * FROM t3 WHERE id = ( SELECT id FROM t2 WHERE content = @@charac
 ```sql
 EXPLAIN 
 SELECT * FROM t3 WHERE id = 1 
-UNION  
+UNION  -- union 两张表的合并，默认会去重，会产生临时表 
 SELECT * FROM t2 WHERE id = 1;
 ```
 
 ![image-20230626214710029](assets/image-20230626214710029.png) 
+
+
+
+~~~mysql
+EXPLAIN 
+SELECT * FROM t3 WHERE id = 1 
+UNION ALL -- union all 两张表的合并，默认不会去重，不会产生临时表，因此性能会比union高一点
+SELECT * FROM t2 WHERE id = 1;
+~~~
+
+
+
+
 
 **DEPENDENT UNION：** 子查询中的UNION或者UNION ALL，除了最左边的查询是DEPENDENT SUBQUREY，其余的查询都是DEPENDENT UNION。 
 
@@ -209,7 +238,7 @@ SELECT * FROM t2 WHERE id = 1;
 
 
 
-**DERIVED：** 在包含**派生表（子查询在from子句中）**的查询中，MySQL会递归执行这些子查询，把结果放在临时表里。
+**DERIVED：** 在包含**派生表（子查询在from子句中）**的查询中，MySQL会递归执行这些子查询，把结果放在临时表里。		derived:派生的
 
 ```sql
 EXPLAIN SELECT * FROM (
@@ -259,7 +288,7 @@ EXPLAIN SELECT * FROM t1 WHERE id > 2;
 
 
 
-**ref：** 表示使用了非唯一索引进行的等值比较，可能返回多个匹配的行。
+**ref：** 表示使用了**非唯一索引进行的等值比较**，可能返回多个匹配的行。
 
 ```sql
 EXPLAIN SELECT * FROM t4 WHERE content1 = 'a';
@@ -269,7 +298,7 @@ EXPLAIN SELECT * FROM t4 WHERE content1 = 'a';
 
 
 
-**eq_ref：**表示使用了连接（join）查询，并且连接条件是通过唯一索引进行的等值比较。
+**eq_ref：**表示使用了连接（join）查询，并且连接条件是通过**唯一索引进行的等值比较**。
 
 ```sql
 EXPLAIN SELECT * FROM t1, t2 WHERE t1.id = t2.id;
@@ -294,9 +323,9 @@ EXPLAIN SELECT * FROM t;
 
 #### possible_keys 和 key
 
-1、possible_keys表示执行查询时可能用到的索引，一个或多个。 查询涉及到的字段上若存在索引，则该索引将被列出，但不一定被查询实际使用。
+1、possible_keys表示执行查询时**可能用到的索引**，一个或多个。 查询涉及到的字段上若存在索引，则该索引将被列出，但不一定被查询实际使用。
 
-2、keys表示实际使用的索引。如果为NULL，则没有使用索引。
+2、key表示**实际使用的索引**。如果为NULL，则没有使用索引。
 
 ```sql
 EXPLAIN SELECT id FROM t1 WHERE id = 1;
@@ -340,9 +369,59 @@ EXPLAIN SELECT * FROM t_emp WHERE age = 30 AND `name` = 'ab%';
 
 -- 测试2
 EXPLAIN SELECT * FROM t_emp WHERE age = 30;
+#计算 key_len：
+#age 字段：
+#age 是一个 INT 类型，它通常占用4个字节。
+#由于 age 字段允许为空，根据你的说明，允许为空的字段要额外加1个字节。
+#因此，对于 age 字段，key_len 应该是 4 (字节 for INT) + 1 (为空标志位) = 5 字节。
 ```
 
 ![image-20230626221403597](assets/image-20230626221403597.png) 
+
+
+
+在你的表 `t_emp` 中，字段 `name` 是定义为 `VARCHAR(20) DEFAULT NULL`。对于 `VARCHAR` 类型字段，其长度计算方式稍有不同，尤其是在涉及不同的字符集时。这里的 `VARCHAR(20)` 指的是最多存储20个字符。下面是详细的计算方式：
+
+1. **基本存储需求：**
+   - `VARCHAR(20)` 表示这个字段最多可以包含20个字符。
+2. **字符集影响：**
+   - 如果字符集是 `utf8mb4`（在MySQL中，`utf8mb4` 是一个常用的字符集，支持完整的Unicode，每个字符最多占用4个字节），则每个字符最多可能占用4个字节。
+   - 因此，20个字符使用 `utf8mb4` 编码最多可能占用 `20 * 4 = 80` 字节。
+3. **额外的字节：**
+   - 对于 `VARCHAR` 类型，MySQL需要额外的字节来存储实际数据长度，这是因为 `VARCHAR` 是可变长的数据类型。
+   - 如果 `VARCHAR` 字段最大长度小于等于255字节，则需要1个字节来存储长度；如果大于255，需要2个字节。因为你的字段 `name` 最大长度为20，这落在255字节以下，因此需要1个字节来记录长度。
+   - 但是由于 `utf8mb4` 的原因，`name` 字段可能需要的空间超过255字节（最多80字节内容加上字符长度指示器）。因此，实际上是2个字节用来存储长度信息。
+4. **NULL标志：**
+   - 如果字段允许为NULL，MySQL还需要一个额外的字节来标识这个字段的值是否为NULL。
+
+综上所述，`name` 字段的存储需求如下：
+
+- 基本字符存储：`20 * 4 = 80` 字节
+- 长度指示器：2字节
+- NULL标志：1字节
+
+总共：`80 + 2 + 1 = 83` 字节。
+
+这里的 "+2" 指的是 `VARCHAR` 类型由于其可变长特性，在存储时需要额外的2个字节来记录实际数据长度。
+
+
+
+**varchar() 的括号中最大可以填多少？**
+
+在MySQL中，`VARCHAR` 字段的最大长度取决于它的最大字节长度，这与所使用的字符集有关。MySQL 中 `VARCHAR` 类型的数据长度限制如下：
+
+- 如果使用单字节字符集（如 `latin1`），`VARCHAR` 的最大长度可以是 65535 字节。
+- 对于多字节字符集，比如 `utf8`（每个字符最多3字节）或 `utf8mb4`（每个字符最多4字节），`VARCHAR` 字段的最大长度会受到总字节限制的影响。MySQL存储系统要求行的最大长度为65535字节，包括所有字段和行内的额外数据。
+
+具体到字符数，如果你使用的是 `utf8mb4` 字符集：
+
+- 理论上，最长的 `VARCHAR` 字段可以是 `65535 / 4 = 16383.75`，但实际上你只能设置为16383个字符，因为MySQL不允许设置为小数。
+
+这意味着在定义 `VARCHAR` 字段时，你可以在括号中指定的最大字符数会因使用的字符集而异。对于 `utf8mb4`，这个值通常设置为16383，保证总字节长度不超过65535字节的限制。
+
+需要注意的是，实际可用长度还可能受到其他因素的影响，如同一表中其他字段的存在，以及特定表的存储引擎配置。因此，在设计表时，应考虑实际应用场景和数据的具体需求。
+
+
 
 #### ref
 
@@ -388,11 +467,11 @@ EXPLAIN SELECT * FROM t_emp WHERE deptId = 1;
 
 
 
-#### Extra
+#### Extra   额外的 /ˈekstrə/
 
 Extra字段提供了一些与查询操作相关的**附加信息**，帮助我们更好地理解查询的执行过程和性能特点。MySQL提供的额外信息有好几十个，这里只挑比较重要的介绍。
 
-**Impossible WHERE**：where子句的值总是false
+**Impossible WHERE**：where子句的值总是false	Impossible: 不可能的
 
 ```sql
 EXPLAIN SELECT * FROM t_emp WHERE 1 != 1;
@@ -420,10 +499,10 @@ EXPLAIN SELECT * FROM t1 ORDER BY id;
 
 ![image-20230626222247353](assets/image-20230626222247353.png) 
 
-如果排序操作无法使用到索引，只能在内存中（记录较少时）或者磁盘中（记录较多时）进行排序（filesort），如下所示：
+如果排序操作**无法使用到索引(content 字段不是索引字段)**，只能在内存中（记录较少时）或者磁盘中（记录较多时）进行排序（filesort），如下所示：
 
 ```sql
-EXPLAIN SELECT * FROM t1 ORDER BY content;
+EXPLAIN SELECT * FROM t1 ORDER BY content; -- content 字段不是索引字段,即ORDER BY 排序没有用上索引
 ```
 
 ![image-20230626222335114](assets/image-20230626222335114.png) 
@@ -449,7 +528,7 @@ EXPLAIN SELECT * FROM t4 WHERE content1 > 'z' AND content1 LIKE '%a';
 
 >1、`如果没有索引下推（ICP）`，那么MySQL在存储引擎层找到满足`content1 > 'z'`条件的第一条二级索引记录。`主键值进行回表`，返回完整的记录给server层，server层再判断其他的搜索条件是否成立。如果成立则保留该记录，否则跳过该记录。
 >
->2、`如果使用了索引下推（ICP）`，那么MySQL在存储引擎层找到满足`content1 > 'z'`条件的第一条二级索引记录。`不着急执行回表`，而是在这条记录上先判断一下所有关于`idx_content1`索引中包含的条件是否成立，也就是`content1 > 'z' AND content1 LIKE '%a'`是否成立。如果这些条件不成立，则直接跳过该二级索引记录，去找下一条二级索引记录；如果这些条件成立，则执行回表操作，返回完整的记录给server层。
+>2、`如果使用了索引下推（ICP） ` **[MySQL默认情况下就是索引下推（ICP）]**，那么MySQL在存储引擎层找到满足`content1 > 'z'`条件的第一条二级索引记录。`不着急执行回表`，而是在这条记录上先判断一下所有关于`idx_content1`索引中包含的条件是否成立，也就是`content1 > 'z' AND content1 LIKE '%a'`是否成立。如果这些条件不成立，则直接跳过该二级索引记录，去找下一条二级索引记录；如果这些条件成立，则执行回表操作，返回完整的记录给server层。
 
 ![image-20230626222533347](assets/image-20230626222533347.png)  
 
@@ -625,11 +704,13 @@ CALL insert_emp(100000,500000);
 
 #### 开启SQL执行时间的显示
 
+利用**SHOW VARIABLES** 可以查看SQL的执行流程。使用前需要先开启该功能：
+
 为了方便后面的测试中随时查看SQL运行的时间，测试索引优化后的效果，我们开启profiling
 
 ```sql
 -- 显示sql语句执行时间
-SET profiling = 1;
+SET profiling = 1; -- profiling=0 代表关闭，我们需要把 profiling 打开，即设置为 1：
 SHOW VARIABLES  LIKE '%profiling%';
 SHOW PROFILES;
 ```
@@ -829,7 +910,6 @@ CREATE INDEX idx_age_deptid_name ON emp(age,deptid,`name`);
 ```sql
 -- 创建索引并执行以上SQL语句的EXPLAIN（将deptid索引的放在最后）
 CREATE INDEX idx_age_name_deptid ON emp(age,`name`,deptid);
-
 -- 使用了完整的索引
 ```
 
@@ -957,6 +1037,14 @@ CREATE INDEX idx_class_card ON class(card);
 
 结论：针对两张表的连接条件涉及的列，索引要创建在被驱动表上，驱动表尽量是小表
 
+**左连接的左表就是驱动表，左连接的右表就是被驱动表**
+
+**左连接的左表放小表，左连接的右表放大表**
+
+**并在左连接的被驱动表上创建索引，效率是最高的**
+
+
+
 ## 3.3 内连接
 
 **测试：**将前面外连接中的LEFT JOIN 变成 INNER JOIN 
@@ -1065,14 +1153,45 @@ UPDATE t_dept SET CEO=9 WHERE id=5;
 EXPLAIN SELECT emp.name, ceo.name AS ceoname 
 FROM t_emp emp
 LEFT JOIN t_dept dept ON emp.deptid = dept.id 
-LEFT JOIN t_emp ceo ON dept.ceo = ceo.id;
+LEFT JOIN t_emp ceo ON dept.ceo = ceo.id; -- 这里用的是ceo表的ceo.id 主键索引 
+#关联条件中只要有一个是主键就可以,就会用到主键索引
+
 ```
 
 执行结果如下所示：
 
 ![image-20230620110214479](assets/image-20230620110214479.png) 
 
+**ref=atguigu.dept.CEO**   关联查询时出现，ceo表和dept表的哪一列进行关联
+
 一趟查询，用到了主键索引，**效果最佳**
+
+
+
+#### **dept.CEO 字段没有索引，会不会导致该字段dept.CEO和主键索引字段ceo.id进行匹配时，dept.CEO 进行全表扫描？再和主键索引字段ceo.id进行索引匹配？**
+
+确实，如果在 `t_dept.CEO` 字段上没有索引，而该字段被用于与 `t_emp` 表的 `id` 字段（一个已经索引化的主键字段）进行连接时，可能会导致查询效率问题。在你的例子中，尽管 `t_emp.id` 是主键索引，但连接操作的效率也取决于 `t_dept.CEO` 字段的索引状态。
+
+##### 如何处理连接操作：
+
+1. **`t_dept` 表的扫描**：
+   - 如果 `t_dept.CEO` 没有索引，那么为了找到与 `t_emp` 表中相匹配的 `id` 值，MySQL 需要对 `t_dept` 表进行全表扫描。这意味着它必须检查 `t_dept` 表中的每一行，以找到所有可能的 `CEO` 值。
+2. **使用 `t_emp.id` 的索引**：
+   - 对于每个从 `t_dept` 表扫描出来的 `CEO` 值，MySQL 会使用 `t_emp.id` 的主键索引来快速定位 `t_emp` 表中相应的行。虽然这个查找过程是高效的，因为它利用了索引，但初始的全表扫描仍然可能是一个瓶颈。
+
+##### 性能影响：
+
+- **效率低下**：这种情况下的查询效率问题主要是因为初步的全表扫描。即使 `t_emp` 表的主键索引可以加速后续的数据检索，整体查询性能仍可能因为 `t_dept` 表的全表扫描而大大降低。
+- **增加负载**：全表扫描会增加I/O负载和CPU负载，尤其是当 `t_dept` 表较大时。
+
+##### 优化建议：
+
+- **添加索引**：为 `t_dept.CEO` 添加索引，这将允许 MySQL 利用索引来快速过滤和定位需要连接的行，从而避免全表扫描。这可以显著提高查询性能，特别是在 `t_dept` 表行数较多的情况下。
+- **重新考虑查询结构**：如果可能，重新设计查询，以减少需要全表扫描的操作，或者考虑使用不同的逻辑来达到同样的结果。
+
+通过这些措施，可以优化查询，避免因缺少索引而导致的性能瓶颈，确保数据操作的效率和速度。如果决定添加索引，请考虑测试索引对整体数据库性能的影响，因为每个索引虽然提高了查询性能，但也会稍微减慢写操作，并占用更多的存储空间。
+
+
 
 
 
@@ -1091,6 +1210,58 @@ LEFT JOIN t_dept dept ON emp.deptid = dept.id;
 ![image-20230620110425801](assets/image-20230620110425801.png) 
 
 两趟查询，用到了主键索引，跟第一种比，效果稍微差点。
+
+
+
+
+
+
+
+~~~mysql
+SELECT 
+emp.name, 
+(SELECT ceo.name FROM t_emp ceo WHERE ceo.id = dept.ceo) AS ceoname
+FROM t_emp emp
+LEFT JOIN t_dept dept ON emp.deptid = dept.id;
+~~~
+
+上面这个查询的执行流程分析：
+
+![image-20240524221829683](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240524221829683.png)
+
+
+
+![image-20240524221839025](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240524221839025.png)
+
+在你提供的SQL查询中，使用了子查询来从 `t_emp` 表中获取CEO的名字，这个查询结构涉及到一个外部查询（主查询）和一个内部查询（子查询）。这种结构的查询执行流程较为复杂，因为它涉及到了对两个不同表的操作，并且子查询是相关子查询，意味着它需要对主查询返回的每一行分别执行一次。这里是详细的执行流程：
+
+### 1. 执行主查询
+- **读取 `t_emp` 表**：首先，MySQL执行外部查询，从 `t_emp` 表读取所有员工的信息。这包括每个员工的 `id`、`name` 以及其他相关字段（如 `deptId`）。
+
+### 2. 连接 `t_dept` 表
+- **执行连接**：通过在 `t_emp` 和 `t_dept` 之间使用 `LEFT JOIN`，MySQL会对每一行从 `t_emp` 表返回的结果尝试找到匹配的 `t_dept` 表中的记录，连接条件是 `emp.deptId = dept.id`。这意味着它会查找每个员工所属的部门信息。
+
+### 3. 执行子查询
+- **对每行结果执行子查询**：对于主查询和连接操作返回的每一行结果，子查询都会被执行一次。这里的子查询是：
+  ```sql
+  (SELECT ceo.name FROM t_emp ceo WHERE ceo.id = dept.ceo)
+  ```
+  这个子查询针对 `t_dept` 表中的每一个 `CEO` 字段值去 `t_emp` 表中查找匹配的 `id`，并返回相应的 `name`。
+- **相关性**：这是一个相关子查询，因为它依赖于外部查询结果中的 `dept.ceo` 值。每次子查询执行时，它都需要访问当前正在处理的外部查询行中的 `CEO` 值。
+
+### 4. 返回最终结果
+- **合并结果**：外部查询的结果（包括所有员工的姓名和其他信息）与子查询的结果（即各自部门的CEO姓名）合并，构成最终的查询结果。每一行结果将包括员工的姓名以及对应的CEO姓名（如果存在）。
+
+### 性能注意事项
+- **效率问题**：由于子查询可能为每个返回的行执行多次，这种类型的查询可能非常低效，特别是当 `t_dept` 表和 `t_emp` 表数据量大时。
+- **索引的重要性**：为 `t_dept.CEO` 以及 `t_emp.id` 提供索引可以显著提高查询性能，因为这些索引可以加快子查询的执行速度。
+
+### 建议
+对于包含大量数据的表，使用显式的 `JOIN` 而不是相关子查询通常会更高效，因为这允许数据库优化器更好地优化查询计划，减少不必要的全表扫描或重复的行访问。
+
+总结来说，这个查询的执行涉及到从 `t_emp` 表读取数据，通过 `LEFT JOIN` 关联 `t_dept`，并且对每一行使用子查询来获取额外的信息。这种查询模式在处理大数据量时可能效率较低，建议优化以提高性能。
+
+
 
 
 
@@ -1135,7 +1306,7 @@ ON emp.deptId = ceo.deptId;
 
 查询一趟，MySQL查询优化器将衍生表查询转换成了连接表查询，但是只有一个表使用了索引，数据检索的次数稍多，性能最差。
 
-**总结**：**能够直接多表关联的尽量直接关联，不用子查询。(减少查询的趟数)**
+**总结**：**能够直接多表关联的尽量直接关联(即左连接)，不用子查询。(减少查询的趟数)**
 
 
 
@@ -1216,17 +1387,22 @@ EXPLAIN SELECT * FROM emp WHERE age=45 ORDER BY deptid;
 -- 排序使用了索引：
 EXPLAIN SELECT * FROM emp WHERE age=45 ORDER BY deptid, `name`; 
 
--- 排序使用索引
+-- 过滤where用上了索引age,排序没用上索引，empno不在联合索引上，索引只有一种排序
+-- 第1个字段排序，结果相同的情况下再按照第2个字段排序，结果相同的情况下再按照第3个字段排序
+-- 又因为索引树只有一种排序，(age,deptid,`name`) ，empno 不在这个索引树上
+-- 按照empno字段在排序就用不上这个索引树了，如果再按照`empno`字段进行排序，和索引
+-- (age,deptid,`name`)的顺序不一样，所以这里 ORDER BY  就没有用上索引排序
 EXPLAIN SELECT * FROM emp WHERE age=45 ORDER BY deptid, empno;
 
--- 排序使用索引
+-- 排序没有使用索引， 顺序错不索引 (age,deptid,`name`), 因为排序的顺序是(age,deptid,`name`) 
+-- 而不能是(age,`name`,deptid) 
 EXPLAIN SELECT * FROM emp WHERE age=45 ORDER BY `name`, deptid;
 
--- 排序没有使用索引：出现的顺序要和复合索引中的列的顺序一致！   -----> 排序在条件过滤之后进行执行，条件过滤没有遵循最左前缀法则
+-- 排序没有使用索引：出现的顺序要和复合索引中的列的顺序一致！   -----> 排序在条件过滤之后进行执行，条件过滤没有遵循最左前缀法则 (age,deptid,`name`) ,下面这个没有用上`age`
 EXPLAIN SELECT * FROM emp WHERE deptid=45 ORDER BY age;
 ```
 
-
+### 5.1.3  排序反不索引
 
 sql演示：
 
@@ -1262,6 +1438,8 @@ sql演示：
 -- 查询 年龄为30岁的，且员工编号小于101000的用户，按用户名称排序 
 explain select * from t_emp emp where emp.age = 30 and emp.empno < 101000 order BY emp.`name` ;
 ```
+
+**duration**	持续时间；期间  /djuˈreɪʃn/
 
 性能测试结果：
 
