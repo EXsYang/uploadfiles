@@ -5448,13 +5448,13 @@ NM_CONTROLLED="yes"
 **命令示例：**
 
 ```
-ps –aux | grep xxx
+ps -aux |grep docker
 ```
 
 - 比如想查看是否有 `sshd` 服务正在运行，可以使用：
 
 ```
-ps –aux | grep sshd
+ps -aux |grep sshd
 ```
 
 
