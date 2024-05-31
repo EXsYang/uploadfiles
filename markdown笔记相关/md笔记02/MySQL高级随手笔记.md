@@ -891,6 +891,14 @@ CONSTRAINT `fk_city_country` FOREIGN KEY(country_id) REFERENCES country_innodb(c
 
 # 14 在MySQL8中，`.ibd`文件扩展名代表的是“**InnoDB Data File**”，这是InnoDB存储引擎的表数据文件。`.ibd`文件是InnoDB表空间的一部分，用于存储数据和索引。
 
+在 MySQL 数据库中，`.frm`、`.myd` 和 `.myi` 文件是 MyISAM 引擎使用的数据文件类型，它们各自存储了不同的信息：
+
+1. **.frm 文件**：用于存储表的结构定义。这包括表中的列名、数据类型、索引等信息。
+2. **.myd 文件**：存储表的实际数据，即表中的行数据。
+3. **.myi 文件**：存储表的索引信息。这些索引用于加快数据检索速度。
+
+这种文件组织方式使得数据库的结构、数据和索引可以分开管理，优化性能和维护。不过，需要注意的是，MyISAM 引擎不支持事务处理和行级锁定，这可能在某些应用场景下会成为限制。
+
 ![image-20240521174640003](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240521174640003.png)
 
 ![image-20240521174758534](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240521174758534.png)

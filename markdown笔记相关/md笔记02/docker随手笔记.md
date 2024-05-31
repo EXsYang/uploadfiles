@@ -180,6 +180,19 @@ systemctl enable docker
 
 
 
+查看docker服务进程是否启动
+
+~~~
+ps -aux |grep docker
+
+netstat -anp | more
+netstat -anp | grep docker
+~~~
+
+
+
+
+
 ## 1.9 配置镜像加速器
 
 docker的使用过程中，需要从远程仓库下载镜像，但是默认为国外网站，所以在下载时可能会出现下载连接超时导致下载失败，因此需要为其配置镜像加速器，以提高下载速度。目前使用的镜像加速器有很多，比如阿里云，网易云等等。
