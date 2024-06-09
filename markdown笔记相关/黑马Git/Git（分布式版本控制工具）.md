@@ -173,6 +173,14 @@ git config --global user.name
 
 git config --global user.email
 
+
+
+![image-20240531112009557](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240531112009557.png)
+
+
+
+
+
 #### **3.1.3** **为常用指令配置别名（可选）**
 
 有些常用的指令参数非常多，每次都要输入好多参数，我们可以使用别名。

@@ -174,9 +174,22 @@ systemctl stop docker
 # 重启docker服务
 systemctl restart docker
 
-# kai'ji
+# 开机自启动docker
 systemctl enable docker
 ```
+
+
+
+查看docker服务进程是否启动
+
+~~~
+ps -aux |grep docker
+
+netstat -anp | more
+netstat -anp | grep docker
+~~~
+
+
 
 
 

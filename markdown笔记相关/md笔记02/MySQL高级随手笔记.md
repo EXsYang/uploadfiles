@@ -1651,7 +1651,24 @@ MySQL 默认的事务隔离级别就是可重复读，这也是它能够有效�
 
 
 
-# 34 
+# 34 在 MySQL 8.0 中，安装并启用`validate_password` 插件
+
+ShardingSphere-JDBC远程连接的方式默认的密码加密规则是：mysql_native_password
+
+因此需要在服务器端修改服务器的密码加密规则，如下：
+
+```sql
+ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY '123456';
+```
+
+从 MySQL 8.0 开始，默认的身份验证插件是 `caching_sha2_password`。
+
+~~~sql
+SHOW VARIABLES LIKE 'validate_password%';
+~~~
+
+- 如果没有安装或启用 `validate_password` 插件（在 MySQL 8.0 中，这个插件是可选的并且默认未启用），则没有默认的密码复杂性验证。这意味着除非你手动设置，否则 MySQL 不会强制执行密码长度、复杂性或其他相关的安全策略。
+- MySQL 服务器在内部使用加密的形式存储密码。即使没有启用 `validate_password` 插件，密码仍然会被加密存储，且不会以明文形式存在于数据库中。
 
 
 
@@ -1659,9 +1676,83 @@ MySQL 默认的事务隔离级别就是可重复读，这也是它能够有效�
 
 
 
+在 MySQL 8.0 中，如果你使用 `SHOW VARIABLES LIKE 'validate_password%';` 得到一个空集（Empty set），这通常意味着密码验证插件 `validate_password` 没有被安装或启用。MySQL 8.0 使用了一个新的密码验证插件 `caching_sha2_password` 作为默认的身份验证机制，但密码复杂性验证插件仍然是可选的。
+
+如果你希望使用密码验证插件来强制实施密码复杂性规则，你可能需要手动安装并启用这个插件。以下是安装和启用 `validate_password` 插件的步骤：
+
+### 步骤 1: 安装 `validate_password` 插件
+
+首先，你需要检查该插件是否已经安装，可以通过查询 `mysql.plugin` 表来确认：
+
+```sql
+SELECT * FROM mysql.plugin WHERE plugin_name = 'validate_password';
+```
+
+如果没有结果返回，你需要安装这个插件。可以使用以下命令来安装：
+
+```sql
+INSTALL PLUGIN validate_password SONAME 'validate_password.so';
+```
+
+在 Windows 上，可能是 `validate_password.dll` 而不是 `.so`。
+
+### 步骤 2: 配置密码验证策略
+
+安装插件后，你可以设置密码验证策略。例如，设置密码长度、复杂性等：
+
+```sql
+SET GLOBAL validate_password.length = 8;
+SET GLOBAL validate_password.number_count = 1;
+SET GLOBAL validate_password.policy = 2; -- Strong
+```
+
+### 步骤 3: 重新检查变量
+
+安装并配置插件后，重新运行你的查询来验证设置是否已生效：
+
+```sql
+SHOW VARIABLES LIKE 'validate_password%';
+```
+
+这次应该会返回插件的配置信息。
+
+### 注意
+
+如果你正在管理生产环境的数据库，改动安全相关的插件和配置前，确保你了解这些改动的影响，并考虑实施相应的密码策略和用户教育。
+
+如果你在安装插件或设置配置时遇到任何错误，请确保你的 MySQL 用户有足够的权限执行这些操作，且插件文件 (`validate_password.so` 或 `.dll`) 存在于服务器的正确目录下。
 
 
 
+
+
+# 35 为什么雪花算法 (Snowflake) 生成长度为 19 位？
+
+生成长度为 19 位的数字通常涉及到 Twitter 的 Snowflake 算法，这种算法用于生成分布式系统中的唯一标识符。让我们深入了解为什么这些数字经常是 19 位长。
+
+### 雪花算法 (Snowflake) 组件
+
+1. **时间戳** - 占用了 41 位。这部分记录的是自定义的时间戳，通常是从一个特定时间点（如该系统的启动时间，也称为 epoch，例如 1288834974657，即 Twitter 雪花算法的默认起始时间）到当前时间的毫秒数。由于这个数字会随着时间的推移而增加，它是生成 ID 中增长最快的部分。
+
+2. **数据中心 ID 和机器 ID** - 这些通常各占几位，例如各占 5 位，用于在数据中心或服务器集群中能够生成唯一 ID，避免冲突。
+
+3. **序列号** - 在同一毫秒内，如果有多个 ID 被请求，则序列号会递增，以保证即使在同一时间戳内也能生成不同的 ID。通常占用 12 位。
+
+### 为什么是 19 位？
+
+为什么最终生成的数字长度常为 19 位，这主要是由于时间戳部分的计算方式和整个数字的位组合：
+
+- 当你将时间戳（41 位），数据中心 ID（5 位），机器 ID（5 位），和序列号（12 位）结合起来，你得到一个 63 位的二进制数。
+- 这个 63 位二进制数转换为十进制后，最大可以达到的数值范围是接近于 2 的 63 次方，即 \(9.22 \times 10^{18}\)。
+- \(9.22 \times 10^{18}\) 是一个 19 位的数字。
+
+因此，尽管不是每个生成的 ID 都恰好为 19 位数字（取决于具体时间和序列号），但它们可以达到这个长度，尤其是随着时间的增长，更趋于接近这个数字位数的上限。
+
+这种长 ID 使得系统在全球任何地方和任何时间都能生成一个唯一的标识符，非常适合大规模分布式系统。
+
+
+
+# 36 
 
 
 
