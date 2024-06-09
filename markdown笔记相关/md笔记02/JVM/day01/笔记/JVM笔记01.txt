@@ -1,0 +1,104 @@
+JVM:
+	1.	JVM是运行在操作系统之上的，它与硬件没有直接的交互
+	
+	2.	JVM 体系结构图：
+			a.	类加载器ClassLoader
+				- 启动类加载器（Bootstrap）C++
+
+				  负责加载$JAVA_HOME中jre/lib/rt.jar里所有的class，由C++实现，不是ClassLoader子类
+
+				- 扩展类加载器（Extension）Java
+
+				  负责加载java平台中扩展功能的一些jar包，包括$JAVA_HOME中jre/lib/*.jar或-Djava.ext.dirs指定目录下的jar包
+
+				- 应用程序类加载器（AppClassLoader）Java
+
+				  也叫系统类加载器，负责加载classpath中指定的jar包及目录中class
+
+				- 用户自定义加载器  Java.lang.ClassLoader的子类，用户可以定制类的加载方式
+				
+			双亲委派机制：重点！
+				加载类的时候，逐层向上找！找不到在向下找！ 还是找不到则会抛出异常！
+				
+				作用：防止内存中出现多份同样的字节码!
+				
+			b.	Execution Engine执行引擎负责解释命令，提交操作系统执行。
+			
+			c.	本地接口Native Interface
+					由native 修饰： 底层C,C++ 实现的！
+			
+			d.	Native Method Stack
+					它的具体做法是Native Method Stack中登记native方法，在Execution Engine 执行时加载本地方法库。
+				
+			e.	PC寄存器	
+					用来存储指向下一条指令的地址
+				
+			f.	Method Area方法区{非堆}	重点！
+					共享区间。 
+					静态变量+常量+类信息(构造方法/接口定义)+运行时常量池存在方法区中
+					But
+					实例变量存在堆内存中,和方法区无关
+			g.	栈：
+					栈内存，生命周期与线程一致，不存在垃圾回收！
+					存储：8种基本类型的变量+对象的引用变量+实例方法	重点！
+					
+					public Class Stu{
+						private int id;
+						private String name;
+					
+						public void sayHi(){
+							sout("hello word")
+						}
+					}
+					
+					Stu stu = new Stu();
+					stu.sayHi();
+			
+					运行原理：
+						遵循“先进后出”或者“后进先出”原则。
+					
+					"Exception in thread "main" java.lang.StackOverflowError"
+						细心，细心，细心！看代码！
+					
+重点：
+	堆：
+		
+	GC：
+
+第一，	堆方法区栈之间的关系！
+		
+		堆划分：
+			新生区：
+				伊甸区（Eden space）和幸存者区（Survivor pace）幸存0区 幸存1区 {from ，to}
+				创建的对象都在伊甸区： 
+				当伊甸园区空间满的时候，程序还需要创建对象时。JVM 就会产生调用回收 普通的GC! 然后将剩下存活的对象放入From 区！
+				
+				Minor GC GC过程：
+				复制 -> 清空 -> 互换
+				部分对象会在From和To区域中复制来复制去,如此交换15次，进入养老区！
+				
+			养老区：
+				经过15次普通GC 之后的对象！
+				养老区满的时候，发生FULL GC{MajorGC}！ 如果依然无法存储对象，此时会发生！就会产生OOM异常“OutOfMemoryError"！
+					原因：
+						1.	可能堆内存不够，可以通过参数条件 -Xms -Xmx
+						2.	存储大量的大对象！这些对象不会被回收！
+										
+			永久区：
+				永久代是方法区(相当于是一个接口interface)的一个实现！ 方法区也叫非堆！
+				永久代与元空间的最大区别之处？
+				永久代使用的是jvm的堆内存，但是java8以后的元空间并不在虚拟机中而是使用本机物理内存。因此，默认情况下，元空间的大小仅受本地内存限制。
+				
+			
+		堆调优：
+			对应的参数：
+				| 参数                | 备注                                                   |
+				| ------------------- | ------------------------------------------------------ |
+				| -Xms                | 初始堆大小。只要启动，就占用的堆大小，默认是内存的1/64 |
+				| -Xmx                | 最大堆大小。默认是内存的1/4                            |
+				| -Xmn                | 新生区堆大小                                           |
+				| -XX:+PrintGCDetails | 输出详细的GC处理日志                                   |
+							
+			
+			System.gc(); 调用它之后，是否会立即执行垃圾回收？
+				不会！

@@ -917,4 +917,65 @@ public R save(@Validated(SaveGroup.class) @RequestBody BrandEntity brand) {
 
 
 
-# 16 
+# 16 `@Resource` 和 `@Autowired` 都是 Spring 框架中用于依赖注入的注解，但它们之间存在一些关键区别：
+
+1. **来源**：
+   - `@Autowired` 是 Spring 的原生注解，主要用于自动按类型进行依赖注入。
+   - `@Resource` 是由 JSR-250 提供的，Java 的标准注解，Spring 支持这个注解用于依赖注入。它可以按名称或类型自动装配。
+
+2. **注入方式**：
+   - `@Autowired` 默认按类型进行依赖注入。如果有多个同类型的实例，可以配合 `@Qualifier` 注解来按名称进行注入。
+   - `@Resource` 默认按名称进行依赖注入。如果未指定名称，它会回退到按类型注入。
+
+3. **必要性**：
+   - `@Autowired` 默认情况下，注入的依赖必须存在，否则会抛出异常。可以通过设置 `required=false` 来改变这种行为，使得如果没有找到相应的 bean 也不会报错。
+   - `@Resource` 默认也是必须依赖存在，但没有类似 `required` 的属性来修改这一默认行为。
+
+4. **灵活性**：
+   - `@Autowired` 在使用 Spring 时更为灵活，支持构造器注入、字段注入和方法注入。
+   - `@Resource` 通常用于字段注入和方法注入，不支持构造器注入。
+
+在选择使用哪一个注解时，通常考虑项目中已经采用的标准和个人或团队的偏好。如果项目需要遵循 JSR-250 标准，则可能倾向于使用 `@Resource`。如果你希望更紧密地与 Spring 的功能整合，或者需要更高的配置灵活性，则可能倾向于使用 `@Autowired`。
+
+
+
+## 16.1 构造器注入（Constructor Injection）
+
+在 Spring 框架中，构造器注入（Constructor Injection）是依赖注入的一种方式，它指的是通过类的构造器来注入依赖的对象。构造器注入是推荐的依赖注入方式，因为它可以确保被注入的依赖在使用之前已经被完全初始化，这有助于避免空指针异常等问题，并且有利于保持代码的不变性和线程安全性。
+
+**支持构造器注入**意味着一个框架或工具可以利用类的构造器自动地注入所需的依赖。在 Spring 中，使用 `@Autowired` 注解来实现构造器注入的示例如下：
+
+```java
+@Component
+public class MyService {
+    private final Dependency dependency;
+
+    @Autowired
+    public MyService(Dependency dependency) {
+        this.dependency = dependency;
+    }
+
+    // 这里可以使用dependency进行相关操作
+}
+```
+
+在这个示例中，`MyService` 类有一个构造器，该构造器接受一个 `Dependency` 类型的参数。通过在构造器上使用 `@Autowired` 注解，Spring 在创建 `MyService` 的实例时，会自动查找类型为 `Dependency` 的 bean，并将其注入到 `MyService` 的实例中。这种方式的好处是一旦 `MyService` 被创建，它的依赖 `dependency` 就被设置好了，确保了 `MyService` 实例在使用时是完整的。
+
+相比之下，`@Resource` 注解不支持构造器注入，它通常用于字段（直接在类的成员变量上注解）或者方法（通常是设置器方法）注入。这意味着你不能用 `@Resource` 来直接在构造器参数上标注依赖，如下是不被支持的：
+
+```java
+@Component
+public class MyService {
+    private Dependency dependency;
+
+    // 这里尝试使用@Resource注解构造器，但这是不支持的
+    @Resource
+    public MyService(Dependency dependency) {
+        this.dependency = dependency;
+    }
+}
+```
+
+构造器注入强调了依赖的必要性，并在对象创建时即确保所有必要的依赖都已满足，这对于构建不可变且可靠的应用组件是非常有用的。
+
+# 17 

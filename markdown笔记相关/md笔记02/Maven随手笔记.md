@@ -654,4 +654,125 @@ mvn help:describe -Dplugin=org.apache.maven.plugins:maven-source-plugin -Ddetail
 
 这个命令会显示插件的详细信息，包括其目标、可用参数、默认配置和所需的 Maven 版本。
 
-通过以上方法，你可以较为有效地确认特定的 Maven 插件是否适用于你当前的 Maven 版本。这种做法虽然可能需要一些额外的步骤，但可以有效避免因版本不兼容导致的构建失败。
+通过以上方法，你可以较为有效地确认特定的 Maven 插件是否适用于你当前的 Maven 版本。这种做法虽然可能需要一些额外的步骤，但可以有效避免因版本不兼容导致的构建失败。 
+
+# 15 在 IntelliJ IDEA 2022.4的 Maven 设置中勾选 “Use settings from .mvn/maven.config” 的选项的作用
+
+
+
+
+
+![image-20240602110854643](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240602110854643.png)
+
+
+
+
+
+在 IntelliJ IDEA 的 Maven 设置中勾选 “Use settings from .mvn/maven.config” 的选项主要用于告诉 IDE 优先使用项目中 `.mvn/maven.config` 文件里的配置，而非全局或用户级的 Maven 配置。
+
+### .mvn/maven.config 文件的作用
+
+`.mvn/maven.config` 是 Maven 项目中的一个配置文件，位于项目根目录下的 `.mvn` 目录中。这个文件允许你为当前项目指定特定的 Maven 配置，这些配置将覆盖全局配置。常用于设置以下内容：
+
+- JVM 参数和 Maven 参数
+- 特定的 Maven 插件版本
+- 环境特定的配置，如代理设置
+
+### 使用这个选项的好处
+
+1. **项目级配置的一致性**：确保所有使用这个项目的开发者都在相同的 Maven 配置下工作，这有助于减少因环境差异导致的构建问题。
+
+2. **便于项目迁移和共享**：通过将 Maven 配置集中管理在项目内部，可以更容易地分享和迁移项目，不必担心不同开发者机器上的 Maven 配置差异。
+
+3. **简化构建流程**：对于需要特定 Maven 设置的项目，无需修改全局或用户级的 Maven 配置，只需调整项目内的 `.mvn/maven.config` 文件即可。
+
+### 如何使用
+
+- 当这个选项被勾选时，每次构建项目时，IntelliJ IDEA 会读取 `.mvn/maven.config` 文件中的配置，并以此来执行 Maven 命令。
+- 如果项目中不存在 `.mvn/maven.config` 文件，或者文件中的某些设置不完整，IDE 将回退到使用其他 Maven 配置（用户级或全局级）。
+
+勾选这个选项后，确保你的项目中的 `.mvn` 目录及其 `maven.config` 文件被正确配置和维护，以避免构建错误或不预期的行为。
+
+
+
+# 16 Maven的 settings.xml 文件中直接配置jdk编译的版本为1.8/17，因为有些时候会是1.5的版本，导致一些Java语法用不了,如钻石符号<>
+
+
+
+## `C:\Users\yangd\.m2\settings.xml` 文本格式的配置：
+
+~~~xml
+  <profiles>
+    <!-- JDK 1.8 配置 -->
+    <profile>
+        <id>jdk-1.8</id>
+        <activation>
+            <activeByDefault>true</activeByDefault>
+            <jdk>1.8</jdk>
+        </activation>
+        <properties>
+            <maven.compiler.source>1.8</maven.compiler.source>
+            <maven.compiler.target>1.8</maven.compiler.target>
+            <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
+        </properties>
+    </profile>
+
+    <!-- JDK 17 配置 -->
+<!--     <profile>
+        <id>jdk-17</id>
+        <activation>
+            <activeByDefault>true</activeByDefault>
+            <jdk>17</jdk>
+        </activation>
+        <properties>
+            <maven.compiler.source>17</maven.compiler.source>
+            <maven.compiler.target>17</maven.compiler.target>
+            <maven.compiler.compilerVersion>17</maven.compiler.compilerVersion>
+        </properties>
+    </profile> -->
+  </profiles>
+~~~
+
+
+
+## pom.xml文件中的配置如下:
+
+~~~xml
+ <!--解决 java: -source 1.5 中不支持 diamond 运算符-->
+    <properties>
+        <java.version>1.8</java.version>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+    </properties>
+
+~~~
+
+
+
+## 配置解释：
+
+这是 Maven 的 `settings.xml` 文件中定义的一部分配置，包括两个 JDK 版本的 Maven profile 设置。这些设置确实类似于在 `pom.xml` 文件中指定 JDK 版本，但使用 `settings.xml` 可以更全局地管理和重用配置
+
+这些配置定义了两个 Maven 构建配置文件（profiles），分别用于 JDK 1.8 和 JDK 17。这些配置文件中包含的设置说明如下：
+
+1. **`<id>`**：配置文件的唯一标识符，用于在命令行或 IDE 中引用。
+2. **`<activation>`**：
+   - **`<activeByDefault>`**：如果设置为 `true`，则此配置文件默认激活。注意，在同一 `settings.xml` 中有多个默认激活的配置文件可能会导致冲突。
+   - **`<jdk>`**：指定此配置文件应激活的 JDK 版本。
+3. **`<properties>`**：
+   - **`maven.compiler.source`**：指定 Java 源代码的版本。
+   - **`maven.compiler.target`**：指定生成的类文件的目标 Java 版本。
+   - **`maven.compiler.compilerVersion`**：指定用于编译的 JDK 版本。
+
+### 与 pom.xml 中的配置比较
+
+在 `pom.xml` 中直接指定 JDK 版本是针对特定项目的，而在 `settings.xml` 中通过 profiles 配置 JDK 版本可以被多个项目共享。使用 `settings.xml` 配置 JDK 版本可以为不同的项目提供灵活的 JDK 版本切换能力，特别是在你需要在多个项目间频繁切换 JDK 环境时，这种方式更为高效。
+
+### 使用建议
+
+- **避免冲突**：确保不要在 `settings.xml` 中同时激活多个冲突的配置文件。如果有多个 `<activeByDefault>` 设置为 `true`，只有一个会被激活。
+- **项目特定设置**：如果项目需要特定的 JDK 版本配置，最好在该项目的 `pom.xml` 中指定，以避免全局配置影响到特定项目的构建。
+
+
+
+# 17 

@@ -296,8 +296,15 @@ docker restart atguigu-mysql-master
 docker exec -it atguigu-mysql-master env LANG=C.UTF-8 /bin/bash
 -- 进入容器内的mysql命令行
 mysql -uroot -p
--- 修改默认密码校验方式
+-- 使用 ALTER USER 更改密码和认证插件。	修改默认密码校验方式
 ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY '123456';
+-- 这条命令做了两件事：
+#1. 将 `root` 用户的认证插件更改为 `mysql_native_password`。
+#2. 同时设置或更改了该用户的密码。
+#这条 `ALTER USER` 命令会立即生效，因为它通过高级接口直接更新了 `mysql.user` 表，并同时通知了 MySQL 服务器更新相关内存中的权限数据。
+#在 MySQL 中，当你使用 ALTER USER 语句修改用户的认证方法或密码时，这些更改是即时生效的，无需执行 FLUSH PRIVILEGES;。FLUSH PRIVILEGES; 命令主要用于重新加载权限，使手动对 mysql.user 表所做的修改生效，或在导入使用 GRANT 语句创建的权限后强制服务器重新读取权限信息。
+
+
 -- 刷新权限，可以不用重启服务器
 FLUSH PRIVILEGES;
 ```
@@ -589,7 +596,9 @@ systemctl restart network
 
 SpringBoot版本：**3.0.5.RELEASE**
 
+ShardingSphere官方文档：
 
+https://shardingsphere.apache.org/document/current/cn/user-manual/shardingsphere-jdbc/
 
 ### 1.2、添加依赖
 
@@ -885,7 +894,13 @@ ShardingSphere-JDBC远程连接的方式默认的密码加密规则是：mysql_n
 ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY '123456';
 ```
 
+从 MySQL 8.0 开始，默认的身份验证插件是 `caching_sha2_password`。
+~~~sql
+SHOW VARIABLES LIKE 'validate_password%';
+~~~
 
+- 如果没有安装或启用 `validate_password` 插件（在 MySQL 8.0 中，这个插件是可选的并且默认未启用），则没有默认的密码复杂性验证。这意味着除非你手动设置，否则 MySQL 不会强制执行密码长度、复杂性或其他相关的安全策略。
+- MySQL 服务器在内部使用加密的形式存储密码。即使没有启用 `validate_password` 插件，密码仍然会被加密存储，且不会以明文形式存在于数据库中。
 
 # 第05章 ShardingSphere-JDBC垂直分片
 
@@ -926,6 +941,7 @@ docker exec -it server-user env LANG=C.UTF-8 /bin/bash
 mysql -uroot -p
 #修改默认密码插件
 ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY '123456';
+#在 MySQL 中，当你使用 ALTER USER 语句修改用户的认证方法或密码时，这些更改是即时生效的，无需执行 FLUSH PRIVILEGES;。
 ```
 
 
@@ -1350,6 +1366,10 @@ public void testInsertOrder(){
 ### 2.2、水平分库配置
 
 使用**行表达式：**[核心概念 :: ShardingSphere (apache.org)](https://shardingsphere.apache.org/document/current/cn/features/sharding/concept/#行表达式)
+
+https://shardingsphere.apache.org/document/current/cn/features/sharding/concept/#行表达式
+
+https://shardingsphere.apache.org/document/current/cn/features/sharding/concept/#%E8%A1%8C%E8%A1%A8%E8%BE%BE%E5%BC%8F
 
 将数据 分片到order_ds_0和order_ds_1中
 
