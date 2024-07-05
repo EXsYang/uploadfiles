@@ -133,4 +133,21 @@
 
 
 
-# 5 
+# 5 从文件资源管理器右键属性进入系统面板
+
+
+
+### 从文件资源管理器`此电脑`-空白处右键选择属性进入系统面板
+
+![image-20240705225029516](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240705225029516.png)
+
+
+
+![](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240705225029516.png)
+
+
+
+# 6 
+
+
+
