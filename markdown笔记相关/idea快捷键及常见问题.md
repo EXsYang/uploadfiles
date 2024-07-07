@@ -395,3 +395,58 @@ Java 一直强调向下兼容性，即较新的 JDK 版本通常能够编译和�
 解决方法，点击旁边的`Modify options`【修改选项】：
 
 ![image-20240704195453783](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240704195453783.png)
+
+
+
+# 20 在IntelliJ IDEA中，插件通常存放在几个特定的位置，这取决于你的操作系统和具体的安装方式。这里是几个常见的操作系统和对应的插件存放路径：
+
+### Windows
+对于Windows系统，插件通常存放在以下位置之一：
+- 用户安装的插件：`C:\Users\<你的用户名>\AppData\Roaming\JetBrains\<IDEA版本>\plugins`
+- 系统级别的安装（所有用户）：`C:\Program Files\JetBrains\IntelliJ IDEA <版本>\plugins`
+
+### macOS
+对于macOS，插件的存放路径通常是：
+- 用户安装的插件：`~/Library/Application Support/JetBrains/<IDEA版本>/plugins`
+- 系统级别的安装：`/Applications/IntelliJ IDEA.app/Contents/plugins`
+
+### Linux
+对于Linux系统，插件可能存放在以下位置：
+- 用户安装的插件：`~/.config/JetBrains/<IDEA版本>/plugins`
+- 系统级别的安装（比如通过snap或者其他包管理器安装的）可能会有不同的路径。
+
+### 查找具体位置
+为了确切找到插件存放的位置，你可以在IDEA中查看：
+1. 打开IDEA。
+2. 进入到**File** > **Settings**（Windows/Linux）或者**IntelliJ IDEA** > **Preferences**（macOS）。
+3. 在设置界面中选择 **Plugins**。
+4. 点击右侧的齿轮图标或者设置图标，选择 **Open Plugin Directory** 来直接打开插件存放的文件夹。
+
+这样可以确保你访问的是当前IDEA实例实际使用的插件目录。
+
+
+
+## 快捷定位
+
+在Windows系统中，你可以使用以下的系统环境变量来快速访问IntelliJ IDEA的插件目录。打开文件资源管理器，然后在地址栏输入以下内容：
+
+```
+%APPDATA%\JetBrains\IntelliJ IDEA<版本号>\plugins
+```
+
+请替换`<版本号>`部分为你的具体IDEA版本，例如如果你使用的是2024.1版本，那么地址将是：
+
+```
+%APPDATA%\JetBrains\IntelliJ IDEA 2024.1\plugins
+```
+
+这样，你就可以直接访问到当前用户的IDEA插件目录了。如果你想访问所有用户的插件目录，那么你需要去程序的安装路径查找，通常这个不通过环境变量访问。
+
+
+
+
+
+
+
+
+

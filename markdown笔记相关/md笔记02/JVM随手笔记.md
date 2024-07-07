@@ -681,6 +681,47 @@ Java虚拟机的启动是通过引导类加载器（bootstrap class loader）创
 ### 总结
 所以，并发在不同的应用和技术背景下可能有不同的实现方式和侧重点，但它们的共同目标是有效地处理多个同时发生的任务或请求。在秒杀系统等高并发场景中，更多的是关注在大规模的用户请求和数据处理上，而不仅仅是单机内部的任务调度。
 
+
+
+# 16 解决idea 2020.2版本安装jclasslib无法使用
+
+
+
+使用 jclasslib 不光可以直观地查看某个类对应的字节码文件，还可以查看类的基本信息、常量池、接口、属性、函数等信息。
+
+使用idea自带插件下载的方式安装在这就不说啦……网络上一大堆啦……
+
+说说我遇到的问题：
+
+我的idea版本是2020.2的，使用插件市场下载jclasslib后，点击view只有show Bytecode，没有JClasslib
+
+![image-20240706013815623](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240706013815623.png)
+
+ 我怀疑应该是我的idea版本和插件的版本不太兼容，或者是新版的插件有其他更改导致
+
+然后找到了插件官网https://plugins.jetbrains.com/plugin/9248-jclasslib-bytecode-viewer/versions
+
+直接下载了5.7版本，使用idea从本地安装插件。
+
+![image-20240706013851270](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240706013851270.png)
+
+ 然后就出现了jclasslib。
+
+另外，按照上面的方法做了之后，需要在`help` -> `edit custom vm options`...里面增加一点点配置
+
+~~~
+-Duser.language=en
+-Duser.region=CN
+~~~
+
+-Duser.language ：设置本地语言
+-Duser.region ：设置区域
+![image-20240706014212225](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240706014212225.png)
+
+然后解决了问题
+
+
+
 # 16 main方法 在jclasslib局部变量表视图的各个属性的含义详细说明
 
 
@@ -5241,7 +5282,7 @@ public class MyClass {
 
 
 
-### Java对象的完整创建和初始化流程
+### Java对象的完整创建和初始化流程(对象初始化过程)
 
 1. **加载类元信息/类加载检查**：
    - 检查所需类是否已被加载、链接和初始化。如果未加载，JVM将开始加载类。
@@ -5260,7 +5301,8 @@ public class MyClass {
 
 4. **初始化零值**：
    - 分配的内存空间初始化为零值，确保对象的所有字段在实际初始化之前不会有未定义的状态。
-
+   - ![image-20240706192536634](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240706192536634.png)
+   
 5. **设置对象头**：
    - 初始化对象头，包括类的元数据信息、哈希码、对象的GC分代年龄等信息。
    - ![image-20240619225841226](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240619225841226.png)
@@ -9507,22 +9549,6 @@ java -jar C:\xxx\xxx.jar
 
 
 (6)双击.jar文件，即可运行。
-
-
-
-
-
-# 124 
-
-
-
-
-
-
-
-
-
-
 
 
 
