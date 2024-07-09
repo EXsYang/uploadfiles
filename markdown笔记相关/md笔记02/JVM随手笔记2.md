@@ -914,6 +914,16 @@ javap -v -p xx
 
 ## 139.1 `ldc`指令
 
+
+
+###  `ldc` 指令（Load Constant）
+
+- `ldc`：加载一个int或float常数池中的项到操作数栈，或者加载一个对String或Class的引用。
+- `ldc_w`：宽索引版本的`ldc`，用于加载较大的常数池索引。
+- `ldc2_w`：用于加载long或double类型的常数到操作数栈。
+
+
+
 ![image-20240709173307464](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240709173307464.png)
 
 
@@ -951,6 +961,194 @@ javap -v -p xx
 
 
 
+# 140 **long** 和 **double** 类型，由于它们是64位的，所以在`局部变量表`和`操作数栈`中占用两个连续的槽位
+
+### 局部变量表
+局部变量表是方法的一部分，用于存储方法执行期间所需的各种数据。在Java虚拟机规范中，以下类型的数据各占一个槽位：
+
+- **int**：32位整数
+- **float**：32位浮点数
+- **reference**：引用类型，指向对象的引用或者是数组的引用
+- **returnAddress**：用于支持Java虚拟机的jsr、ret指令，存放返回地址
+- **byte**、**short**、**char** 和 **boolean**：虽然这些数据类型在Java中有自己的数据大小，但在局部变量表中都是被扩展为一个整数型（32位）来处理。
+
+### 操作数栈
+操作数栈是一个后进先出（LIFO）的栈结构，用于存放指令过程中的中间数据。在操作数栈中，大部分指令都是通过操作栈顶的数值来执行的。和局部变量表类似，操作数栈中也主要处理以下类型的数据：
+
+- **int、float、reference 和 returnAddress** 类型的数据在操作数栈中也是占用一个槽位。
+- **byte**、**short**、**char** 和 **boolean** 类型的数据在进行操作时，通常也会被扩展到32位，并作为整型处理。
+
+### 占用两个槽位的数据类型
+- **long** 和 **double** 类型，由于它们是64位的，所以在局部变量表和操作数栈中占用两个连续的槽位。
+
+这种设计允许Java虚拟机以一致的方式来处理数据，无论其原始大小如何。每种类型的处理方式确保了虚拟机的效率和类型安全。
+
+
+
+# 141 什么是内码？什么是外码？到底在Java总char类型一个字符占几个字节？
+
+
+
+**//3. 字符型：char (1字符=2字节) 	**
+
+**//① 定义char型变量，通常使用一对'',内部只能写一个字符 **
+
+**//② 表示方式：1.声明一个字符 2.转义字符 3.直接使用 Unicode 值来表示字符型常量 **
+
+**1. Java规定了字符的内码要用UTF-16编码，一个字符是2个字节。外码字符所占字节取决于具体编码。字符和字节是不一样的。 **
+
+**2. 外码编码不同，字符和字节的换算不同，几种常见的编码换算如下： 在ASCII码编码方案中,一个英文字符占用一个字节,一个中文字符占用两个字节的空间; 在Unicode编码方案中,一个英文字符或一个中文字符都占用两个字节的空间; 在UTF-8编码方案中,一个英文字符占用一个字节,一个中文字符占用三个字节的空间;** 
+
+
+
+在讨论编码和字符存储的问题时，术语“内码”和“外码”经常出现，尤其是在描述字符在内存和文件系统中的编码方式时。这里我们详细解释一下这两个概念，以及在Java中`char`类型字符究竟占用多少字节。
+
+### 内码和外码
+
+1. **内码**：内码通常指的是程序在内存中处理和存储数据时使用的编码方式。在Java中，字符的内码是固定使用UTF-16编码，这意味着每个字符无论是英文还是中文，通常都是用两个字节来表示。
+
+2. **外码**：外码指的是数据在存储或传输时使用的编码方式。这种编码方式影响数据在硬盘、网络传输等环境下的表现形式，例如UTF-8、ASCII等。外码的选用可以根据需要来优化存储空间或兼容性等因素。
+
+### Java中的char类型
+
+在Java中，`char`类型的数据是使用UTF-16编码的，因此：
+
+- **char类型**：每个`char`字符占用两个字节。Java的`char`是一个16位的无符号整数，范围从`\u0000`到`\uFFFF`。这允许`char`直接表示UTF-16编码中的基本多语言平面（BMP）上的所有字符。
+
+### 字符和字节的换算
+
+字符和字节的换算取决于使用的具体编码方式：
+
+- **ASCII**：一个英文字符占用一个字节。
+- **Unicode**（通常指UTF-16）：一个字符占用两个字节，无论是英文还是中文。
+- **UTF-8**：一个英文字符占用一个字节，而中文字符根据具体的字符，可能占用三到四个字节。
+
+### 结论
+
+在Java中，每个`char`类型的字符固定占用两个字节，因为Java内部使用UTF-16编码。而文件或网络传输中字符所占的字节大小则取决于选用的外码编码方式。希望这能帮助你更好地理解Java中字符的存储和编码方式！
+
+
+
+## 141.1 不够形象，请举一个具体的例子
+
+好的，让我们通过一个具体的例子来说明Java中`char`类型的字符在内存中的存储情况，以及在不同编码下字符与字节的关系。
+
+### Java内存中的`char`存储
+
+假设我们在Java中声明一个字符变量并赋值：
+
+```java
+char ch = 'A';
+```
+
+在Java中，由于内码使用UTF-16编码，字符`A`会被存储为16位（即2字节）的二进制数。UTF-16编码中，英文字符`A`的Unicode码点是U+0041，因此在内存中它被存储为：
+
+```
+00000000 01000001
+```
+
+这里，高位的`00000000`是因为`A`在UTF-16编码中只需要低8位就可以完全表示，高8位因此被填充为0。
+
+### 不同编码下的文件存储
+
+现在，如果我们需要将这个字符写入文件，根据文件的编码方式，存储的字节数会有所不同：
+
+1. **UTF-16编码**：`A`直接以其Unicode格式`00000000 01000001`存储，占用两个字节。
+2. **UTF-8编码**：`A`的UTF-8编码是其ASCII码，因此只占用一个字节：`01000001`。
+3. **ASCII编码**：同UTF-8，`A`以一个字节的形式存储。
+
+### 中文字符的情况
+
+再看一个中文字符的例子：
+
+```java
+char ch = '中';
+```
+
+在UTF-16编码中，中文字符`中`的Unicode码点是U+4E2D，因此在Java内存中它被存储为：
+
+```
+01001110 00101101
+```
+
+如果要将这个字符写入文件，不同的编码对应的存储情况如下：
+
+1. **UTF-16编码**：直接以`01001110 00101101`存储，占用两个字节。
+2. **UTF-8编码**：`中`的UTF-8编码是`E4 B8 AD`，占用三个字节。
+
+这个例子形象地展示了在Java中字符是如何以UTF-16编码存储的，以及如何在不同编码下转换为字节。希望这能帮助你更加形象地理解！
+
+
+
+# 142 理解 `newarray` 指令在字节码中如何表示不同类型的数组。
+
+![image-20240709220936688](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240709220936688.png)
+
+### 提问的问题要领：
+- 询问为什么在 `newarray` 指令后的数字标识不同（例如为什么 `double` 类型数组使用 `7` 而不是其他数字，比如 `10` 用于 `int` 类型）。
+
+### 主要代码和对应的字节码分析：
+
+#### 示例代码 1: 创建并打印 `double` 类型数组的长度
+**Java代码**：
+```java
+public void arrLength() {
+    double[] arr = new double[10];
+    System.out.println(arr.length);
+}
+```
+**对应的字节码**：
+
+![image-20240709220913694](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240709220913694.png)
+
+```
+ 0 bipush 10           // 将10推送至栈顶
+ 2 newarray 7 (double) // 创建一个double类型的数组
+ 4 astore_1            // 将数组引用存储到局部变量1
+ 5 getstatic #8 <java/lang/System.out> // 获取System.out的PrintStream对象
+ 8 aload_1             // 加载局部变量1的数组引用到栈顶
+ 9 arraylength         // 获取数组长度
+10 invokevirtual #14 <java/io/PrintStream.println> // 调用PrintStream的println方法打印长度
+13 return              // 返回
+```
+这里的关键点是 `newarray 7 (double)`，其中 `7` 指的是Java虚拟机规范中定义的 `double` 类型数组的标识。
+
+#### 示例代码 2: 创建 `int` 和 `boolean` 类型的数组并进行操作
+**Java代码**：
+```java
+public void setArray() {
+    int[] intArray = new int[10];
+    intArray[3] = 20;
+    System.out.println(intArray[1]);
+
+    boolean[] arr = new boolean[10];
+    arr[1] = true;
+}
+```
+**对应的字节码**：
+
+![image-20240709220847471](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240709220847471.png)
+
+```
+ 0 bipush 10           // 将10推送至栈顶
+ 2 newarray 10 (int)   // 创建一个int类型的数组
+ 4 astore_1            // 将数组引用存储到局部变量1
+ 5 aload_1             // 加载局部变量1的数组引用到栈顶
+ 6 iconst_3            // 将3推送至栈顶
+ 7 bipush 20           // 将20推送至栈顶
+ 9 iastore             // 将20存入int数组的第3个位置
+ ...
+```
+在这里，`newarray 10 (int)` 中的 `10` 表示 `int` 类型数组。
+
+### 结论
+通过这些示例和字节码，可以清楚地看到，`newarray` 指令后的数字是根据Java虚拟机规范预定义的类型标识，每种基本数据类型都有一个对应的数字，用来在字节码中准确表示数组的元素类型。
+
+
+
+# 143 五种方法调用指令：`invokevirtual` 、`invokedinterface` 、`invokedspecial` 、`invokestatic`、 `invokedynamic` 
+
+![image-20240709233801703](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240709233801703.png)
 
 
 
@@ -958,8 +1156,201 @@ javap -v -p xx
 
 
 
+## 143.1 `invokespecial`指令的详细解释
+
+![image-20240709225120825](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240709225120825.png)
+
+你提到的 `invokespecial` 和 `invokestatic` 在Java字节码中的用途确实与方法的调用和重写有关。让我们澄清每个指令的用途以及它们如何与方法的重写相关：
+
+### `invokestatic`
+- **用途**：`invokestatic` 用于调用静态方法。
+- **重写相关**：静态方法不参与到类的多态行为中，它们与类而非类的实例关联。因此，静态方法不能被重写，只能被隐藏。当子类中定义了一个与父类中同名的静态方法时，父类中的方法不会被重写而是被隐藏。因此，`invokestatic` 调用的静态方法不能被重写。
+
+### `invokespecial`
+- **用途**：`invokespecial` 用于调用初始化方法(`<init>`)，私有方法，以及父类中的方法。
+- **重写相关**：当`invokespecial`用于调用父类中的方法时，通常是因为需要调用一个具体的父类实现，而不是依赖于子类可能已经重写的版本。这样的调用确保执行的是指定的父类方法，而不是任何子类中可能重写的版本。因此，即使父类的方法可以被子类重写，使用`invokespecial`进行调用时，调用的是父类中的原始方法，而不是子类中的重写版本。
+
+### 示例说明
+假设有如下类结构：
+```java
+public class Parent {
+    public void show() {
+        System.out.println("Parent show");
+    }
+}
+
+public class Child extends Parent {
+    @Override
+    public void show() {
+        System.out.println("Child show");
+    }
+
+    public void demo() {
+        invokespecial Parent.show(); // 这将调用 Parent 类中的 show 方法，而不是 Child 中的
+    }
+}
+```
+在这个例子中，尽管 `Child` 类重写了 `show` 方法，但是在 `demo` 方法中通过 `invokespecial` 显式调用了 `Parent` 类的 `show` 方法。这意味着不论 `Child` 类如何重写，调用的总是 `Parent` 类中定义的版本。
+
+### 结论
+- `invokestatic` 调用的方法不涉及重写。
+- `invokespecial` 调用父类方法时，即使父类的方法可以被子类重写，也总是调用的父类中的具体实现，不会调用任何子类的重写版本。
+
+
+
+# 144 `invokedynamic` 指令的Java代码示例
+
+`invokedynamic` 指令是在Java虚拟机中支持动态类型语言和Lambda表达式的一种机制，它被引入在Java 7中，主要用于动态解析调用点，这使得Java可以更灵活地支持不仅仅是Java自身，还包括其他动态类型语言。下面是一个使用 `invokedynamic` 指令的Java代码示例，以Lambda表达式的形式呈现。
+
+### Java代码示例
+假设我们有一个简单的接口和使用Lambda表达式来实现这个接口的例子：
+
+```java
+import java.util.function.Consumer;
+
+public class LambdaExample {
+    public static void main(String[] args) {
+        // 使用Lambda表达式打印一个字符串
+        Consumer<String> printer = s -> System.out.println(s);
+        printer.accept("Hello, Lambda!");
+    }
+}
+```
+
+在这个例子中，`Consumer<String>` 是一个功能接口，它接受一个单一的输入参数并且不返回结果。Lambda表达式 `s -> System.out.println(s)` 实现了这个接口。
+
+### 对应的字节码中的 `invokedynamic`
+在编译上述Java代码后，生成的字节码将使用 `invokedynamic` 指令来动态绑定Lambda表达式。虽然具体的字节码可能因Java编译器的不同版本而略有差异，但基本的用法如下所示：
+
+```
+ 0: invokedynamic #2,  0              // InvokeDynamic #0:accept:(L/java/lang/String;)Ljava/util/function/Consumer;
+ 5: astore_1                           // 存储Lambda表达式实现到局部变量1
+ 6: aload_1                            // 加载局部变量1
+ 7: ldc           #3                  // String "Hello, Lambda!"
+ 9: invokeinterface #4,  2            // InterfaceMethod java/util/function/Consumer.accept:(Ljava/lang/String;)V
+14: return
+```
+
+### 解释
+- `invokedynamic #2, 0`：这里的 `invokedynamic` 指令是用来创建 `Consumer<String>` 接口的一个实例，它是通过动态绑定Lambda表达式实现的。这种绑定是在运行时完成的，而不是在编译时。
+- `#2` 是对动态调用点的一个引用，它通常指向一个称为"bootstrap method"的方法，这个方法在运行时负责解析Lambda表达式并返回实现了指定接口的实例。
+- 后面的代码展示了如何使用这个通过 `invokedynamic` 创建的Lambda表达式对象。
+
+`invokedynamic` 使得Java的动态行为部分更加丰富和灵活，特别是在支持函数式编程和动态语言特性方面。
+
+
+
+# 145 对`invokedynamic` 和`invokevirtual` 进行区分总结
+
+`invokedynamic` 和 `invokevirtual` 是Java字节码中的两个关键指令，它们都用于方法调用，但用途和工作机制有明显的不同。了解这些区别有助于更好地理解Java的动态性和多态性。下面是这两个指令的主要区别和关键点总结：
+
+### 1. `invokevirtual`
+- **用途**：`invokevirtual` 主要用于调用对象的实例方法。
+- **多态性**：它支持Java的多态性。这意味着在运行时，将根据对象的实际类型来确定要调用的具体方法实现，即使在编译时只知道对象的引用类型。
+- **绑定类型**：`invokevirtual` 使用的是晚绑定（动态绑定），方法在运行时根据对象的实际类型解析。
+- **适用范围**：适用于非私有的非静态方法（普通方法），包括继承自父类的方法。
+
+### 示例代码：
+```java
+public class Animal {
+    void speak() {
+        System.out.println("Animal speaks");
+    }
+}
+
+public class Dog extends Animal {
+    @Override
+    void speak() {
+        System.out.println("Dog barks");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Animal myDog = new Dog();
+        myDog.speak();  // invokevirtual 调用
+    }
+}
+```
+
+### 2. `invokedynamic`
+- **用途**：`invokedynamic` 用于动态解析方法调用，主要在支持动态语言特性和Lambda表达式的场景中使用。
+- **动态性**：它提供了极高的动态性，方法调用的解析是在运行时进行的，而且每次调用都可能得到不同的结果。
+- **绑定机制**：使用所谓的“bootstrap方法”来进行第一次调用的方法解析，解析结果可以缓存以优化后续调用。
+- **适用范围**：主要用于需要高度动态性的场景，如Lambda表达式或动态语言的支持。
+
+### 示例代码（Lambda表达式）：
+```java
+import java.util.function.Consumer;
+
+public class LambdaExample {
+    public static void main(String[] args) {
+        Consumer<String> printer = s -> System.out.println(s);
+        printer.accept("Hello, Lambda!");  // invokedynamic 调用
+    }
+}
+```
+
+### 总结区别：
+- **设计目的**：`invokevirtual` 设计用于面向对象的多态和方法重载，而 `invokedynamic` 设计用于支持Java的动态语言能力和Lambda表达式。
+- **绑定时间**：`invokevirtual` 在运行时进行动态绑定，而 `invokedynamic` 的绑定更灵活，完全动态，可以在运行时改变。
+- **性能优化**：`invokedynamic` 允许Java虚拟机在运行时进行更多的优化，因为它可以延迟所有的方法解析决策到运行时最后一刻。
+
+理解这些区别有助于深入掌握Java虚拟机的工作原理和Java代码的性能优化。
 
 
 
 
 
+# 146 举一个完全展现`invokedynamic` 动态性更强的例子
+
+为了展示 `invokedynamic` 的高度动态性，我们可以考虑一个简单的例子，其中使用Java的Lambda表达式和方法句柄（Method Handles），来动态地选择不同的方法实现。在这个例子中，我们将演示如何根据运行时提供的条件动态改变行为。
+
+### Java代码示例
+
+我们将创建一个功能接口和两个实现，然后根据运行时的条件动态选择使用哪一个实现。此示例将使用Lambda表达式和方法句柄来实现动态行为：
+
+```java
+import java.lang.invoke.*;
+import java.util.function.BiFunction;
+
+public class DynamicInvoker {
+    public static void main(String[] args) throws Throwable {
+        // 定义两个不同的行为
+        BiFunction<Integer, Integer, Integer> add = (a, b) -> a + b;
+        BiFunction<Integer, Integer, Integer> multiply = (a, b) -> a * b;
+
+        // 创建一个动态调用器
+        MethodHandles.Lookup lookup = MethodHandles.lookup();
+        CallSite site = createCallSite(lookup, args.length > 0 ? "multiply" : "add", add, multiply);
+
+        // 获得调用器并执行
+        BiFunction<Integer, Integer, Integer> func = (BiFunction<Integer, Integer, Integer>) site.getTarget().invoke();
+        int result = func.apply(5, 3);
+
+        System.out.println("Result: " + result);
+    }
+
+    // 动态创建CallSite
+    private static CallSite createCallSite(MethodHandles.Lookup lookup, String method, BiFunction<Integer, Integer, Integer> add, BiFunction<Integer, Integer, Integer> multiply) throws NoSuchMethodException, IllegalAccessException {
+        MethodHandle target;
+        if ("multiply".equals(method)) {
+            target = lookup.findVirtual(BiFunction.class, "apply", MethodType.methodType(Object.class, Object.class, Object.class)).bindTo(multiply);
+        } else {
+            target = lookup.findVirtual(BiFunction.class, "apply", MethodType.methodType(Object.class, Object.class, Object.class)).bindTo(add);
+        }
+        return new ConstantCallSite(target);
+    }
+}
+```
+
+### 解释
+1. **功能接口和Lambda表达式**：定义了两个操作，加法和乘法，使用`BiFunction`接口。
+2. **动态调用站点（CallSite）**：`createCallSite` 方法根据传入的条件（这里是命令行参数的长度）动态选择要绑定的方法（加法或乘法）。
+3. **Method Handle和Lookup**：使用`MethodHandles`和`Lookup`来找到并绑定相应的方法实现到方法句柄。这个方法句柄被绑定到一个`ConstantCallSite`，意味着一旦设定就不再改变。但是，你可以改变此逻辑，使用`MutableCallSite`或其他类型的`CallSite`来在运行时进一步动态调整绑定。
+
+### 运行时行为
+- 运行这段代码时，如果没有提供命令行参数，则执行加法（5 + 3），输出结果为 8。
+- 如果提供了任何命令行参数，执行乘法（5 * 3），输出结果为 15。
+
+这个例子展示了如何使用`invokedynamic`和方法句柄在Java中实现方法调用的完全动态绑定，根据运行时状态动态选择行为。这种能力是`invokevirtual`所不具备的，后者仅能在类的多态框架内部解析方法调用。
