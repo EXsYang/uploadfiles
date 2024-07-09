@@ -1013,7 +1013,7 @@ $ javap -v LocalVariablesTest.class
 在Java中，`jclasslib`工具是一个非常有用的字节码查看器，它能帮助我们了解Java编译器是如何把Java源代码转换成字节码的。图中显示的是`jclasslib`的界面，其中包含关于方法中局部变量和行号的信息。以下是对这些部分的解释：
 
 ### Start PC 和 Length
-这两个字段是局部变量表（Local Variable Table）的组成部分，它们指示局部变量在方法的字节码中的作用范围：
+这两个字段是局部变量表（**Local Variable Table**）的组成部分，它们指示局部变量在方法的字节码中的作用范围：
 - **Start PC**: 指的是局部变量从哪个偏移量（字节码指令的位置）开始有效。
 - **Length**: 表示从Start PC开始，局部变量在方法中持续有效的指令数量。
 
@@ -1024,7 +1024,7 @@ $ javap -v LocalVariablesTest.class
 如果局部变量`args`在`LocalVariableTable`中的Start PC是0，Length是16，这意味着`args`从方法字节码的第0条指令开始有效，并持续到第15条字节码指令（不包括第16条指令）。换言之，`args`在这段代码中的作用范围是从第0条指令（数组下标为0的指令）直到第15条指令（数组下标为15的指令）。
 
 ### Start PC 和 Line Number
-这两个字段是行号表（Line Number Table）的组成部分，它们提供了字节码指令与源代码行的映射：
+这两个字段是行号表（**Line Number Table**）的组成部分，它们提供了字节码指令与源代码行的映射：
 - **Start PC**: 指的是某个字节码指令的起始位置。
 
 - **Line Number**: 表示该字节码指令对应源代码中的行号。

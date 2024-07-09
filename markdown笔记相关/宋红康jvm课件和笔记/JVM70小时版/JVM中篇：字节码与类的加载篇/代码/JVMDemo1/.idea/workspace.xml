@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="d671a00a-e3f4-4437-9a85-91499212dd6a" name="Default Changelist" comment="" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand />
+    <select />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1c3otqiNFUKKFsp47Qy58LEz5wE" />
+  <component name="PropertiesComponent">
+    <property name="Downloaded.Files.Path.Enabled" value="false" />
+    <property name="Repository.Attach.Annotations" value="false" />
+    <property name="Repository.Attach.JavaDocs" value="false" />
+    <property name="Repository.Attach.Sources" value="false" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="jdk.selected.JAVA_MODULE" value="9" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/chapter04/src/com/atguigu/java2" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.atguigu.java" />
+      <recent name="com.atguigu.java1" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\code\workspace_idea5\JVMDemo1\chapter04\src\com\atguigu\java2" />
+      <recent name="D:\code\workspace_idea5\JVMDemo1\chapter04\src\com\atguigu\java1" />
+      <recent name="D:\code\workspace_idea5\JVMDemo1\chapter03\src\com\atguigu\java" />
+      <recent name="D:\code\workspace_idea5\JVMDemo1\chapter01\src\com\atguigu\java" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Application.ClassLoaderTest">
+    <configuration name="ClassLoaderTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.atguigu.java.ClassLoaderTest" />
+      <module name="chapter04_1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.atguigu.java.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="FileClassLoader" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.atguigu.java2.FileClassLoader" />
+      <module name="chapter04" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.atguigu.java2.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MyClassLoader" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.atguigu.java2.MyClassLoader" />
+      <module name="chapter04" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.atguigu.java2.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MyClassLoaderTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.atguigu.java2.MyClassLoaderTest" />
+      <module name="chapter04" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.atguigu.java2.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserClassLoader" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.atguigu.java.UserClassLoader" />
+      <module name="chapter04" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.atguigu.java.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <option name="MAIN_CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-XX:+TraceClassLoading" />
+      <option name="PARAMETERS" value="" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.MyClassLoader" />
+      <item itemvalue="Application.FileClassLoader" />
+      <item itemvalue="Application.MyClassLoaderTest" />
+      <item itemvalue="Application.ClassLoaderTest" />
+      <item itemvalue="Application.UserClassLoader" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.ClassLoaderTest" />
+        <item itemvalue="Application.MyClassLoaderTest" />
+        <item itemvalue="Application.UserClassLoader" />
+        <item itemvalue="Application.MyClassLoader" />
+        <item itemvalue="Application.FileClassLoader" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d671a00a-e3f4-4437-9a85-91499212dd6a" name="Default Changelist" comment="" />
+      <created>1589766855519</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1589766855519</updated>
+      <workItem from="1589766858491" duration="1501000" />
+      <workItem from="1589901008542" duration="12000" />
+      <workItem from="1598976097792" duration="179000" />
+      <workItem from="1599099426930" duration="9182000" />
+      <workItem from="1599139938989" duration="2076000" />
+      <workItem from="1599180233448" duration="14623000" />
+      <workItem from="1599237108964" duration="320000" />
+      <workItem from="1599266816228" duration="20616000" />
+      <workItem from="1599390263996" duration="8756000" />
+      <workItem from="1599441604022" duration="615000" />
+      <workItem from="1599442686773" duration="9743000" />
+      <workItem from="1599485096982" duration="8410000" />
+      <workItem from="1599525725039" duration="14237000" />
+      <workItem from="1599611839345" duration="24232000" />
+      <workItem from="1599664304479" duration="1649000" />
+      <workItem from="1599698397007" duration="27494000" />
+      <workItem from="1599753404312" duration="5705000" />
+      <workItem from="1599786807317" duration="17342000" />
+      <workItem from="1599965249785" duration="22144000" />
+      <workItem from="1600009354263" duration="7119000" />
+      <workItem from="1600046332111" duration="17389000" />
+      <workItem from="1600098718052" duration="2199000" />
+      <workItem from="1600161545670" duration="3170000" />
+      <workItem from="1600178256308" duration="5898000" />
+      <workItem from="1600217278676" duration="5569000" />
+      <workItem from="1600235881833" duration="10056000" />
+      <workItem from="1600308688001" duration="13537000" />
+      <workItem from="1600333617104" duration="3148000" />
+      <workItem from="1600352101704" duration="2558000" />
+      <workItem from="1600391126324" duration="15588000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+</project>

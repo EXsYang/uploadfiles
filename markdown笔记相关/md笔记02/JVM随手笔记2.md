@@ -801,3 +801,113 @@ ClassFile {
 
 
 ![image-20240708171118891](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240708171118891.png)
+
+
+
+
+
+# 137 解释局部变量表中的的Start PC=0 和 Lengh=10，为什么字节码前面的行号到9？而不是10？
+
+
+
+![image-20240708203405028](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240708203405028.png)
+
+![image-20240708203331588](C:/Users/yangd/AppData/Roaming/Typora/typora-user-images/image-20240708203331588.png)
+
+
+
+从你上传的截图和描述中，我们可以详细解释你的问题关于`Start PC`, `Length`属性，以及字节码中行号的计算方式。
+
+### Start PC 和 Length 解释
+
+在Java字节码中的`LocalVariableTable`信息，`Start PC`和`Length`字段指定了局部变量在方法字节码中的作用域：
+
+- **Start PC**：表示局部变量从哪个偏移量（指令索引）开始有效。在你的例子中，`Start PC`为0意味着变量从第一条指令开始就是有效的。
+- **Length**：表示从`Start PC`开始，这个局部变量在多少字节码指令的范围内有效。在你的例子中，`Length`为10意味着从索引0开始，覆盖了10条指令。
+
+这些信息对于调试和运行时的类型检查非常关键，它们帮助虚拟机正确地管理栈帧中的局部变量。
+
+### 字节码行号到9的原因
+
+关于为什么字节码的行号到9而不是10，这实际上与你提供的`Length`的解释相连：
+
+- 字节码的每个索引（如0, 1, 4, 5, 6, 9等）代表一条或一组指令的开始。
+- 在Java字节码中，行号通常与源代码中的行对应。如果某条字节码指令没有直接从源代码中对应的行转换过来，它可能不会被计入最终的行号映射表中。例如，自动生成的构造器调用 (`invokespecial`) 和字段初始化 (`putfield`) 可能没有直接的源代码行对应。
+
+在你的情况中，虽然`Length`为10，但实际上指令索引9是最后一条被执行的指令。这通常意味着索引9的指令是方法中最后一条执行的有效指令，而后面可能没有更多的指令（或者后面的指令不再对应源代码中的新行）。因此，尽管`Length`涵盖了10个指令长度，但在源代码中对应的最高行号可能只到9。
+
+总结一下，`Length`为10意味着局部变量在从字节码索引0到索引9（包括9，总共10个位置）的范围内有效，而行号表中最后一条记录的行号是9，可能是因为在源代码中，索引9是最后一条与源代码直接关联的指令。
+
+
+
+# 138 `javac -g` 操作
+
+
+
+![image-20240708212446950](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240708212446950.png)
+
+
+
+不加上`-g`则在编译xx.java文件时在class文件中，不会生成局部变量表`Local Variable Table`
+
+~~~java
+javac xx.java
+~~~
+
+
+
+加上`-g`则在该命令生成的class文件中，会生成局部变量表`Local Variable Table`
+
+~~~java
+javac -g xx.java
+~~~
+
+
+
+~~~
+使用 javap -v xx.class 来比较生成的文件的区别
+javap -v xx.class
+
+使用-p会包含私有/private的结构
+javap -v -p xx.class
+
+即使不带.class也可以反编译成功！！
+javap -v -p xx
+
+~~~
+
+![image-20240708220925422](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240708220925422.png)
+
+
+
+
+
+
+
+# 139 javap的用法
+
+![image-20240708221105899](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240708221105899.png)
+
+![image-20240708221033581](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240708221033581.png)
+
+
+
+~~~
+使用-p会包含私有/private的结构，输出的信息是最全的
+javap -v -p xx.class
+
+即使不带.class也可以反编译成功！！
+javap -v -p xx
+~~~
+
+
+
+
+
+![image-20240708220756916](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240708220756916.png)
+
+
+
+
+
+# 139 
