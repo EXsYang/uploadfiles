@@ -1304,53 +1304,261 @@ public class LambdaExample {
 
 # 146 举一个完全展现`invokedynamic` 动态性更强的例子
 
-为了展示 `invokedynamic` 的高度动态性，我们可以考虑一个简单的例子，其中使用Java的Lambda表达式和方法句柄（Method Handles），来动态地选择不同的方法实现。在这个例子中，我们将演示如何根据运行时提供的条件动态改变行为。
+您指出的问题是非常关键的。如果示例代码中未见 `invokedynamic` 使用，这可能是因为示例未能充分利用 `invokedynamic` 的特性或Lambda表达式未被编译成预期的形式。为了确实展示 `invokedynamic` 的使用，我们需要确保例子中的动态调用特性能通过Lambda表达式或方法句柄API明显体现。让我们重写一个示例，这次我们将使用一个更直接利用Lambda表达式的场景，确保 `invokedynamic` 显式出现在字节码中。
 
-### Java代码示例
+### 重写的示例：使用Lambda表达式
 
-我们将创建一个功能接口和两个实现，然后根据运行时的条件动态选择使用哪一个实现。此示例将使用Lambda表达式和方法句柄来实现动态行为：
+这次我们将创建一个简单的示例，通过用户输入动态选择不同的算法策略，使用Java 8 Lambda表达式，这应该会在编译后的字节码中使用 `invokedynamic` 指令。
 
 ```java
-import java.lang.invoke.*;
 import java.util.function.BiFunction;
 
-public class DynamicInvoker {
-    public static void main(String[] args) throws Throwable {
-        // 定义两个不同的行为
-        BiFunction<Integer, Integer, Integer> add = (a, b) -> a + b;
-        BiFunction<Integer, Integer, Integer> multiply = (a, b) -> a * b;
+public class LambdaDynamicExample {
 
-        // 创建一个动态调用器
-        MethodHandles.Lookup lookup = MethodHandles.lookup();
-        CallSite site = createCallSite(lookup, args.length > 0 ? "multiply" : "add", add, multiply);
-
-        // 获得调用器并执行
-        BiFunction<Integer, Integer, Integer> func = (BiFunction<Integer, Integer, Integer>) site.getTarget().invoke();
-        int result = func.apply(5, 3);
-
-        System.out.println("Result: " + result);
-    }
-
-    // 动态创建CallSite
-    private static CallSite createCallSite(MethodHandles.Lookup lookup, String method, BiFunction<Integer, Integer, Integer> add, BiFunction<Integer, Integer, Integer> multiply) throws NoSuchMethodException, IllegalAccessException {
-        MethodHandle target;
-        if ("multiply".equals(method)) {
-            target = lookup.findVirtual(BiFunction.class, "apply", MethodType.methodType(Object.class, Object.class, Object.class)).bindTo(multiply);
+    public static void main(String[] args) {
+        // 根据输入选择操作
+        BiFunction<Integer, Integer, Integer> operation;
+        if (args.length > 0 && "multiply".equals(args[0])) {
+            operation = (a, b) -> a * b;  // Lambda表达式
         } else {
-            target = lookup.findVirtual(BiFunction.class, "apply", MethodType.methodType(Object.class, Object.class, Object.class)).bindTo(add);
+            operation = (a, b) -> a + b;  // Lambda表达式
         }
-        return new ConstantCallSite(target);
+
+        // 执行操作
+        System.out.println("Result: " + operation.apply(5, 3));
     }
 }
 ```
 
-### 解释
-1. **功能接口和Lambda表达式**：定义了两个操作，加法和乘法，使用`BiFunction`接口。
-2. **动态调用站点（CallSite）**：`createCallSite` 方法根据传入的条件（这里是命令行参数的长度）动态选择要绑定的方法（加法或乘法）。
-3. **Method Handle和Lookup**：使用`MethodHandles`和`Lookup`来找到并绑定相应的方法实现到方法句柄。这个方法句柄被绑定到一个`ConstantCallSite`，意味着一旦设定就不再改变。但是，你可以改变此逻辑，使用`MutableCallSite`或其他类型的`CallSite`来在运行时进一步动态调整绑定。
+### 字节码中的 `invokedynamic`
 
-### 运行时行为
-- 运行这段代码时，如果没有提供命令行参数，则执行加法（5 + 3），输出结果为 8。
-- 如果提供了任何命令行参数，执行乘法（5 * 3），输出结果为 15。
+在这个例子中，我们使用Lambda表达式来定义加法和乘法操作。当这段代码被编译后，每个Lambda表达式的实例化部分将通过 `invokedynamic` 指令实现。这是因为Lambda表达式在Java中是基于 `invokedynamic` 来动态绑定的，允许JVM在运行时进行方法绑定，以便更高效地执行。
 
-这个例子展示了如何使用`invokedynamic`和方法句柄在Java中实现方法调用的完全动态绑定，根据运行时状态动态选择行为。这种能力是`invokevirtual`所不具备的，后者仅能在类的多态框架内部解析方法调用。
+### 验证字节码
+
+编译上述代码后，使用 `javap -v` 命令查看编译后的字节码，应该能看到 `invokedynamic` 指令用于实现Lambda表达式的部分。例如：
+
+```shell
+javap -v LambdaDynamicExample.class
+```
+
+你会在输出中看到类似以下的 `invokedynamic` 指令：
+
+```
+invokedynamic #34,  0              // InvokeDynamic #0:apply:(L...;)
+```
+
+这里的 `#34` 是对动态调用点的一个引用，具体数字和细节可能因编译器和环境而异。
+
+### 总结
+
+通过使用Lambda表达式和动态方法绑定，我们能够展示 `invokedynamic` 的动态性。这样的例子不仅显示了代码的简洁性，还揭示了Java在运行时如何处理这种动态性，这是传统的 `invokevirtual` 或 `invokestatic` 无法提供的灵活性和性能优化。
+
+
+
+## 146.1 使用随机数来控制行为的选择可以更直观地展示 `invokedynamic` 的动态性
+
+确实，使用随机数来控制行为的选择可以更直观地展示 `invokedynamic` 的动态性，因为它更明显地体现了运行时行为的不确定性和灵活性。我们可以通过调整之前的例子，让程序不是基于静态的命令行参数，而是基于每次运行时生成的随机数来选择执行加法或乘法。这样做可以进一步强调 `invokedynamic` 在运行时如何处理不同的方法绑定。
+
+### 更新的 Java 代码示例
+
+```java
+import java.util.function.BiFunction;
+import java.util.Random;
+
+public class LambdaDynamicExample {
+
+    public static void main(String[] args) {
+        // 创建随机数生成器
+        Random random = new Random();
+
+        // 随机选择操作
+        BiFunction<Integer, Integer, Integer> operation;
+        if (random.nextBoolean()) {
+            operation = (a, b) -> a + b;  // Lambda表达式实现加法
+            System.out.println("Using addition");
+        } else {
+            operation = (a, b) -> a * b;  // Lambda表达式实现乘法
+            System.out.println("Using multiplication");
+        }
+
+        // 执行操作并打印结果
+        System.out.println("Result: " + operation.apply(5, 3));
+    }
+}
+```
+
+### 字节码中的 `invokedynamic`
+
+编译上述代码后，每个 Lambda 表达式的实例化部分将通过 `invokedynamic` 指令实现。这意味着对于每次程序运行，`invokedynamic` 可能会根据 `Random` 对象生成的布尔值绑定到不同的方法实现。这种行为在程序运行前是未确定的，由 JVM 在运行时决定。
+
+### 解释动态性
+
+在这个例子中，每次程序运行时都可能表现不同的行为，这取决于 `Random` 对象生成的布尔值。这种模式使得程序的行为具有高度的不确定性，展示了 `invokedynamic` 的能力，即在运行时动态解决方法调用，而非编译时固定方法调用目标。
+
+- **运行时决策**：`invokedynamic` 允许 JVM 在每次执行时基于当前的上下文（本例中是随机数）动态选择最适合的方法实现。
+- **性能优化**：JVM 可以利用 `invokedynamic` 的灵活性进行方法调用的优化，如延迟绑定、内联等，这可能会根据实际运行时的使用模式调整。
+
+### 总结
+
+通过随机数控制 Lambda 表达式的选择，我们不仅展示了代码的简洁性，还直观地展示了 `invokedynamic` 的动态方法绑定功能。这种方式体现了 Java 平台对动态语言特性的支持，允许开发者编写更灵活和高效的代码。
+
+
+
+# 147 `new`指令会将创建后的地址值放入栈顶， `invokespecial`需要消耗一份引用类型的地址值
+
+`invokevirtual` 、`invokedinterface` 、`invokedspecial` 、`invokestatic`、 `invokedynamic` 
+
+
+
+~~~
+public void print(){
+        Object obj = new Object();
+       String info = obj.toString();
+        // obj.toString();
+    }
+~~~
+
+`print()`方法执行过程分析如下图：
+
+![image-20240710105546255](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240710105546255.png)
+
+
+
+![image-20240710112107187](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240710112107187.png)
+
+
+
+## 147.1 方法调用指令是如何消耗操作数栈上的数据？
+
+在Java字节码中，方法调用指令（`invokevirtual`, `invokespecial`, `invokeinterface`, `invokestatic`, `invokedynamic`）确实都需要消耗操作数栈上的一定数量的数据，其中包括方法的接收者（对于静态方法除外，因为静态方法不需要对象引用）以及方法的参数。下面是详细解释每个指令如何消耗操作数栈上的数据：
+
+### 1. `invokespecial`
+- **消耗内容**：这个指令会消耗一个对象引用（即需要初始化或者调用的对象）以及该方法的所有参数。
+- **用途**：用于初始化对象、调用私有方法和父类方法。
+- **栈消耗情况**：对于非静态方法，消耗包括一个对象引用和所有方法参数。
+
+### 2. `invokevirtual`
+- **消耗内容**：同样消耗一个对象引用和所有方法参数。
+- **用途**：用于调用对象的实例方法。
+- **栈消耗情况**：包括一个对象引用和所有方法参数。
+
+### 3. `invokeinterface`
+- **消耗内容**：消耗一个对象引用和所有方法参数。
+- **用途**：用于调用接口方法。
+- **栈消耗情况**：包括一个接口实现对象的引用和所有方法参数。
+
+### 4. `invokestatic`
+- **消耗内容**：只消耗方法的参数，因为静态方法不需要对象引用。
+- **用途**：用于调用类的静态方法。
+- **栈消耗情况**：只包括方法参数。
+
+### 5. `invokedynamic`
+- **消耗内容**：消耗的内容取决于动态解析的结果，通常包括所有的方法参数，以及可能的隐式参数，但不包括对象引用，除非动态方法决定需要。
+- **用途**：用于动态类型语言和Lambda表达式的方法调用。
+- **栈消耗情况**：取决于动态解析到的方法签名，但通常包括所有的方法参数。
+
+### 总结
+确实，对于大部分方法调用指令，操作数栈消耗的总量是：方法接收对象的引用（如果有）加上方法的所有参数。唯一的例外是 `invokestatic`，它不需要对象引用，只消耗方法参数。而 `invokedynamic` 的消耗则依赖于具体的动态方法解析结果。这些设计确保了Java虚拟机在执行方法调用时能够有效地管理操作数栈，同时支持Java的多态性和动态语言特性。
+
+
+
+## 147.2 更清晰和准确地描述方法调用指令是如何消耗操作数栈上的
+
+确实，为了更清晰和准确地描述这些指令消耗操作数栈的情况，我们应该详细指明具体数量的消耗。让我们来具体澄清每个方法调用指令的消耗详情：
+
+### 1. `invokespecial`
+- **消耗的数据量**：包括一个对象的引用加上该方法的所有参数。如果方法有 n 个参数，那么总共消耗的数据量是 n + 1。
+
+### 2. `invokevirtual`
+- **消耗的数据量**：同样包括一个对象的引用和该方法的所有参数。如果方法有 n 个参数，那么总共消耗的数据量是 n + 1。
+
+### 3. `invokeinterface`
+- **消耗的数据量**：包括一个实现了接口的对象的引用和该方法的所有参数。如果方法有 n 个参数，那么总共消耗的数据量是 n + 1。
+
+### 4. `invokestatic`
+- **消耗的数据量**：仅包括方法的参数，因为它是静态方法不需要对象引用。如果方法有 n 个参数，那么总共消耗的数据量是 n。
+
+### 5. `invokedynamic`
+- **消耗的数据量**：这个指令的消耗数据量取决于动态解析出的目标方法需要的参数数量。不涉及固定的对象引用，但可能包括其他隐式参数。如果解析出的方法有 n 个参数，那么总消耗的数据量将是 n，具体数量可能在运行时变化。
+
+### 示例说明
+
+例如，假设我们有一个方法 `doSomething(int a, double b)`，我们可以通过不同的字节码指令来调用它：
+
+- **对于 `invokevirtual` 和 `invokespecial`**：如果这是一个实例方法，那么调用它需要的操作数栈数据量将是 3 （1个对象引用 + 1个整数 + 1个双精度浮点数）。
+- **对于 `invokestatic`**：如果这是一个静态方法，那么调用它需要的操作数栈数据量将是 2（1个整数 + 1个双精度浮点数）。
+- **对于 `invokeinterface`**：同 `invokevirtual` 和 `invokespecial`，调用需要的操作数栈数据量也将是 3。
+- **对于 `invokedynamic`**：消耗的数据量完全取决于动态解析的结果，但如果同样是调用 `doSomething(int a, double b)`，则也是 2。
+
+这样的详细说明希望能帮助您更好地理解每个指令对操作数栈的具体影响。
+
+# 148 消耗操作数栈中的对象引用的字节码指令举例
+
+
+
+在Java字节码中，多种指令会消耗操作数栈中的对象引用。对象引用主要用于实例方法调用、字段访问、数组操作和类实例化等操作。下面总结了一些常见的字节码指令，它们会消耗操作数栈中的对象引用：
+
+### 1. 方法调用指令
+- **`invokevirtual`**：用于调用对象的实例方法。消耗对象引用以及该方法的参数。
+- **`invokespecial`**：用于调用初始化方法(`<init>`)、私有方法及父类方法。消耗对象引用以及该方法的参数。
+- **`invokeinterface`**：用于调用接口方法。消耗实现接口的对象引用以及该方法的参数。
+
+### 2. 字段操作指令
+- **`getfield`**：用于获取对象的实例字段值。消耗对象引用，将字段值压入栈顶。
+- **`putfield`**：用于设置对象的实例字段值。消耗对象引用和要设置的新值。
+
+### 3. 数组操作指令
+- **`aaload`**：从引用类型数组中加载一个引用类型的数据到操作数栈顶。消耗数组引用和索引。
+- **`aastore`**：将一个引用类型的数据存储到引用类型数组中。消耗数组引用、索引和要存储的值。
+- **`baload`, `caload`, `saload`, `iaload`, `faload`, `daload`, `laload`**：这些指令用于从数组中加载类型为byte、char、short、int、float、double、long的数据。均消耗数组引用和数组索引。
+
+### 4. 实例化指令
+- **`new`**：创建一个类实例。虽然此指令本身不消耗操作数栈上的引用，但随后通常会跟随一个 `invokespecial` 指令来调用构造函数，此时会消耗新创建的对象引用。
+
+### 5. 类型检查指令
+- **`checkcast`**：检查类型转换是否合法。如果对象可以被转换成目标类型，则不改变栈顶值；否则抛出 `ClassCastException`。消耗对象引用。
+- **`instanceof`**：判断对象是否是某个类的实例或者是这个类的子类的实例。消耗对象引用，结果（布尔值）被推到栈顶。
+
+### 总结
+这些指令展示了Java虚拟机如何通过操作数栈来管理对象引用。在实际应用中，了解这些指令如何操作可以帮助开发者更好地理解Java程序的底层执行逻辑，尤其是在进行性能优化和调试时。
+
+
+
+# 149 
+
+
+
+
+
+```java
+//思考,i++面试题
+public void method8() {
+    int i = 10;
+    i = i++;
+    System.out.println(i);//10
+}
+
+```
+
+![image-20240710172347683](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240710172347683.png)
+
+
+
+~~~java
+//思考,++i面试题
+public void method8_() {
+    int i = 10;
+    i = ++i;
+    System.out.println(i);//10
+}
+~~~
+
+
+
+![image-20240710172311369](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240710172311369.png)
+
+
+
+
+

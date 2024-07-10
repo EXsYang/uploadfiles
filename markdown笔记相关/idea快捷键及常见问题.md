@@ -450,3 +450,466 @@ Java 一直强调向下兼容性，即较新的 JDK 版本通常能够编译和�
 
 
 
+---
+
+# 分割线下面是从`常用快捷键.md`直接复制过来的
+
+---
+
+## Windows常用快捷键
+
+永久删除：shift+delete
+
+运行：win+R
+
+打开我的电脑：win+E
+
+打开任务管理器：ctrl+shift+esc
+
+
+
+![image-20240620105337427](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240620105337427.png)
+
+## EclipseKeys
+
+/*
+
+ * Eclipse中的快捷键：
+   修改过的：
+   进入方法：ctrl + B / ctrl + 鼠标左键
+   进入实现类的方法: ctrl + alt + B
+   转换大小写 ctrl + shift + U
+
+
+
+
+
+![image-20211102160758267](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20211102160758267.png)
+
+![image-20211102163840412](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20211102163840412.png)
+
+查找类：**Ctrl+Shift+T***用于从jar中查找类 这个eclipse键盘快捷键可以帮助你快速找到类。
+
+类中查找结构：ctrl+o
+
+eclipse查看继承树：CTRL + T
+
+idea查看继承树：F4
+
+调出Source菜单：alt + shift + s
+
+alt shift z 或者 ctrl alt t 在idea中使用synchronized包起来代码块
+
+用的比较少的快捷键：
+
+![image-20211102163827392](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20211102163827392.png)
+
+![image-20211102163751174](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20211102163751174.png)
+
+![image-20211102161042371](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20211102161042371.png)
+
+写.的时候给作提示是这里设置的
+
+如果想一直作提示可以在里面输入   abcdef....xyz.  
+
+![image-20211102161453202](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20211102161453202.png)
+
+CTRL + SHIFT + O  批量导包
+
+![image-20211102161916421](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20211102161916421.png)
+
+修改快捷键指令的地方，先在上面的搜索框搜索出来，然后在下面的Binding修改即可
+
+
+
+
+
+# idea 常用快捷键
+
+0	配置idea快捷键小技巧
+
+![image-20230726120326319](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20230726120326319.png)
+
+
+
+
+
+
+
+![image-20220601204436986](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20220601204436986.png)
+
+上图所示的提示，快捷键为CTRL+ALT+/			在idea中
+
+CTRL + 空格 + 上下左右：idea上下滑动拖拽条
+
+idea中显示所有快捷键的快捷键：CTRL+j
+
+![image-20220618102832638](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20220618102832638.png)
+
+
+
+## **1、idea多行同一列同时编辑**
+
+方法一：按住alt+caps+a，鼠标左键拉选要修改的连续行的同一列
+
+方法二：按住鼠标滚轮拉选要修改的连续行的同一列
+
+## **2、多光标处同时编辑**
+
+*按住alt+shift+a，鼠标左键选择要修改的列位置，会有一个光标显示在选择的列位置，然后编辑所有光标处都会起作用*
+
+*统一按esc键退出*
+
+
+
+
+
+![image-20230413225401731](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20230413225401731.png)
+
+## 3、包 分级显示
+
+上图中的Compact Middle Packages 取消勾选 包会分级显示 如下图所示：
+![image-20230413225523992](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20230413225523992.png)
+
+## 4、**增强for循环快捷键：iter**
+
+
+
+## 5、 <!--   前面的空格--> 去掉  ctrl + / 时前面的空格 取消下图勾选框
+
+![image-20230522200527857](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20230522200527857.png)
+
+## 6、查找接口的实现类方法： ctrl + alt +B
+
+## 6.1 查看类或接口的继承关系：ctrl + h / F4
+
+```java
+  @Override
+    public boolean isExistsUsername(String username) {
+
+        //老韩的小技巧
+        //如果看某个方法 ctrl + b  => 定位到memberDAO 遍历类型的方法
+        //如果使用 ctrl+alt+ b=> 实现类的方法
+        //如果有多个类，实现了该方法 会弹出选择的对话框.
+        return memberDAO.queryMemberByUsername(username) == null ? false : true;
+
+    }
+```
+
+
+
+## 7、**设置 复制文件名的快捷键**
+
+![image-20230717090318262](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20230717090318262.png)
+
+![image-20230717090415097](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20230717090415097.png)
+
+![image-20230717090557078](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20230717090557078.png)
+
+![image-20230717090639924](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20230717090639924.png)
+
+
+
+
+
+
+
+
+
+---
+
+## 8、ieea 标签页显示在同一行或多行的设置
+
+多行显示：
+
+![image-20230718120944771](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20230718120944771.png)
+
+详细设置如下：
+
+![image-20230718120558025](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20230718120558025.png)
+
+同一行显示：超过最大标签页的会关掉
+
+详细设置如下：
+
+![image-20230718120820772](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20230718120820772.png)
+
+
+
+## 9 ctrl + alt + /  放在要传入的方法小括号中 会提示方法形参
+
+![image-20231020151659975](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20231020151659975.png)
+
+
+
+
+
+## 10 alt + /  会提示要使用的变量
+
+![image-20231020151805084](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20231020151805084.png)
+
+
+
+
+
+
+
+
+
+# 2 idea 未设置成和老韩一样的 快捷键
+
+## 切换大小写
+
+//ctrl+shift+u => 切换大小写
+
+自动生成JavaBean的内部结构 的快捷键
+
+生成try catch 的快捷键
+
+进入方法的快捷键 ctrl+ B
+
+alt+insert 生成构造器 / getset方法
+
+![image-20230802172506540](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20230802172506540.png)
+
+![image-20230802172511350](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20230802172511350.png)
+
+# 3 Javaweb开发中的快捷键
+
+**查看位置**
+
+*E:\韩顺平Java\第二阶段-JavaWeb\JavaWeb学习资料\JavaWeb学习资料\代码\jiaju_mall\src\com\hspedu\furns\service\impl\MemberServiceImpl.java*
+
+
+
+ /**
+     * 判断用户名是否存在
+          *
+          * @param username 用户名
+               * @return 如果存在返回true, 否则返回false
+               */
+            @Override
+            public boolean isExistsUsername(String username) {
+
+        //老韩的小技巧
+        //如果看某个方法 ctrl + b  => 定位到memberDAO 遍历类型的方法
+        //如果使用 ctrl+alt+ b=> 实现类的方法
+        //如果有多个类，实现了该方法 会弹出选择的对话框.
+        return memberDAO.queryMemberByUsername(username) == null ? false : true;
+    
+    }
+
+------
+
+![image-20230715095649360](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20230715095649360.png)
+
+## JUnit5.4 配置 alt + R 快捷键
+
+![image-20230715101702399](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20230715101702399.png)
+
+
+
+## HTML 注释顶格生成问题
+
+![image-20230715115618744](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20230715115618744.png)
+
+![image-20230715115309105](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20230715115309105.png)
+
+**设置后：**
+
+![image-20230715115731635](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20230715115731635.png)
+
+
+
+# 4 idea 全局搜索关键字 
+
+本页面搜索快捷键 ctrl + F
+
+**使用全局搜索关键字 查找该class 属性 调用的位置 看看到底干了什么！**
+
+![image-20230803185039301](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20230803185039301.png)
+
+![image-20230803185139067](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20230803185139067.png)
+
+![image-20230803185459816](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20230803185459816.png)
+
+![image-20230803185718938](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20230803185718938.png)
+
+
+
+# 5 在Windows 10中，切换虚拟桌面的快捷键是：`Ctrl` + `Win` + `右方向键`
+
+- 切换到下一个虚拟桌面：`Ctrl` + `Win` + `右方向键`
+- 切换到上一个虚拟桌面：`Ctrl` + `Win` + `左方向键`
+
+这些快捷键可以帮助您快速在不同的虚拟桌面之间切换。
+
+
+
+# 6 在Windows 10中，剪切板的快捷键是  
+
+# `Win` + `V`
+
+![image-20240208012706301](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240208012706301.png)
+
+
+
+
+
+
+
+# 7 Idea主题设置
+
+![image-20240316161536166](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240316161536166.png)
+
+
+
+
+
+# 8 idea 设置书签
+
+![image-20240401012832693](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240401012832693.png)
+
+
+
+# 9 快速定位本类中的上/下一个方法
+
+
+
+## ctrl+shift+上下箭头
+
+
+
+# 10 在windows的搜索框直接输入 `calc + 回车`可以打开计算器
+
+
+
+
+
+
+
+# 11 Idea中修改/配置 项目/程序的jdk、jre
+
+
+
+
+
+![image-20240622011202204](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240622011202204.png)
+
+
+
+
+
+![image-20240622011210681](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240622011210681.png)
+
+
+
+
+
+![image-20240622011602245](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240622011602245.png)
+
+在 IntelliJ IDEA 的这个界面中，“Sources”选项卡和“Dependencies”选项卡分别有不同的作用。
+
+### Sources 选项卡
+
+- **Sources（源代码）**：在这个选项卡中，主要是指定当前模块的源代码路径、测试代码路径、资源路径等。
+- **Language level（语言级别）**：指定当前模块使用的 Java 语言级别，例如 Java 8 的 lambda 表达式、类型注解等。这决定了编译器将使用哪些语言特性来编译该模块的代码。
+
+### Dependencies 选项卡
+
+- **Dependencies（依赖项）**：在这个选项卡中，你可以管理当前模块的所有依赖项。依赖项可以是其他模块、库、框架等。通过管理依赖项，你可以确保当前模块在编译和运行时能够找到所需的类和资源。
+  - **Module Dependencies（模块依赖）**：其他模块的代码当前模块可能依赖。
+  - **Library Dependencies（库依赖）**：当前模块需要的外部库，如 JAR 文件或 Maven 库。
+  - **Scope（作用域）**：定义依赖项的作用范围，例如 Compile（编译时）、Test（测试时）、Runtime（运行时）等。
+
+### 总结
+
+- **Sources**选项卡主要用于配置当前模块的源代码路径和语言级别。
+- **Dependencies**选项卡用于管理模块的所有依赖项，确保在编译和运行时可以找到所需的资源。
+
+这些设置对于项目的构建和运行至关重要，确保代码可以正确编译并运行在指定的环境中。
+
+
+
+## 11.1 如果Dependencies 选的jdk9,Sources 的Language level可以选择8吗？是不是这里java能向下兼容，是支持的？
+
+是的，在 IntelliJ IDEA 中，如果你在 Dependencies 选项卡中选择了 JDK 9，Sources 选项卡中的 Language level 可以选择 8。这是因为 Java 具有向下兼容性，即较新的 JDK 可以编译和运行使用较旧语言级别的代码。
+
+### 具体说明
+
+- **Dependencies 选项卡选择 JDK 9**：
+  - 这意味着项目将使用 JDK 9 来编译和运行代码。JDK 9 包含了 JDK 8 的所有特性，并且向下兼容，因此可以编译和运行使用 JDK 8 语言特性的代码。
+
+- **Sources 选项卡选择 Language level 8**：
+  - 这意味着你希望项目代码使用 JDK 8 的语言特性，例如 lambda 表达式、类型注解等。
+  - 即使使用 JDK 9 进行编译，你仍然可以限制代码使用 JDK 8 的语言特性。这在一些项目中很有用，例如，当你希望确保代码能够在使用 JDK 8 的环境中运行时。
+
+### 向下兼容性
+
+Java 一直强调向下兼容性，即较新的 JDK 版本通常能够编译和运行使用较旧版本语言特性的代码。这意味着：
+
+- 你可以在较新的 JDK（如 JDK 9）中使用旧版本的语言特性（如 JDK 8）。
+- 这提供了很大的灵活性，特别是在维护旧项目或确保项目在多个 Java 版本中运行时。
+
+### 配置示例
+
+- **Dependencies** 选项卡中选择 JDK 9。
+- **Sources** 选项卡中选择 Language level 8。
+
+这种配置确保你使用 JDK 9 的编译器和运行时环境，同时限制代码使用 JDK 8 的语言特性。这在一些兼容性测试和渐进式升级项目中非常有用。
+
+因此，Java 的向下兼容特性允许你在 Dependencies 选项卡中选择 JDK 9，同时在 Sources 选项卡中选择 Language level 8，是完全支持的。
+
+
+
+
+
+# 12 在 Windows 系统中，如果你想关闭特定的进程，如 ID 为 20104 的 `GCUseTest` 进程，你可以使用命令行工具来实现。
+
+
+
+
+
+![image-20240703120534110](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240703120534110.png)
+
+
+
+在 Windows 系统中，如果你想关闭特定的进程，如 ID 为 20104 的 `GCUseTest` 进程，你可以使用命令行工具来实现。下面是具体步骤：
+
+### 使用命令提示符
+
+1. **打开命令提示符**：
+
+   - 可以通过在搜索栏输入 `cmd` 或 `命令提示符` 并点击结果打开它。
+
+2. **使用 `taskkill` 命令**：
+
+   - 在命令提示符中输入以下命令来终止进程：
+
+   ```bash
+   taskkill /PID 20104 /F
+   ```
+
+   - 这里 `/PID` 表示指定进程ID，`/F` 表示强制终止进程。
+
+### 使用 PowerShell
+
+1. **打开 PowerShell**：
+
+   - 可以在开始菜单搜索 `PowerShell`，然后选择“以管理员身份运行”。
+
+2. **执行停止进程命令**：
+
+   - 在 PowerShell 中输入以下命令：
+
+   ```powershell
+   Stop-Process -Id 20104 -Force
+   ```
+
+   - `-Id` 指定进程 ID，`-Force` 用于强制停止进程。
+
+### 检查进程是否已关闭
+
+完成上述任一操作后，你可以再次使用 `jps` 命令或通过任务管理器检查进程是否已经被成功终止。在命令提示符中输入 `jps` 可以查看当前运行的 Java 进程列表，确认 `20104` 是否还在列表中。
+
+这些方法可以帮助你管理和终止在 Windows 系统上运行的进程。如果你不确定某个进程的功能或它属于哪个应用，最好在终止前做一些调查，避免关闭关键系统进程可能导致的问题。
