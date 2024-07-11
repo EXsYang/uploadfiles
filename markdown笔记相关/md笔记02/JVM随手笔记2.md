@@ -1525,7 +1525,7 @@ public void print(){
 
 
 
-# 149 
+# 149 i++面试题
 
 
 
@@ -1550,13 +1550,567 @@ public void method8() {
 public void method8_() {
     int i = 10;
     i = ++i;
-    System.out.println(i);//10
+    System.out.println(i);//11
 }
 ~~~
 
 
 
 ![image-20240710172311369](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240710172311369.png)
+
+
+
+
+
+# 150 一般情况下，main方法是最后一个非守护线程吗？那么守护线程是GC线程？
+
+在Java中，`main` 方法是程序的入口点，它运行在主线程中。是否是最后一个非守护线程取决于程序的具体实现和它是否启动了其他非守护线程。
+
+### 主线程和非守护线程
+- **主线程**：当你的应用启动时，Java虚拟机（JVM）启动一个被称作`main`的线程。这个线程主要用于执行你程序的`main`方法。
+- **非守护线程**：在Java中，默认情况下，由主线程创建的任何新线程都是非守护线程，除非显式地将它设置为守护线程。这意味着程序的结束取决于所有非守护线程的完成。
+
+因此，`main` 线程可能不是最后一个结束的非守护线程，尤其是当你的程序显式地启动了其他非守护线程并且这些线程仍在执行时。
+
+### 守护线程
+- **守护线程**：守护线程在后台运行，主要用于服务于程序运行时的环境（例如垃圾收集器线程、最终化线程等）。当所有非守护线程结束时，守护线程会自动结束。
+- **垃圾收集器（GC）线程**：确实，GC 线程是典型的守护线程。垃圾收集器主要负责管理Java堆内存中对象的自动内存管理，这是在后台进行的，并且不应阻止JVM关闭。
+
+### 结论
+- `main` 方法是否是最后一个非守护线程取决于程序是否启动了其他长时间运行的非守护线程。
+- 垃圾收集器等系统级服务通常由守护线程执行，这些线程不会影响程序的结束，它们在所有非守护线程结束后自动结束。
+
+如果你的程序设计中没有启动其他长时间运行的非守护线程，那么`main`方法结束时，程序通常会终止，除非存在其他用户创建的非守护线程仍在执行。
+
+
+
+# 150.1 在main方法中没有启动其他长时间运行的非守护线程，那么main方法自己是否是最后一个非守护线程？是
+
+是的，**如果在你的`main`方法中没有显式地启动其他非守护线程，并且所有由`main`方法启动的线程都已经完成或被设置为守护线程，则`main`方法所在的主线程将会是程序中最后一个运行的非守护线程。当`main`方法执行完毕并退出时，如果没有其他非守护线程在运行，Java虚拟机（JVM）将会退出。**
+
+这个行为是因为JVM在确定没有任何活跃的非守护线程运行时会结束程序。`main`线程作为程序的入口点，通常是启动所有其他工作线程的线程。如果这些工作线程都已结束或者被设定为守护线程，那么在`main`方法结束后，JVM会识别到没有活跃的非守护线程存在，并且会终止程序。
+
+这种机制确保了当主线程（或其他非守护线程）没有更多的执行指令时，程序能够干净地结束，不会留下悬挂的进程。
+
+
+
+# 151 泛型擦除（Type Erasure）
+
+ 泛型擦除（Type Erasure）是Java编程语言中实现泛型的一种机制。这种机制允许程序在使用泛型时保持与旧版本Java代码的兼容性。具体来说，泛型擦除涉及以下几个主要方面：
+
+### 定义
+泛型擦除是指在**编译过程中**，Java编译器将所有的泛型信息去除（擦除），将泛型类型参数替换为它们的边界或者替换为`Object`。这样做的目的是确保泛型代码能与Java早期版本的字节码兼容。
+
+### 泛型信息与`Signature`属性
+
+确实，虽然泛型类型在编译后的字节码中的方法签名中被擦除（即，在方法的调用和执行层面不再保留具体的泛型类型信息），但这些信息并非完全丢失。Java使用`Signature`属性在类文件中保留了原始的泛型类型信息。这个属性允许保持泛型的完整性，主要用于反射操作中，使得可以在运行时通过反射访问类、方法和字段的泛型类型信息。
+
+### 细节
+1. **擦除类型参数**：在泛型代码被编译成字节码时，所有的泛型参数都会被边界类型（如果指定了边界）或`Object`替换。例如，一个泛型类`Box<T>`中使用了类型参数`T`，在编译后的字节码中，除非特别指定边界，否则`T`会被替换为`Object`。
+
+2. **桥接方法（Bridge Methods）**：由于类型擦除，可能会出现新的方法与继承的方法签名冲突的情况。Java编译器可能会引入一种特殊的方法，称为桥接方法，以保持多态和继承的正确性。
+
+3. **类型安全的保证**：尽管类型信息在编译时被擦除，Java编译器在编译时会执行类型检查，确保代码在逻辑上不会出现类型错误。这意味着类型错误会在编译阶段被捕捉，而不是在运行时。
+
+### 实例
+考虑以下Java类使用泛型：
+```java
+public class Box<T> {
+    private T t;
+
+    public void set(T t) {
+        this.t = t;
+    }
+
+    public T get() {
+        return t;
+    }
+}
+```
+在编译后的字节码中，所有的`T`类型都会被`Object`替换。这意味着无论`set`方法和`get`方法中的`T`实际上是什么类型，它们都会被处理为`Object`类型。
+
+### 总结
+泛型擦除使得Java泛型可以与旧版本的代码无缝工作，但这也意味着在运行时类型信息部分丢失，从而可能导致某些类型的操作在运行时无法进行，如类型转换和实例检查。这种设计决策是Java平衡新特性和向后兼容性的一个例证。
+
+
+
+# 152 举一个泛型擦除的例子，即在源代码层面不好看出执行的细节，可能会导致误判的例子，但是可以通过观察字节码的执行细节，可以理解泛型擦除的机制
+
+
+
+Java的泛型擦除是泛型引入到Java语言中的一种折衷实现方式，以保持向后兼容性。在编译时，泛型类型参数会被擦除，替换为它们的边界（如果指定了边界），或者替换为`Object`。这种方式在源代码层面可能不易被察觉，但在字节码层面变得明显。下面举一个示例来展示泛型擦除，及其可能导致的误判情况。
+
+### 示例代码
+
+假设有如下的Java代码：
+
+```java
+import java.util.List;
+import java.util.ArrayList;
+
+public class GenericTest {
+    public static void main(String[] args) {
+        List<Integer> intList = new ArrayList<>();
+        intList.add(1);
+        printList(intList);
+
+        List<String> stringList = new ArrayList<>();
+        stringList.add("hello");
+        printList(stringList);
+    }
+
+    public static void printList(List list) { // 故意未使用泛型
+        for (Object obj : list) {
+            System.out.println(obj); // 这里会打印出列表中的元素
+        }
+    }
+}
+```
+
+### 问题分析
+
+在这个例子中，`printList` 方法的参数被定义为一个原始类型的 `List`，而不是一个泛型 `List`。这样的定义在源码层面可能会导致误判：
+
+- 当调用 `printList(intList)` 和 `printList(stringList)` 时，看似没有任何问题，因为 Java 泛型提供了类型擦除，所以这两个调用在字节码层面实际上都是传递 `List` 类型。
+- 在源代码中，看上去我们好像可以向 `printList` 传递任何类型的 `List`，而不关心其元素类型。
+
+### 字节码观察
+
+通过观察编译后的字节码，可以看到泛型擦除的影响。使用 `javap -c GenericTest` 命令，可以查看到如下的关键输出：
+
+```plaintext
+public static void printList(java.util.List);
+    Code:
+       0: aload_0
+       1: invokeinterface #2,  1            // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+       6: astore_1
+       7: goto          23
+      10: aload_1
+      11: invokeinterface #3,  1            // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      16: astore_2
+      17: getstatic     #4                  // Field java/lang/System.out:Ljava/io/PrintStream;
+      20: aload_2
+      21: invokevirtual #5                  // Method java/io/PrintStream.println:(Ljava/lang/Object;)V
+      24: goto          10
+      27: return
+```
+
+从这个字节码中可以看到，`printList` 方法在处理列表时，对于列表元素完全按照 `Object` 类型来处理，没有任何关于元素实际类型的信息。这是因为泛型信息在编译时被擦除了。
+
+### 结论
+
+这个例子展示了如何通过观察字节码来理解Java泛型擦除的机制。在运行时，所有的泛型类型信息都丢失了，剩下的只有原始类型。这可能导致类型安全问题，因为在源代码中看起来类型安全的代码（如上面的 `printList` 方法调用），在运行时实际上可能接受任何类型的 `List`，从而引发 `ClassCastException` 等错误。这也是为什么建议即使是在使用泛型的环境中，也要尽可能保留泛型类型参数，以便编译器可以帮助保证类型安全。
+
+
+
+## 152.1 所以这个哪里会因为泛型擦除引起问题，这个例子中应该可以正常执行啊？
+
+您是对的，您提供的代码示例在实际执行中不会直接由于泛型擦除引起问题。这个示例会正常执行，并且正确地打印出列表中的所有元素。泛型擦除在这里确实不会直接导致运行时错误。
+
+### 泛型擦除的影响
+泛型擦除主要影响的是类型信息在编译时被移除，这意味着在运行时，JVM不知道泛型的具体类型。例如，在您的 `printList` 方法中：
+
+```java
+public static void printList(List list) {
+    for (Object obj : list) {
+        System.out.println(obj);
+    }
+}
+```
+
+这里 `List` 被声明为一个原始类型，没有指定泛型类型。因此，不管传入 `printList` 的 `List` 实际上是 `List<Integer>` 还是 `List<String>`，它们都被处理为包含 `Object` 类型的元素。编译器和运行时都不会对此代码段进行类型检查，这可以工作，但失去了泛型的主要好处之一——类型安全。
+
+### 潜在问题
+虽然当前的代码可以正常运行，但使用原始类型（如 `List` 而非 `List<T>`）会失去类型检查的好处，这可能导致未来的错误。例如，如果你在未来修改了 `printList` 方法并尝试执行一些特定类型的操作，就可能遇到 `ClassCastException`。此外，不使用泛型也会使代码更难阅读和维护，因为其他开发者或未来的你可能不清楚这个列表应该包含什么类型的元素。
+
+### 最佳实践
+即使您的方法只是打印出元素，最好还是使用泛型来增强程序的可读性和安全性。例如：
+
+```java
+public static void printList(List<?> list) {
+    for (Object obj : list) {
+        System.out.println(obj);
+    }
+}
+```
+
+这里使用 `List<?>` 而非原始类型 `List`。这样的声明不仅保持了代码的灵活性，还增加了至少一些形式的类型安全——表明这个列表是有某种特定类型的对象组成，即使这个特定类型是未知的。
+
+总结来说，您的示例代码确实可以正常运行，但考虑到长期维护和代码清晰度，采用泛型总是更好的做法。
+
+---
+
+~~~java
+public static void printList(List<String> list) {
+    for (Object obj : list) {
+        System.out.println(obj);
+    }
+} 
+
+~~~
+
+和
+
+~~~java
+public static void printList(List list) {
+    for (Object obj : list) {
+        System.out.println(obj);
+    }
+} 
+~~~
+
+## 152.2 在Code字节码指令上完全一样，字节码上没有体现出泛型擦除啊
+
+![image-20240710212231840](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240710212231840.png)
+
+
+
+您提到的关于泛型擦除在字节码中的体现确实有些微妙之处。虽然泛型在字节码层面进行了擦除，但Java编译器在.class文件中使用特殊的属性来记录泛型类型信息，这就是`Signature`属性。这就是为什么您看到的字节码示例中存在与泛型有关的信息。
+
+### 泛型擦除与Signature属性
+
+~~~java
+public static void printList(List<String> list) {
+    for (Object obj : list) {
+        System.out.println(obj);
+    }
+}
+~~~
+
+
+
+图1：
+
+![image-20240710211920533](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240710211920533.png)
+
+图2：
+
+![image-20240711112951223](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240711112951223.png)
+
+在您上传的图片图1中，`Signature`属性被用来存储泛型信息：
+
+- **Signature**：这个属性保存了泛型的原始签名信息，例如在您的例子中`List<String>`被记录为`<Ljava/util/List<Ljava/lang/String;>;>V`。这表明原始代码中使用了`String`类型的`List`。
+
+### 泛型擦除的影响
+
+尽管字节码中的操作和方法调用本身不直接使用泛型信息（因为Java在运行时不直接支持泛型类型，而是依赖于类型擦除），`Signature`属性确实保存了原始的泛型类型信息。这种信息主要用于反射操作和某些特定的编译时处理，而不是普通的程序运行时行为。例如，当你通过反射查询一个泛型方法的返回类型或参数类型时，可以获取到这些泛型信息。
+
+### 两种printList方法的比较
+
+- 对于方法`public static void printList(List list)`，其在字节码中通常不会有`Signature`属性，因为它使用了原始类型`List`。
+- 对于方法`public static void printList(List<String> list)`，其在字节码中会包含一个`Signature`属性，记录了使用了泛型`List<String>`。
+
+### 结论
+
+所以，尽管在执行层面，这两个`printList`方法的字节码操作可能看起来相同（特别是在方法体内的操作），它们在.class文件中的表示是不同的。`Signature`属性的存在是为了支持泛型的编译时类型检查和运行时的反射操作，而不直接影响方法的执行逻辑。因此，泛型的主要优点是在编译阶段提供类型安全，而不是在运行时。
+
+
+
+# 153 泛型擦除的应用【老韩讲吐血的那个`{}.`】
+
+
+
+![image-20240710220817587](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240710220817587.png)
+
+
+
+将mycode作为根节点，使用idea打开，查询关键字：`TypeToken`
+
+路径：D:\Java_developer_tools\mycode\javaweb\json-ajax\src\com\hspedu\json\JavaJson.java
+
+
+
+![image-20240710221025498](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240710221025498.png)
+
+
+
+~~~java
+package com.hspedu.json;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * @author yangda
+ * @description:
+ * @create 2023-06-27-22:31
+ */
+public class JavaJson {
+    public static void main(String[] args) {
+        // javabean  json对象 互相转换
+
+        //创建一个gson对象，做为一个工具对象使用
+        Gson gson = new Gson();
+
+        //演示javabean 和 json字符串的转换
+        // 创建 Book对象
+        Book book = new Book(100, "零基础学Java");
+
+        //1. 演示把javebean -> json字符串
+        String strBook = gson.toJson(book);
+        System.out.println("strBook= " + strBook); //strBook= {"id":100,"name":"零基础学Java"}
+
+        //2. json字符串->javabean
+        //老韩解读
+        //(1) strBook 就是 json字符串
+        //(2) Book.class 指定将 json字符串转成 Book对象
+        //(3) 底层是反射机制
+        Book book2 = gson.fromJson(strBook, Book.class);
+        System.out.println("book2= " + book2);//book2= Book{id=100, name='零基础学Java'}
+
+
+        //3. 演示把list对象 -> json字符串
+        List<Book> bookList = new ArrayList<>();
+        bookList.add(new Book(200, "天龙八部"));
+        bookList.add(new Book(300, "三国演义"));
+
+        //老韩解读, 因为把对象,集合转成字符串, 相对比较简单
+        //底层只需要遍历, 按照json格式拼接返回即可
+        String strBookList = gson.toJson(bookList);
+        System.out.println("strBookList= " + strBookList);
+
+        //4. 演示把json字符串 -> list对象
+        //老师解读
+        //(1) 如果需要把json字符串 转成 集合这样复杂的类型, 需要使用gson提供的一个类
+        //(2) TypeToken , 是一个自定义泛型类, 然后通过TypeToken来指定我们需要转换成的类型
+        /*
+        com.google.gson.reflect
+
+        public class TypeToken<T> {
+            final Class<? super T> rawType;
+            final Type type;
+            final int hashCode;
+
+            protected TypeToken() {
+                this.type = getSuperclassTypeParameter(this.getClass());
+                this.rawType = Types.getRawType(this.type);
+                this.hashCode = this.type.hashCode();
+            }
+         */
+        //老师解读
+        //(1) 返回类型的完整路径java.util.List<com.hspedu.json.Book>
+        //(2) gson的设计者，需要得到类型的完整路径，然后进行底层反射
+        //(3) 所以gson 设计者就提供TypeToken, 来搞定.
+
+        //二说 TypeToken , 为甚要加 {}
+
+        //(1) 如果我们  new TypeToken<List<Book>>()  提示
+        // 'TypeToken()' has protected access in 'com.google.gson.reflect.TypeToken'
+        //(2) 因为TypeToken 的无参构造器是protected ， 而 new TypeToken<List<Book>>() 就是调用其无参构造器
+        //(3) 根据java基础, 如果一个方法是protected ,而且不在同一个包， 是不能直接访问的, 因此报错
+        //(4) 为什么 new TypeToken<List<Book>>(){} 使用就可以，这里就涉及到匿名内部类的知识.
+        //(5) 当 new TypeToken<List<Book>>(){} 其实这个类型就是不是 TypeToken 而是一个匿名内部类(子类)
+        //(6) 而且这个匿名内部类是有自己的无参构造器(隐式), 根据java基础规则 当执行子类的无参构造器时, 默认super();
+
+        //三说 TypeToken->举一个例子.[对java基础回顾.]
+        Type type = new TypeToken<List<Book>>() {
+        }.getType();
+
+        List<Book> bookList2 = gson.fromJson(strBookList, type);
+        System.out.println("bookList2= " + bookList2);
+        System.out.println("bookList2运行类型= " + bookList2.getClass());//class java.util.ArrayList
+
+        //5 map => json字符串
+        HashMap<String, Book> bookHashMap = new HashMap<>();
+        bookHashMap.put("k1", new Book(600, "史记"));
+        bookHashMap.put("k2", new Book(700, "春秋"));
+
+        String strBookHashMap = gson.toJson(bookHashMap);
+        System.out.println("strBookHashMap= " + strBookHashMap);
+
+
+        //6 json字符串 => map
+        Type type2 = new TypeToken<Map<String, Book>>() {
+        }.getType();
+        System.out.println("type2= "+type2);
+        Map<String, Book> bookHashMap2 = gson.fromJson(strBookHashMap, new TypeToken<Map<String, Book>>() {
+        }.getType());
+        System.out.println("bookHashMap2= " + bookHashMap2);
+        System.out.println("bookHashMap2运行类型= " + bookHashMap2.getClass());//class com.google.gson.internal.LinkedTreeMap
+
+    }
+}
+
+~~~
+
+
+
+# 154 泛型擦除的应用【b站搜的】
+
+
+
+![image-20240710220817587](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240710220817587.png)
+
+在您提供的代码示例中，`{}.getType()` 的用法来自 Google 的 Gson 库。这种用法特别适用于处理 Java 的泛型擦除问题，使得 Gson 能够正确地反序列化泛型集合。
+
+### 详细解释
+- **Gson**: 是一个由 Google 提供的开源 Java 库，用于将 Java 对象转换成 JSON 格式，反之亦然。
+- **TypeToken**: 是 Gson 中一个用来获取泛型的类型信息的类。因为 Java 的泛型类型信息在运行时会被擦除，`TypeToken` 帮助保留这些信息。
+
+### 代码示例解析
+在您的代码中：
+```java
+String jsonString = "[1, 2]";
+Type type = new TypeToken<List<Integer>>(){}.getType();
+List<Integer> list = new Gson().fromJson(jsonString, type);
+```
+- `TypeToken<List<Integer>>(){}` 是一个匿名内部类，继承自 `TypeToken` 并指定了其泛型参数 `List<Integer>`。
+- `getType()` 方法返回表示此特定泛型类型的 `Type` 实例。
+- `new Gson().fromJson(jsonString, type)` 则利用这个类型信息将 JSON 字符串反序列化为相应的泛型 Java 对象，这里是 `List<Integer>`。
+
+### 为什么需要TypeToken
+在 Java 中，泛型信息在编译时会因类型擦除而丢失。例如，如果你直接传递 `List<Integer>.class` 给 Gson，它将不知道列表中应该包含 `Integer` 类型的对象，因为 `List<Integer>.class` 和 `List.class` 在运行时是一样的。使用 `TypeToken` 允许 Gson 知道确切的泛型类型，从而能够正确地反序列化集合中的元素类型。
+
+### 结论
+所以，这种 `{}.getType()` 的用法是利用 Gson 库提供的 `TypeToken` 类来解决 Java 泛型在运行时的类型擦除问题，使 JSON 反序列化处理得到正确的泛型数据类型。如果您打算使用这种方式处理 JSON 数据，需要确保已经将 Gson 库包含在您的项目中。
+
+
+
+# 155 泛型擦除对方法重载的影响
+
+
+
+在Java中，泛型擦除确实对方法重载有重要影响，因为它导致了一些特定情况下的限制。这主要是因为Java中的泛型信息仅在编译期有效，而在运行时，所有的泛型类型信息都会被擦除，泛型类型参数被替换为它们的边界或者`Object`类（如果没有指定边界）。这会影响重载方法的能力，尤其是当这些方法的区别仅仅在于泛型类型参数时。
+
+### 泛型擦除和方法重载的问题
+
+举一个具体的例子来说明泛型擦除如何影响重载：
+
+```java
+public class GenericTest {
+    public void print(List<String> list) {
+        for (String s : list) {
+            System.out.println(s);
+        }
+    }
+
+    public void print(List<Integer> list) {
+        for (Integer i : list) {
+            System.out.println(i);
+        }
+    }
+}
+```
+
+这段代码看起来像是合法的重载，因为它试图根据列表的内容类型（`String`或`Integer`）定义不同的行为。然而，这段代码实际上是不能通过编译的。原因在于泛型擦除后，两个`print`方法都会变成相同的原始方法签名：
+
+```java
+public void print(List list)
+```
+
+因为泛型类型参数在**编译时**都被擦除了，两个方法在擦除后的类型上没有区别，所以它们在Java的方法重载机制中被视为相同的方法，导致编译错误。
+
+### 解决方法
+
+如果你需要根据泛型类型重载方法，通常需要采取不同的方法命名或者不使用泛型重载。例如，可以将方法命名为`printStringList`和`printIntegerList`，以此来区分：
+
+```java
+public class GenericTest {
+    public void printStringList(List<String> list) {
+        for (String s : list) {
+            System.out.println(s);
+        }
+    }
+
+    public void printIntegerList(List<Integer> list) {
+        for (Integer i : list) {
+            System.out.println(i);
+        }
+    }
+}
+```
+
+### 总结
+
+泛型擦除确实限制了在Java中使用泛型参数进行方法重载的能力。在设计接口和类时，需要考虑到泛型擦除的影响，并且可能需要使用更具体的方法名称或者其他设计模式（如访问者模式）来解决因泛型擦除导致的问题。这样可以保持代码的清晰和易于维护，同时避免泛型擦除带来的限制。
+
+
+
+# 156 **泛型擦除发生在编译阶段**。
+
+确实，我在先前的表述中没有充分清晰地描述泛型擦除的具体发生阶段，这可能导致理解上的混淆。为了澄清这个问题，我们需要正确区分编译阶段和运行阶段在处理泛型时的不同行为。
+
+### 泛型擦除的发生阶段
+
+**泛型擦除发生在编译阶段**。这意味着在Java源代码被编译成字节码时，所有的泛型信息（例如使用的具体泛型类型如`List<String>`或`List<Integer>`）都被移除了。编译器在处理源代码时会使用泛型信息进行类型检查，确保类型的正确使用，但是一旦类型检查完毕并且代码编译成字节码，这些泛型类型信息就不再存在了。
+
+编译器在擦除泛型类型信息的同时，会将泛型类型替换为相应的原始类型（如果泛型类型有边界，如`<T extends SomeClass>`，则替换为边界类；如果没有指定边界，则替换为`Object`）。因此，在生成的字节码中，不会有任何泛型类型信息。
+
+### 对先前表述的澄清
+
+- 当我说“这段代码实际上是不能通过编译的”，我指的是在编译阶段，编译器会识别到两个方法签名在泛型擦除后变得相同，因此会阻止代码的编译通过。
+- 当我说“泛型类型参数在运行时都被擦除了”，更准确的表述应该是：“**泛型类型参数在编译时就被擦除，所以在运行时，JVM看不到任何泛型类型信息。**”
+
+### 泛型信息与`Signature`属性
+
+确实，虽然泛型类型在编译后的字节码中的方法签名中被擦除（即，在方法的调用和执行层面不再保留具体的泛型类型信息），但这些信息并非完全丢失。Java使用`Signature`属性在类文件中保留了原始的泛型类型信息。这个属性允许保持泛型的完整性，主要用于反射操作中，使得可以在运行时通过反射访问类、方法和字段的泛型类型信息。
+
+### 运行时的行为
+
+由于泛型信息不包含在字节码中，所以在运行时，Java虚拟机（JVM）对于泛型的处理只能按照它们的原始类型（通常是`Object`）来操作。这就是为什么在运行时无法知道一个列表是`List<Integer>`还是`List<String>`，它们在JVM中都只是简单的`List`。
+
+### 结论
+
+泛型擦除确实是在编译阶段完成的，这使得在运行时JVM无法区分不同的泛型类型。这种设计允许Java保持向后兼容性，同时引入泛型带来的编译时类型安全性和灵活性。对于开发者来说，理解泛型擦除发生在编译阶段是很重要的，这有助于更好地设计泛型应用和处理可能出现的类型相关问题。
+
+
+
+实际上泛型擦除的类型信息也会记录在字节码当中`Signature`属性中
+
+
+
+# 157 类加载过程
+
+![image-20240711173204146](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240711173204146.png)
+
+## 第一阶段类的加载阶段
+
+![image-20240711173058820](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240711173058820.png)
+
+确实，我之前的表述可能导致了混淆，感谢您的指出。这里我们需要明确一些概念来解决这个混淆：
+
+### Class对象的存储
+
+在Java虚拟机中，每个加载的类都会有一个对应的`java.lang.Class`对象，用来表示这个类的所有元数据。这个`Class`对象包含了类的元数据信息，如类的名称、方法的信息、字段信息等。
+
+1. **方法区（MetaSpace从Java 8开始）**：
+   - 方法区主要存储类的结构信息，如运行时常量池、字段和方法数据、构造函数、接口描述等静态数据。
+   - 这里不直接存储`Class`类的实例，而是存储类的定义和静态变量等。
+
+2. **堆（Heap）**：
+
+   - 这是运行Java程序时JVM用于存储对象实例的内存区域。所有的对象实例和数组都在这里分配内存。
+
+   - 每个类的`Class`对象实例本身是在堆上创建的。这个`Class`对象包含了指向方法区中类定义的引用。
+   - 因此，当我们说`Class`类的实例，我们是指在堆上分配的实例，这个实例通过其中的数据指向方法区中的类定义。
+
+### Class模板与Class实例的区分
+
+- **Class模板**：这不是Java官方术语，如果用来指代的话，可以理解为类的定义或类的元数据结构，这些信息存储在方法区中。
+- **Class实例**：指的是`java.lang.Class`类的实例，这是一个在堆中创建的对象，代表着一个特定类的所有元数据。每个被加载的类在JVM中只有一个对应的`Class`对象实例。
+- **`Class`对象的实例**：每个类在Java中都有一个对应的`java.lang.Class`对象，这个对象包含了类的元数据信息，如类的名称、方法和变量等。这些`Class`对象是在堆上创建的，每个被JVM加载的类只有一个对应的`Class`对象。
+
+### 结论
+
+所以，当我们讨论类的元数据或类的模板时，我们指的是存储在方法区中的类的定义。当我们说`Class`类的实例时，我们指的是在堆上分配的、表示这个类的`java.lang.Class`对象。
+
+这样的区分应该可以帮助更清晰地理解JVM中类的存储结构和`Class`对象的作用。希望这解释了之前的矛盾，也更明确地阐述了类在JVM中的存储方式。
+
+
+
+
+
+
+
+
+
+
 
 
 

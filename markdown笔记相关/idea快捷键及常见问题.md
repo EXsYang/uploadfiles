@@ -913,3 +913,38 @@ Java 一直强调向下兼容性，即较新的 JDK 版本通常能够编译和�
 完成上述任一操作后，你可以再次使用 `jps` 命令或通过任务管理器检查进程是否已经被成功终止。在命令提示符中输入 `jps` 可以查看当前运行的 Java 进程列表，确认 `20104` 是否还在列表中。
 
 这些方法可以帮助你管理和终止在 Windows 系统上运行的进程。如果你不确定某个进程的功能或它属于哪个应用，最好在终止前做一些调查，避免关闭关键系统进程可能导致的问题。
+
+
+
+
+
+# 13 在 IntelliJ IDEA 中更改项目默认打开方式
+
+在 IntelliJ IDEA 中更改项目默认打开方式，使其在新窗口打开而不是在当前窗口（This Window）打开，可以通过修改设置来实现。以下是如何进行这项设置的步骤：
+
+### 步骤修改项目打开方式
+
+1. **打开设置**：
+   - 在 Windows 或 Linux 上，您可以通过点击菜单栏的 **File > Settings** 来访问设置。
+   - 在 macOS 上，您可以通过点击 **IntelliJ IDEA > Preferences** 来访问偏好设置。
+
+2. **导航至系统设置**：
+   - 在设置或偏好设置窗口中，使用侧边栏导航至 **System Settings**。
+   - 在 Windows/Linux 上的路径是 **File | Settings | Appearance & Behavior | System Settings**。
+   - 在 macOS 上的路径是 **IntelliJ IDEA | Preferences | Appearance & Behavior | System Settings**。
+
+3. **更改项目打开选项**：
+   - 在 **System Settings** 页面中，找到一个名为 **Project Opening** 的部分。
+   - 查找 “**Open project in**” 选项，您会看到几个选项，例如 “**New window**”, “**This window**”, 和 “**Ask**”。
+   - 选择 “**New window**” 选项以确保每次打开一个新项目时，它都会在新窗口中打开。
+
+4. **应用并保存设置**：
+   - 点击底部的 **OK** 或 **Apply** 按钮来保存您的设置。
+
+通过以上步骤，您可以设置 IntelliJ IDEA 默认在新窗口中打开项目，而不是替换当前窗口中打开的项目或总是询问您的偏好。这样的设置可以提高多项目同时工作的效率，尤其是在进行多个项目之间的快速切换时非常有用。
+
+
+
+
+
+# 14 
