@@ -2106,13 +2106,122 @@ public class GenericTest {
 
 
 
+# 158 `-XX:+TraceClassLoading`，追踪类的加载信息并打印出来
 
 
 
+![image-20240711223226434](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240711223226434.png)
 
 
 
+## Idea中设置在每个单元测试方法`@Test`程序运行后，追踪类的加载信息并打印出来【如果需要取消，则将参数拿掉即可】
+
+![image-20240711223334137](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240711223334137.png)
 
 
 
+![image-20240711223424091](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240711223424091.png)
 
+
+
+![image-20240711223434295](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240711223434295.png)
+
+
+
+# 159 判断类是否被加载了的方法
+
+
+
+## 即看打印信息中是否有对应的类被 Loaded
+
+## 相关的JVM参数是：`-XX:+TraceClassLoading`
+
+![image-20240711223935697](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240711223935697.png)
+
+
+
+# 160  类的`主动使用`第8条举一个简单的例子
+
+
+
+~~~java
+8. 当初次调用 MethodHandle 实例时，初始化该 MethodHandle 指向的方法所在的类。 * （涉及解析REF_getStatic、REF_putStatic、REF_invokeStatic方法句柄对应的类）
+~~~
+
+![image-20240712102609747](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240712102609747.png)
+
+
+
+在Java中，`MethodHandle` 是一种强大的机制，用于直接和灵活地操作方法、构造函数和字段的句柄。这些句柄可以在运行时修改，并且可以比反射更快地执行。`MethodHandle` 实例的初始化确实可以触发其所指向的类的初始化，尤其是当它与静态方法或字段相关时。
+
+下面，我将通过一个简单的示例展示如何使用 `MethodHandle` 来访问静态方法，并说明这如何触发类的初始化。
+
+### 示例代码
+
+假设我们有两个类，一个类包含静态方法，另一个类用于演示如何通过 `MethodHandle` 访问该静态方法，并触发类的初始化。
+
+```java
+// 文件名: StaticClass.java
+public class StaticClass {
+    static {
+        System.out.println("StaticClass initializing...");
+    }
+
+    public static void display() {
+        System.out.println("Hello from StaticClass!");
+    }
+}
+
+// 文件名: MethodHandleExample.java
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+
+public class MethodHandleExample {
+    public static void main(String[] args) {
+        try {
+            // 获取MethodHandles.Lookup对象，用于查找和创建方法句柄
+            MethodHandles.Lookup lookup = MethodHandles.lookup();
+            
+            // 定义想要调用的方法的类型签名
+            MethodType methodType = MethodType.methodType(void.class);
+            
+            // 查找StaticClass.display()静态方法的方法句柄
+            MethodHandle displayHandle = lookup.findStatic(StaticClass.class, "display", methodType);
+            
+            // 调用方法句柄，应触发StaticClass的初始化
+            displayHandle.invokeExact();
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+### 如何运作
+
+1. **类定义与静态块**：`StaticClass` 定义了一个静态初始化块和一个静态方法 `display`。静态代码块中的代码是在类的 `<clinit>` 方法中执行的，这个方法在类首次被加载到Java虚拟机并准备好进行初始化时自动执行。(静态块在类首次初始化时执行。静态代码块中的代码是在`<clinit>`方法中执行的)
+
+
+这种描述更准确地阐述了静态初始化块（静态代码块）是如何被执行的，即通过类的 `<clinit>` 方法，这是一个由编译器自动收集类中所有静态变量的赋值动作和静态代码块中的语句合并而成的方法。此方法不需要定义，它由编译器隐式创建，并且在类加载过程中的初始化阶段被调用。
+
+1. **创建 `MethodHandle`**：在 `MethodHandleExample` 类中，我们首先获取一个 `MethodHandles.Lookup` 实例，这是查找方法句柄的一个起点。接着，我们定义了想要调用的方法的签名，并使用 `lookup.findStatic` 来获取指向 `StaticClass.display` 方法的句柄。
+
+2. **调用方法句柄**：通过 `displayHandle.invokeExact()` 调用该方法句柄。因为这是对静态方法的首次引用，所以会触发 `StaticClass` 的加载和初始化，执行静态块。
+
+### 效果
+
+当 `MethodHandleExample` 类运行时，它将输出：
+```
+StaticClass initializing...
+Hello from StaticClass!
+```
+这表明通过 `MethodHandle` 对 `StaticClass.display` 的调用确实触发了 `StaticClass` 的初始化。
+
+### 总结
+
+这个例子展示了如何使用 `MethodHandle` 来访问静态方法，并通过这种访问触发类的初始化。这是一个强大的特性，特别是在你需要动态处理方法调用时。相比于传统的反射，`MethodHandle` 提供了更高的性能和更大的灵活性。
+
+
+
+# 161 

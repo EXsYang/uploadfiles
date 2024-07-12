@@ -452,6 +452,16 @@ Java 一直强调向下兼容性，即较新的 JDK 版本通常能够编译和�
 
 ---
 
+# 分割线
+
+# 分割线
+
+# 分割线
+
+# 分割线
+
+# 分割线
+
 # 分割线下面是从`常用快捷键.md`直接复制过来的
 
 ---
@@ -947,4 +957,22 @@ Java 一直强调向下兼容性，即较新的 JDK 版本通常能够编译和�
 
 
 
-# 14 
+# 14  `-XX:+TraceClassLoading`，追踪类的加载信息并打印出来
+
+
+
+![image-20240711223226434](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240711223226434.png)
+
+
+
+## Idea中设置在每个单元测试方法`@Test`程序运行后，追踪类的加载信息并打印出来【如果需要取消，则将参数拿掉即可】
+
+![image-20240711223334137](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240711223334137.png)
+
+
+
+![image-20240711223424091](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240711223424091.png)
+
+
+
+![image-20240711223434295](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240711223434295.png)
