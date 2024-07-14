@@ -2224,4 +2224,38 @@ Hello from StaticClass!
 
 
 
-# 161 
+# 161 `jstat`命令的使用格式如下：
+
+```
+jstat -<option> [-t] [-h<lines>] <vmid> [<interval> <count>]
+```
+
+这里各部分的选项意义简要说明如下：
+
+- `-<option>`: 指定`jstat`要显示的统计信息的类型（例如 `-gc` 显示垃圾收集统计信息）。
+- `[-t]`: 可选，如果使用，则在输出中包括时间戳。程序执行开始到现在的总时间，单位是秒。
+- `[-h<lines>]`: 可选，每隔指定的行数输出一次表头。
+- `<vmid>`: Java虚拟机的进程标识符。即进程号，可以使用`jps`查看。
+- `[<interval> <count>]`: 可选，`interval` 指定采样间隔（毫秒），`count` 指定要显示的记录数。如果省略这两个参数，`jstat`只输出一次数据；如果只指定`interval`，`jstat`将持续输出数据直到被中断。
+
+这些选项使得`jstat`可以灵活地用来监控Java虚拟机各种不同的性能指标。
+
+
+
+# 162 如何关闭Java update可用的提示
+
+要彻底取消，首先按win+R键，呼出运行框，输入`msconfig`，然后确定
+
+会出来一个系统配置界面，点启动的选项卡
+
+![image-20240714132625999](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240714132625999.png)
+
+找到java开头的那一项，这里在倒数第二个
+
+全称叫java platform SE Auto updater，把前面的勾去掉，点确定即可
+
+点重新启动，使配置生效
+
+
+
+# 163 
