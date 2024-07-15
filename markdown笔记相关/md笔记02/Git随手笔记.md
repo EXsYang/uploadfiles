@@ -212,11 +212,12 @@ git reset --hard 39128d1
 ~~~
 git init
 
-git remote add origin git@github.com:EXsYang/hspedu_seckill.git
+git remote add origin git@github.com:EXsYang/uploadfiles.git
+
 git remote add origin git@gitee.com:czbk_zhang_meng/git_test.git
 
 #使用 git remote set-url 命令来更新 origin  
-git remote set-url origin git@github.com:EXsYang/hspliving2.git
+git remote set-url origin git@github.com:EXsYang/uploadfiles.git
 
 
 git remote -v
