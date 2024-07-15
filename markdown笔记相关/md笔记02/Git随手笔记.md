@@ -227,15 +227,23 @@ git status
 git add .
 
 # --set-upstream 推送到远端的同时并且建立起和远端分支的关联关系。如果当前分支已经和远端分支关联，# 则可以省略分支名和远端名。
+git push --set-upstream origin main
 git push --set-upstream origin master
-
 git status
 
 git commit -m 'commit'
 
 git push origin master:master
 git push 
+git push --force
 
+执行强制推送
+如果您决定强制推送，可以使用以下命令：
+git push origin main --force
+
+或者更安全的方法：
+git push origin main --force-with-lease
+--force-with-lease 参数提供了一个安全网，它只会在远程分支的当前状态与您本地认为的远程分支的状态相匹配时才会推送。这样可以防止覆盖由其他人所做的未知更改。
 ~~~
 
 
@@ -493,7 +501,7 @@ $ git-log
 * beeb1a7 第一次提交
 
 yangda@F2 MINGW64 /d/Java_developer_tools/GiteeRepository/gitee_hsp_java/hspgit (master)
-$ git reset --hard beeb1a7
+$ git reset --hard b8c883f9
 HEAD is now at beeb1a7 第一次提交
 
 yangda@F2 MINGW64 /d/Java_developer_tools/GiteeRepository/gitee_hsp_java/hspgit (master)
@@ -1462,6 +1470,64 @@ EXsYang <yangda27@aliyun.com> <10825197+kapaiya@user.noreply.gitee.com>
 
 通过遵循这些步骤和注意事项，您可以安全有效地在其他仓库中使用 `git filter-repo` 来修改提交历史。
 
+## 6.2 重新关联远程仓库
+
+
+
+执行如下指令即可：
+
+~~~
+git remote add origin git@github.com:EXsYang/mycode.git
+git remote add origin git@github.com:EXsYang/uploadfiles.git
+
+# --set-upstream 推送到远端的同时并且建立起和远端分支的关联关系。如果当前分支已经和远端分支关联，# 则可以省略分支名和远端名。
+git push --set-upstream origin main --force
+git push --set-upstream origin master --force
+
+
+~~~
+
+指令参考：
+
+~~~
+
+git remote add origin git@github.com:EXsYang/uploadfiles.git
+
+
+#使用 git remote set-url 命令来更新 origin  
+git remote set-url origin git@github.com:EXsYang/uploadfiles.git
+
+
+git remote -v
+
+git status
+
+git add .
+
+# --set-upstream 推送到远端的同时并且建立起和远端分支的关联关系。如果当前分支已经和远端分支关联，# 则可以省略分支名和远端名。
+git push --set-upstream origin main --force
+git push --set-upstream origin master --force
+git status 
+
+git commit -m 'commit'
+
+git push origin master:master
+git push 
+
+git push --force 
+
+执行强制推送
+如果您决定强制推送，可以使用以下命令：
+git push origin main --force
+
+或者更安全的方法：
+git push origin main --force-with-lease
+--force-with-lease 参数提供了一个安全网，它只会在远程分支的当前状态与您本地认为的远程分支的状态相匹配时才会推送。这样可以防止覆盖由其他人所做的未知更改。
+
+~~~
+
+
+
 # 7 修复git提交不显示commit贡献小绿点【git bash】【不推荐使用该方案，更推荐使用`git filter-repo` 】
 
 #### 原因:
@@ -1484,10 +1550,12 @@ EXsYang <yangda27@aliyun.com> <10825197+kapaiya@user.noreply.gitee.com>
 
 如果你只是想以后的commit记录,你只需要把当前本地git的user.name和user.email配置一下即可
 
+不要加双引号！
+
 ```
-$ git config --global user.name “github’s Name”
- 
-$ git config --global user.email "github@xx.com"
+$ git config --global user.name github’s Name
+
+$ git config --global user.email github@xx.com
 123
 ```
 
@@ -1523,3 +1591,65 @@ fi
 ```
 
 之后就能在commit记录里看到自己的头像了，而且在github主页上也会有小绿点
+
+
+
+# 8 手动修改提交历史的作者信息
+
+如果只有少数几个提交需要修改，您可以使用 `git rebase -i` （交互式变基）手动编辑这些提交的作者信息，这种方法对于处理少量的提交来说非常有效和直接。
+
+### 使用交互式变基手动修改提交
+
+以下是手动修改几个提交的步骤：
+
+1. **启动交互式变基**：
+   
+   - 找到要修改的最早的提交前一个提交的哈希。如果您要修改的第一个有问题的提交是仓库中的第一个提交，您可以使用 `--root` 选项开始变基。
+   - 运行交互式变基命令：
+   
+     ```bash
+     git rebase -i --root
+     ```
+   
+   - 如果不是从根提交开始，替换 `commit_hash^` 为最早需要修改的提交的前一个提交的哈希：
+   
+     ```bash
+     git rebase -i commit_hash^
+     ```
+   
+2. **在编辑器中选择操作**：
+   - Git 将打开一个文本编辑器窗口，列出将要重写的提交。
+   - 对于您想要修改的每个提交，将 `pick` 命令更改为 `edit`，然后保存并关闭编辑器。
+
+3. **修改每个选定的提交**：
+   - 当变基进程暂停以允许您修改提交时，使用以下命令修改作者信息（确保移除引号）：
+
+     ```bash
+     git commit --amend --author="EXsYang <yangda27@aliyun.com>"
+     ```
+
+   - 继续变基过程：
+
+     ```bash
+     git rebase --continue
+     ```
+
+   - 重复此步骤，直到所有选定的提交都已修改。
+
+4. **解决可能出现的冲突**：
+   - 如果在变基过程中遇到冲突，Git 将提示您解决冲突。解决冲突后，添加更改到暂存区，并使用 `git rebase --continue` 继续变基。
+
+5. **完成变基**：
+   - 一旦完成所有更改并且变基进程结束，使用以下命令将更改推送到远程仓库：
+
+     ```bash
+     git push --force
+     ```
+
+### 注意事项
+
+- **备份**：在执行变基操作之前，确保您有仓库的完整备份。
+- **通知团队**：如果您在团队环境中工作，通知团队成员您将进行变基操作，因为这会改变仓库的提交历史。
+- **慎用**：变基是一种强大的工具，但也可能导致复杂的问题，特别是在多人项目中。确保您完全理解变基的影响。
+
+这种方法允许您精确控制哪些提交被修改，并确保只修改需要改变的部分，非常适合处理只有几个提交需要修正的情况。

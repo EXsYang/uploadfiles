@@ -159,9 +159,37 @@ Git版本控制要记录哪个人什么时候做了什么事情，Git就是通�
 
 2. 设置用户信息
 
-git config --global user.name “EXsYang”
+
+
+查看配置信息
+
+~~~
+git config --global user.name
+
+git config --global user.email
+~~~
+
+
+
+**不要加双引号！！！**
+
+~~~
+git config --global user.name EXsYang
+
+git config --global user.email yangda27@aliyun.com
+~~~
+
+下面这个不对：
+
+~~~
+git config --global user.name “EXsYang“
 
 git config --global user.email “yangda27@aliyun.com”
+~~~
+
+
+
+
 
 <img src="https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20220504121336393.png" alt="image-20220504121336393" style="zoom:80%;" /> 
 
@@ -198,9 +226,9 @@ git config --global user.email
 如果你只是想以后的commit记录,你只需要把当前本地git的user.name和user.email配置一下即可
 
 ```
-$ git config --global user.name “github’s Name”
- 
-$ git config --global user.email "github@xx.com"
+$ git config --global user.name github’s Name
+
+$ git config --global user.email github@xx.com
 123
 ```
 
