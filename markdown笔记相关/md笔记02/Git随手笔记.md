@@ -446,7 +446,10 @@ $ git config --global user.name 'CodeYang'
 
 $ git config --global user.email '10825197+kapaiya@user.noreply.gitee.com'
 
+-----------上面是之前的，下面是现在的----------------
+$ git config --global user.name 'EXsYang' 
 
+$ git config --global user.email 'yangda27@aliyun.com'
 #初始化本地仓库
 $ git init
 
@@ -1359,3 +1362,163 @@ git commit -m "Ignore gittest directory"
 
 总结来说，`git submodule add` 命令提供了一种管理项目依赖的强大工具，使得你可以在项目中集成并维护外部代码，同时保持主项目和外部代码的独立性和可控性。
 
+
+
+
+
+# 6 修改历史提交中的作者和邮箱信息，使之与你的 GitHub 账户相匹配，以便于你的贡献能够正确显示在 GitHub 的贡献图上。
+
+是的，上述操作的基本目的与之前讨论的使用 `git filter-repo` 更改作者信息的效果是一样的，都旨在修改 Git 历史中的作者名和邮箱地址。不过，这两种方法在实现上有一些关键的区别：
+
+### `git filter-branch` vs `git filter-repo`
+
+1. **命令和工具**：
+   - `git filter-branch` 是 Git 自带的一个工具，用于重写大量的分支历史。然而，由于它的复杂性和潜在的风险，Git 官方已不推荐使用 `git filter-branch`，并建议使用更现代的 `git filter-repo`。
+   - `git filter-repo` 是一个更快、更安全的第三方工具，专为替代 `git filter-branch` 而设计。它提供了更多的功能和更好的错误处理机制。
+
+2. **安全性和性能**：
+   - `git filter-branch` 可能会留下备份引用和其他副作用，这可能导致意外的数据泄露或历史不一致。它的执行速度通常比 `git filter-repo` 慢，尤其是在处理大型仓库时。
+   - `git filter-repo` 更加高效，在执行过程中会明确地清理不必要的数据，并确保历史的一致性和安全。
+
+### 实现的效果
+
+尽管两种方法在技术实现上有所不同，但它们达到的最终效果是相似的，即修改历史提交中的作者和邮箱信息，使之与你的 GitHub 账户相匹配，以便于你的贡献能够正确显示在 GitHub 的贡献图上。
+
+### 使用 `git filter-repo`
+
+建议使用 `git filter-repo`，尤其是在处理较新的或较大的仓库时，因为它更安全、更快速，并且由于其设计是为了替代 `git filter-branch`，因此在处理可能的错误和边缘情况时表现更好。
+
+如果你决定使用 `git filter-repo`，可以使用类似以下命令来替换旧的提交者和作者信息：
+
+```bash
+git filter-repo --mailmap mailmap.txt --force
+```
+
+其中 `mailmap.txt` 文件包含了旧新信息的映射，如上文所示：下面这个无效。
+
+```
+CodeYang <old-email@example.com> = EXsYang <yangda27@aliyun.com>
+```
+
+下面这个格式有效！
+
+~~~
+EXsYang <yangda27@aliyun.com> <10825197+kapaiya@user.noreply.gitee.com>
+~~~
+
+成功很可能是因为：
+
+1. **正确的格式**：您使用的 `mailmap` 文件中的格式 `EXsYang <yangda27@aliyun.com> <10825197+kapaiya@user.noreply.gitee.com>` 正确地映射了旧的邮箱到新的用户名和邮箱。这种格式清楚地指出了旧邮箱应该被替换为新的用户名和邮箱。
+2. **适用的命令选项**：`git filter-repo --mailmap` 正确地解析了 `mailmap` 文件，并应用了您希望的更改。这表明使用 `--mailmap` 选项通常更适合处理用户名和邮箱的变更。
+
+
+
+### 结论
+
+无论选择哪种工具，主要目标是保证历史提交信息正确反映你的身份，以确保 GitHub 能够识别出这些提交属于你，并在你的贡献概览中显示。在执行任何这类操作之前，都应该确保备份仓库，避免不可恢复的数据丢失。
+
+
+
+## 6.1 其他仓库是不是也可以这样修改，修改历史提交中的作者和邮箱信息？
+
+是的，您可以使用相同的方法来修改其他仓库的提交历史。`git filter-repo` 工具是非常灵活的，并且可以应用于任何 Git 仓库，以进行各种类型的历史重写操作，包括但不限于更改作者信息、移除文件、重写提交信息等。
+
+### 在其他仓库使用 `git filter-repo` 的步骤：
+
+1. **备份仓库**：
+
+   - 在操作任何仓库之前，始终确保进行完整的备份，以防万一操作出现错误或不可预见的后果。
+
+2. **准备 `mailmap.txt`**：
+
+   - 根据需要更改的具体用户名和邮箱，准备一个 `mailmap.txt` 文件，格式与您之前成功使用的相同。
+
+3. **执行命令**：
+
+   - 在目标仓库的根目录下执行 `git filter-repo` 命令，使用 `--mailmap` 选项和相应的 `mailmap.txt` 文件。例如：
+
+     ```bash
+     git filter-repo --mailmap mailmap.txt --force
+     ```
+
+4. **验证更改**：
+
+   - 使用 `git log` 检查历史记录，确保更改已正确应用，并且没有意外的副作用。
+
+5. **推送更改**：
+
+   - 如果您满意更改，并且确定没有问题，可以使用 `git push --force` 将更改推送到远程仓库。
+
+6. **通知团队成员**：
+
+   - 如果您在一个团队环境中工作，确保通知所有相关的团队成员关于历史更改。他们可能需要重新克隆仓库或调整他们的本地设置以适应新的历史。
+
+### 注意事项
+
+- **使用的责任**：重写历史是一种有力的操作，但它会改变仓库的基础结构。在团队项目中，这可能导致合作者的混淆和额外的工作，因为每个人都需要适应这些更改。
+- **迁移引用**：在使用 `git filter-repo` 时，所有分支和标签的引用都可能会被重写，这可能会影响所有基于这些引用的开发活动。
+- **透明和沟通**：在进行这样的操作时，与项目的其他参与者保持透明和开放的沟通是非常重要的。
+
+通过遵循这些步骤和注意事项，您可以安全有效地在其他仓库中使用 `git filter-repo` 来修改提交历史。
+
+# 7 修复git提交不显示commit贡献小绿点【git bash】【不推荐使用该方案，更推荐使用`git filter-repo` 】
+
+#### 原因:
+
+最近一直在用github来写博客,但是今天发现github上的contributions记录并没有我的提交记录.
+
+原因在于：本地的git默认的user.name和user.email并不是你的,而是本机.所以在此期间你的commit都是默认本机的.
+
+你可以用git config user.name / git config user.email 来查看自己的git所属
+
+查不出的结果应该是为空,因为你根本就没设置过.
+
+然后用git log查看一下commit记录.你会惊奇的发现虽然在往你的github仓库中push,但是用户名和邮箱却不是你github的,而是系统默认的pc用户.
+
+所以github贡献统计的根本就不是你的账户,就没有贡献小绿点咯.
+
+#### 解决办法:
+
+#### 保证以后的commit
+
+如果你只是想以后的commit记录,你只需要把当前本地git的user.name和user.email配置一下即可
+
+```
+$ git config --global user.name “github’s Name”
+ 
+$ git config --global user.email "github@xx.com"
+123
+```
+
+#### 修改之前的commit
+
+如果你不想浪费之前的commit贡献,需要把所有你用默认账户的commit都归为你真正的名下怎么办.
+
+我们需要修改所有的commit和push历史：
+【在你想修改的仓库中】
+
+- 修改所有者：
+
+```
+git filter-branch -f --env-filter '
+if [ "$GIT_AUTHOR_NAME" = "CodeYang" ]
+then
+export GIT_AUTHOR_NAME="EXsYang"
+export GIT_AUTHOR_EMAIL="yangda27@aliyun.com"
+fi
+' HEAD
+```
+
+- 修改贡献者：
+
+```
+git filter-branch -f --env-filter '
+if [ "$GIT_COMMITTER_NAME" = "CodeYang" ]
+then
+export GIT_COMMITTER_NAME="EXsYang"
+export GIT_COMMITTER_EMAIL="yangda27@aliyun.com"
+fi
+' HEAD
+```
+
+之后就能在commit记录里看到自己的头像了，而且在github主页上也会有小绿点

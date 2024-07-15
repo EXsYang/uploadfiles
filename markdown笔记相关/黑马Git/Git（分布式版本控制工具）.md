@@ -165,7 +165,7 @@ git config --global user.email “yangda27@aliyun.com”
 
 <img src="https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20220504121336393.png" alt="image-20220504121336393" style="zoom:80%;" /> 
 
-邮箱可以是假邮箱
+邮箱可以是假邮箱【用户名和邮箱和github不匹配会导致commit贡献小绿点不显示个人头像】
 
 查看配置信息
 
@@ -175,7 +175,7 @@ git config --global user.email
 
 ---
 
-### 修复git提交不显示commit贡献小绿点【git bash】
+### 修复git提交不显示commit贡献小绿点【git bash】【不推荐使用该方案，更推荐使用`git filter-repo` 】
 
 #### 原因:
 
