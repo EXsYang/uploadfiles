@@ -159,9 +159,9 @@ Git版本控制要记录哪个人什么时候做了什么事情，Git就是通�
 
 2. 设置用户信息
 
-git config --global user.name “itcast”
+git config --global user.name “EXsYang”
 
-git config --global user.email “hello@itcast.cn”
+git config --global user.email “yangda27@aliyun.com”
 
 <img src="https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20220504121336393.png" alt="image-20220504121336393" style="zoom:80%;" /> 
 
@@ -173,7 +173,71 @@ git config --global user.name
 
 git config --global user.email
 
+---
 
+### 修复git提交不显示commit贡献小绿点【git bash】
+
+#### 原因:
+
+最近一直在用github来写博客,但是今天发现github上的contributions记录并没有我的提交记录.
+
+原因在于：本地的git默认的user.name和user.email并不是你的,而是本机.所以在此期间你的commit都是默认本机的.
+
+你可以用git config user.name / git config user.email 来查看自己的git所属
+
+查不出的结果应该是为空,因为你根本就没设置过.
+
+然后用git log查看一下commit记录.你会惊奇的发现虽然在往你的github仓库中push,但是用户名和邮箱却不是你github的,而是系统默认的pc用户.
+
+所以github贡献统计的根本就不是你的账户,就没有贡献小绿点咯.
+
+#### 解决办法:
+
+#### 保证以后的commit
+
+如果你只是想以后的commit记录,你只需要把当前本地git的user.name和user.email配置一下即可
+
+```
+$ git config --global user.name “github’s Name”
+ 
+$ git config --global user.email "github@xx.com"
+123
+```
+
+#### 修改之前的commit
+
+如果你不想浪费之前的commit贡献,需要把所有你用默认账户的commit都归为你真正的名下怎么办.
+
+我们需要修改所有的commit和push历史：
+【在你想修改的仓库中】
+
+- 修改所有者：
+
+```
+git filter-branch -f --env-filter '
+if [ "$GIT_AUTHOR_NAME" = "CodeYang" ]
+then
+export GIT_AUTHOR_NAME="EXsYang"
+export GIT_AUTHOR_EMAIL="yangda27@aliyun.com"
+fi
+' HEAD
+```
+
+- 修改贡献者：
+
+```
+git filter-branch -f --env-filter '
+if [ "$GIT_COMMITTER_NAME" = "CodeYang" ]
+then
+export GIT_COMMITTER_NAME="EXsYang"
+export GIT_COMMITTER_EMAIL="yangda27@aliyun.com"
+fi
+' HEAD
+```
+
+之后就能在commit记录里看到自己的头像了，而且在github主页上也会有小绿点
+
+---
 
 ![image-20240531112009557](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240531112009557.png)
 
