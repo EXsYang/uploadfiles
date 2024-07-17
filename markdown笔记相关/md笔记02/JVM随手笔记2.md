@@ -2651,5 +2651,105 @@ Java对象头的大小取决于Java虚拟机的实现和运行的系统架构（
 
 
 
-# 170  
+# 170  内存泄露举例-内部类持有外部类
 
+![image-20240717221238275](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240717221238275.png)
+
+非常抱歉之前未能准确理解您所指的场景。您提到的是内部类持有外部类引用的问题，这是Java中一个非常典型的内存泄露场景。当一个内部类实例被外部对象引用，而这个内部类又持有对其外部类的隐式引用时，即使外部类的实例不再需要，也不会被垃圾收集器回收，因为它仍被内部类实例所引用。
+
+### 示例：内部类导致的内存泄露
+
+假设我们有一个定时任务管理器，其中包含一个内部类，用于执行某些周期性任务。如果内部类的实例被某个长生命周期的对象（例如静态集合）引用，而这个内部类又持有对外部类的引用，那么即使外部类的实例不再需要，它也不会被回收。
+
+```java
+import java.util.HashSet;
+import java.util.Set;
+
+public class TaskScheduler {
+    private static final Set<Task> tasks = new HashSet<>();
+
+    public void scheduleTask() {
+        Task task = new Task();
+        tasks.add(task);
+        System.out.println("Task scheduled.");
+    }
+
+    class Task implements Runnable {
+        @Override
+        public void run() {
+            System.out.println("Task executed.");
+        }
+
+        public void complete() {
+            tasks.remove(this);
+            System.out.println("Task completed and removed from schedule.");
+        }
+    }
+
+    public static void main(String[] args) {
+        TaskScheduler scheduler = new TaskScheduler();
+        scheduler.scheduleTask();
+        // 假设TaskScheduler实例在此后不再需要
+        // 但因为Task持有TaskScheduler的隐式引用，且Task的实例仍在tasks中，导致内存泄露
+    }
+}
+```
+
+### 分析
+在这个例子中：
+- `TaskScheduler` 是一个外部类，它有一个内部类 `Task`。
+- `Task` 实现了 `Runnable` 接口，并在内部类中重写了 `run` 方法。
+- 外部类中有一个静态集合 `tasks`，用于存储 `Task` 的实例。
+- 当 `TaskScheduler` 实例创建一个 `Task` 并将其添加到 `tasks` 集合中时，每个 `Task` 都会隐式持有一个对其外部类 `TaskScheduler` 的引用。
+
+因为 `tasks` 是静态的，它的生命周期与应用程序相同，这意味着它引用的所有 `Task` 对象（以及间接引用的 `TaskScheduler` 实例）都不会被垃圾收集器回收，即使没有其他活跃的引用指向这些 `TaskScheduler` 实例。这样，即使 `TaskScheduler` 实例不再需要，它们的内存也不会被释放，导致内存泄露。
+
+### 解决方案
+为避免此类内存泄露：
+- 可以考虑使用静态内部类（如果不需要访问外部类的实例变量）。
+- 确保长生命周期的集合不直接存储对这类内部类实例的引用，或者在不再需要时显式地从集合中移除这些对象。
+
+
+
+# 171 为什么非静态内部类会隐式地持有一个对其外部类实例的引用？
+
+在Java中，非静态内部类会隐式地持有一个对其外部类实例的引用。这是Java的语言设计使然，它允许内部类实例访问外部类实例的成员（包括私有成员）。这种设计提供了方便的方式来直接操作外部类的状态，但也带来了潜在的内存泄露问题，尤其是在内部类实例比外部类实例有更长的生命周期时。
+
+### 解释原因
+
+当你在一个外部类 `TaskScheduler` 中定义一个内部类 `Task` 时，`Task` 类的每个实例都会自动持有一个指向创建它的 `TaskScheduler` 实例的引用。这样做的目的是为了能够在 `Task` 实例中直接访问 `TaskScheduler` 的实例变量和实例方法。
+
+例如，在如下代码片段中：
+
+```java
+public class TaskScheduler {
+    private String name = "Scheduler";
+
+    class Task implements Runnable {
+        @Override
+        public void run() {
+            System.out.println("Accessing outer class field: " + name);
+        }
+    }
+}
+```
+
+`Task` 类的 `run` 方法直接访问了外部类 `TaskScheduler` 的实例变量 `name`。为了使这种访问成为可能，每个 `Task` 对象必须持有一个指向其外部 `TaskScheduler` 对象的引用。
+
+### 内存泄露的风险
+
+这种隐式的引用关系在某些情况下可能导致内存泄露。如果一个长生命周期的对象（如静态集合）持有内部类 `Task` 的实例，而这些内部类实例又持有外部类 `TaskScheduler` 的实例，那么即使外部类 `TaskScheduler` 的实例不再被其他地方引用，它也不会被垃圾收集器回收，因为它仍被 `Task` 实例间接引用。
+
+### 解决策略
+
+为了避免这种潜在的内存泄露问题，有几种策略可以采用：
+
+1. **使用静态内部类**：静态内部类不会持有对外部类实例的引用，适合那些不需要访问外部类实例状态的场合。
+2. **显式管理生命周期**：确保当内部类实例不再需要时，及时从引用它们的容器（如集合）中移除。
+3. **使用弱引用**：在某些情况下，使用弱引用存储内部类实例可能有助于减少内存泄露的风险，因为垃圾收集器可以回收只被弱引用指向的对象。
+
+通过这些方式，可以有效地管理和减少因内部类隐式引用外部类实例而导致的内存泄露问题。
+
+
+
+# 172 
