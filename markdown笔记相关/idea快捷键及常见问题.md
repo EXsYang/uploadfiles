@@ -976,3 +976,62 @@ Java 一直强调向下兼容性，即较新的 JDK 版本通常能够编译和�
 
 
 ![image-20240711223434295](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240711223434295.png)
+
+
+
+
+
+# 15 idea安装离线插件的方法(以jclasslib举例)
+
+## 15.1 解决idea 2020.2版本安装jclasslib无法使用
+
+
+
+使用 jclasslib 不光可以直观地查看某个类对应的字节码文件，还可以查看类的基本信息、常量池、接口、属性、函数等信息。
+
+使用idea自带插件下载的方式安装在这就不说啦……网络上一大堆啦……
+
+说说我遇到的问题：
+
+我的idea版本是2020.2的，使用插件市场下载jclasslib后，点击view只有show Bytecode，没有JClasslib
+
+![image-20240706013815623](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240706013815623.png)
+
+ 我怀疑应该是我的idea版本和插件的版本不太兼容，或者是新版的插件有其他更改导致
+
+然后找到了插件官网https://plugins.jetbrains.com/plugin/9248-jclasslib-bytecode-viewer/versions
+
+直接下载了5.7版本，使用idea从本地安装插件。
+
+![image-20240706013851270](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240706013851270.png)
+
+ 
+
+离线安装idea jclasslib插件:
+
+![image-20240718184147351](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240718184147351.png)
+
+然后就出现了jclasslib。
+
+另外，按照上面的方法做了之后，需要在`help` -> `edit custom vm options`...里面增加一点点配置
+
+~~~
+-Duser.language=en
+-Duser.region=CN
+~~~
+
+-Duser.language ：设置本地语言
+-Duser.region ：设置区域
+![image-20240706014212225](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240706014212225.png)
+
+然后解决了问题
+
+
+
+## 15.2 idea的`JProfiler`插件和idea的版本要对应
+
+![image-20240718190043165](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240718190043165.png)
+
+
+
+# 16 

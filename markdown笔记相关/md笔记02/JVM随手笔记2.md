@@ -2752,4 +2752,119 @@ public class TaskScheduler {
 
 
 
-# 172 
+# 172 JProfiler演示
+
+
+
+![image-20240718190817533](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240718190817533.png)
+
+
+
+上面这张图片显示的是JProfiler软件的一个快速启动对话框，其中包含以下选项：
+
+1. **快速开始**：你可以使用JProfiler执行许多操作。从常见用例中选择。
+2. **分析演示会话或已保存会话**：JProfiler附带多个预配置的演示会话。你可以启动它们来探索JProfiler的功能。
+3. **连接到正在运行的JVM**：JProfiler可以连接到本地或远程运行的JVM，并且可以即时进行分析。某些功能在附加模式下不支持。
+4. **分析应用服务器，本地或远程**：JProfiler为所有主要的应用服务器提供广泛支持。本机和远程计算机上运行的应用服务器均受支持。
+5. **打开快照**：JProfiler可以保存带有所有分析结果的快照，这些快照稍后可以打开。此外，它还可以打开HPROF和PHD快照。
+
+最下方还有一个勾选框，用于选择是否在未来显示此对话框。
+
+
+
+
+
+**instrumentation**	/ˌɪnstrəmenˈteɪʃn/	(一套)仪器，仪表；器乐谱写
+
+**sampling**	/ˈsɑːmplɪŋ/	取样；抽样；(乐曲的)节录，选录
+
+**Recommended**	/ˌrekəˈmendɪd/	建议；推荐；被推荐的
+
+![image-20240718191638440](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240718191638440.png)
+
+这张图片展示的是JProfiler软件中的初始分析设置对话框，内容如下：
+
+**初始分析设置**
+请选择您的初始用例：
+
+1. **测量（Instrumentation）**
+   - 支持所有功能，如调用次数和方法统计。合适的过滤器对于减少开销至关重要。
+
+2. **采样（推荐）（Sampling (Recommended)）**
+   - CPU分析不会被短时间运行的方法扭曲。开销极低。不支持某些功能。当连接到正在运行的JVMs时，这种模式更安全。
+
+分析设置随时可以更改。
+
+![image-20240718192102822](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240718192102822.png)
+
+
+
+
+
+# 173 JProfiler两种启动方式演示
+
+**instrumentation**	/ˌɪnstrəmenˈteɪʃn/	(一套)仪器，仪表；器乐谱写
+
+**sampling**	/ˈsɑːmplɪŋ/	取样；抽样；(乐曲的)节录，选录
+
+**Recommended**	/ˌrekəˈmendɪd/	建议；推荐；被推荐的
+
+
+
+
+
+**一般使用推荐的抽样模式(sampling)即可**
+**启动JProfiler有两种方式**
+
+## 第一种启动方式：使用Idea的JProfiler插件直接和当前应用程序的进程关联启动
+
+第一步：点击JProfiler插件按钮
+
+![image-20240718195725577](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240718195725577.png)
+
+第二步：点击OK按钮
+
+![image-20240718195743350](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240718195743350.png)
+
+启动成功！
+
+## 第二种启动方式：先单独打开JProfiler软件，然后再关联当前运行的应用程序OOMTest进程
+
+第一步：先运行应用程序OOMTest,普通启动，右键 - Run as
+
+![image-20240718195800438](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240718195800438.png)
+
+第二步：启动JProfiler软件
+找到JProfiler软件安装目录bin下的.exe文件双击它
+
+会弹出下面的界面
+
+ ![image-20240718195925081](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240718195925081.png)
+
+紧接着会弹出下面的窗口：
+
+ ![image-20240718195938298](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240718195938298.png)
+
+ 
+
+紧接着会弹出下面的窗口：
+
+ attach：连接的意思
+左上角`Local attach`的意思是`本地连接`
+
+ ![image-20240718200137811](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240718200137811.png)
+
+ 
+
+ 紧接着会弹出下面的窗口：![image-20240718200233921](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240718200233921.png)
+
+ 
+
+ 最后看到下面这个关联OOMTest JVM进程成功界面
+
+![image-20240718200248169](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240718200248169.png)
+
+完。
+
+# 174 
+

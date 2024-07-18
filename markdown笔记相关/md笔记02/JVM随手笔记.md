@@ -705,7 +705,13 @@ Java虚拟机的启动是通过引导类加载器（bootstrap class loader）创
 
 ![image-20240706013851270](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240706013851270.png)
 
- 然后就出现了jclasslib。
+ 
+
+离线安装idea jclasslib插件:
+
+![image-20240718184147351](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240718184147351.png)
+
+然后就出现了jclasslib。
 
 另外，按照上面的方法做了之后，需要在`help` -> `edit custom vm options`...里面增加一点点配置
 
