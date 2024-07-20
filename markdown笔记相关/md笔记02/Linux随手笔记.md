@@ -3887,7 +3887,37 @@ ChatGPT
 
 
 
+### 17.01 在 Linux 中，你可以使用以下命令来查看当前系统的 IP 地址：
 
+1. **使用 `ip` 命令**：
+   ```bash
+   ip addr show
+   ```
+   或者简短一些：
+   ```bash
+   ip a
+   ```
+   这个命令会显示所有网络接口的详细信息，包括 IP 地址。
+
+2. **使用 `ifconfig` 命令**（需要安装 `net-tools` 包）：
+   ```bash
+   ifconfig
+   ```
+   这个命令也会显示所有网络接口的信息，包括 IP 地址。请注意，在一些较新的 Linux 发行版中，`ifconfig` 可能不会默认安装，你可能需要先安装 `net-tools` 包。
+
+3. **使用 `hostname` 命令**（仅显示当前主机名对应的 IP 地址）：
+   ```bash
+   hostname -I
+   ```
+   这个命令会显示当前主机的 IP 地址，不包括其他网络接口的信息。
+
+4. **使用 `nmcli` 命令**（NetworkManager 命令行界面）：
+   ```bash
+   nmcli device show
+   ```
+   这个命令会显示所有网络设备的详细信息，包括 IP 地址。
+
+这些命令可以帮助你查看当前 Linux 系统的 IP 地址，根据你的需求选择合适的命令。
 
 
 
@@ -3953,7 +3983,7 @@ vi /etc/sysconfig/network-scripts/ifcfg-ens33
 - 禁用 `NetworkManager` 并启用 `network` 服务：
 
   ```
-  bashCopy codesudo systemctl stop NetworkManager
+  sudo systemctl stop NetworkManager
   sudo systemctl disable NetworkManager
   sudo systemctl enable network
   sudo systemctl start network
@@ -4069,6 +4099,50 @@ NM_CONTROLLED="yes"
 
 
 
+vi /etc/sysconfig/network-scripts/ifcfg-ens33
+
+最新的网络配置文件如下：
+
+~~~
+TYPE="Ethernet"
+PROXY_METHOD="none"
+BROWSER_ONLY="no"
+BOOTPROTO="static"
+DEFROUTE="yes"
+IPV4_FAILURE_FATAL="no"
+IPV6INIT="yes"
+IPV6_AUTOCONF="yes"
+IPV6_DEFROUTE="yes"
+IPV6_FAILURE_FATAL="no"
+IPV6_ADDR_GEN_MODE="stable-privacy"
+NAME="ens33"
+UUID="2e5a5c25-b0b3-489a-aecd-1461cf86d9d8"
+DEVICE="ens33"
+ONBOOT="yes"
+#IP 地址
+#IPADDR=192.168.200.130
+#网关
+#GATEWAY=192.168.200.2
+#域名解析器
+#DNS1=192.168.200.2
+
+#IP 地址
+IPADDR="192.168.198.135"
+#网关
+GATEWAY="192.168.198.2"
+#域名解析器
+DNS1="192.168.198.2"
+#域名解析器
+DNS2="8.8.8.8"
+
+#子网掩码，不写默认就是255.255.255.0
+NETMASK="255.255.255.0"
+
+# 你希望 NetworkManager 接管并应用 ifcfg-ens33 文件中的配置
+NM_CONTROLLED="yes"
+
+~~~
+
 
 
 
@@ -4076,7 +4150,7 @@ NM_CONTROLLED="yes"
 禁用 `NetworkManager` 并启用 `network` 服务：
 
 ```
-bashCopy codesudo systemctl stop NetworkManager
+systemctl stop NetworkManager
 sudo systemctl disable NetworkManager
 sudo systemctl enable network
 sudo systemctl start network
