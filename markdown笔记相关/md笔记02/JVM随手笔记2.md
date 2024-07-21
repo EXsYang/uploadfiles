@@ -3134,4 +3134,261 @@ class Bean {
 
 
 
-# 177 
+# 177 Arthas学习
+
+
+
+## 177.1 使用`quit`退出Arthas后再使用`java -jar arthas-boot.jar 17551`指令报错
+
+~~~
+[root@hspEdu100 opt]# java -jar arthas-boot.jar 17551
+[INFO] arthas-boot version: 3.4.5
+[INFO] Process 15241 already using port 3658
+[INFO] Process 15241 already using port 8563
+[ERROR] The telnet port 3658 is used by process 15241 instead of target process 17551, you will connect to an unexpected process.
+[ERROR] 1. Try to restart arthas-boot, select process 15241, shutdown it first with running the 'stop' command.
+[ERROR] 2. Or try to stop the existing arthas instance: java -jar arthas-client.jar 127.0.0.1 3658 -c "stop"
+[ERROR] 3. Or try to use different telnet port, for example: java -jar arthas-boot.jar --telnet-port 9998 --http-port -1
+[root@hspEdu100 opt]# 
+
+~~~
+
+你的问题是由于 Arthas 已经在使用端口 3658 和 8563，而你尝试连接到另一个进程时遇到了端口冲突。你可以按照提示信息进行操作来解决这个问题。以下是详细的步骤：
+
+### 方法一：停止当前运行的 Arthas 实例
+
+1. **查看正在使用的 Arthas 实例**：
+    ```bash
+    java -jar arthas-client.jar 127.0.0.1 3658 -c "stop"
+    ```
+
+2. **重新启动 Arthas 并连接到目标进程**：
+    ```bash
+    java -jar arthas-boot.jar 17551
+    ```
+
+### 方法二：使用不同的端口启动 Arthas
+
+如果你不想停止当前的 Arthas 实例，可以尝试使用不同的端口启动 Arthas：
+
+1. **指定不同的 telnet 和 HTTP 端口**：
+    
+    ```bash
+    java -jar arthas-boot.jar --telnet-port 9998 --http-port 9999 17551
+    ```
+
+这样，Arthas 将使用不同的端口，你就可以连接到目标进程而不会有端口冲突。
+
+### 方法三：停止目标进程再启动 Arthas
+
+如果你可以停止目标进程，然后重新启动 Arthas，也是一种解决方案：
+
+1. **找到并停止目标进程（如果适用）**：
+    ```bash
+    kill -9 17551
+    ```
+
+2. **重新启动目标进程**：
+    ```bash
+    # 启动目标进程的命令，例如：
+    java -jar your-target-application.jar
+    ```
+
+3. **重新启动 Arthas 并连接到目标进程**：
+    ```bash
+    java -jar arthas-boot.jar 17551
+    ```
+
+以上方法可以帮助你解决端口冲突的问题。
+
+
+
+## 177.2 查看 `URLClassLoader` 实际的 URLs 有什么用？
+
+查看 `URLClassLoader` 实际的 URLs 在调试和分析 Java 应用程序时非常有用，特别是在以下几个场景中：
+
+#### 1. **诊断类加载问题**
+
+在 Java 应用程序中，类加载器负责加载类文件。如果出现类加载问题（例如 `ClassNotFoundException` 或 `NoClassDefFoundError`），查看 `URLClassLoader` 实际的 URLs 可以帮助你确定类路径是否正确配置，以及类文件是否在预期的目录中。
+
+#### 2. **确认类路径**
+
+在大型项目中，特别是使用多个第三方库和模块时，类路径管理变得复杂。查看 `URLClassLoader` 实际的 URLs 可以帮助你确认所有必要的 JAR 文件和目录都包含在类路径中，避免遗漏或重复的依赖。
+
+#### 3. **调试依赖冲突**
+
+Java 项目中常常会有依赖冲突问题（例如同一个类在多个 JAR 文件中出现）。查看 `URLClassLoader` 的 URLs 可以帮助你识别哪个 JAR 文件中的类被加载，从而诊断和解决依赖冲突问题。
+
+#### 4. **分析运行时环境**
+
+在某些情况下，你可能需要分析运行时环境以确保类加载行为符合预期。通过查看 `URLClassLoader` 的 URLs，你可以了解应用程序实际加载的类文件位置，从而确认运行时环境配置是否正确。
+
+#### 示例解释
+
+假设你正在调试一个 Java 应用程序，并遇到以下错误：
+```plaintext
+Exception in thread "main" java.lang.ClassNotFoundException: com.example.MyClass
+```
+你怀疑类路径配置有问题。你可以使用 Arthas 的 `classloader` 命令查看 `URLClassLoader` 的实际 URLs，确认 `com.example.MyClass` 是否在类路径中：
+
+```bash
+$ classloader --classLoaderClass sun.misc.Launcher$AppClassLoader
+file:/path/to/your/application.jar
+file:/path/to/your/dependency1.jar
+file:/path/to/your/dependency2.jar
+```
+
+通过查看输出，你可以确认 `com.example.MyClass` 所在的 JAR 文件是否在类路径中。
+
+#### 具体使用步骤
+
+1. **查看当前的 ClassLoader 信息**，提取对应 ClassLoader 的 hashcode：
+    ```bash
+    $ classloader
+    ```
+
+2. **使用 hashcode 查看 URLClassLoader 实际的 URLs**：
+    ```bash
+    $ classloader -c <hashcode>
+    ```
+
+3. **或者通过 ClassLoader 的类名查看**（适用于只有唯一实例的 ClassLoader）：
+    ```bash
+    $ classloader --classLoaderClass sun.misc.Launcher$AppClassLoader
+    ```
+
+#### 结论
+
+查看 `URLClassLoader` 的实际 URLs 是诊断和调试 Java 应用程序中类加载问题的重要工具。它可以帮助你确认类路径配置是否正确，分析依赖冲突，并确保运行时环境配置符合预期。
+
+## 177.3 上个问题里所指的 `URLClassLoader` 是 Java 中的一种类加载器
+
+这里所指的 `URLClassLoader` 是 Java 中的一种类加载器，具体来说，它是 `java.net.URLClassLoader` 类的一个实例。`URLClassLoader` 使用一个或多个 URLs（通常是 JAR 文件或目录的路径）来查找和加载类文件。
+
+在 Java 应用程序中，`URLClassLoader` 被广泛用于加载从文件系统、网络或其他来源获取的类和资源。它通常用于以下场景：
+
+1. **加载 JAR 文件**：将多个 JAR 文件添加到类路径中，以便加载这些 JAR 文件中的类和资源。
+2. **动态加载类**：在运行时根据需要从指定的 URL 加载类，而不是在编译时确定类路径。
+
+#### 示例解释
+
+假设你有一个 Java 应用程序，其类路径包含多个 JAR 文件和目录。通过 `URLClassLoader`，这些路径被用于查找和加载类文件。如果你遇到类加载问题，可以使用 Arthas 查看 `URLClassLoader` 实例实际使用的 URLs，以确认类路径配置是否正确。
+
+#### 实际操作步骤
+
+1. **查看当前的 ClassLoader 信息**：
+    ```bash
+    $ classloader
+    ```
+    这条命令会列出当前 JVM 中所有的 ClassLoader 实例及其 hashcode。
+
+2. **使用 hashcode 查看特定 ClassLoader 的 URLs**：
+    ```bash
+    $ classloader -c <hashcode>
+    ```
+    例如：
+    ```bash
+    $ classloader -c 3d4eac69
+    ```
+    这将显示 `hashcode` 为 `3d4eac69` 的 `URLClassLoader` 实例实际加载类的 URLs。
+
+3. **通过 ClassLoader 的类名查看**（适用于只有唯一实例的 ClassLoader）：
+    ```bash
+    $ classloader --classLoaderClass sun.misc.Launcher$AppClassLoader
+    ```
+
+#### 实际用途
+
+假设你的应用程序遇到类加载问题，`ClassNotFoundException` 或 `NoClassDefFoundError`，你可以使用 Arthas 的 `classloader` 命令来确认 `URLClassLoader` 实际使用的 URLs，以便诊断问题。例如：
+
+```bash
+$ classloader --classLoaderClass sun.misc.Launcher$AppClassLoader
+file:/path/to/your/application.jar
+file:/path/to/your/dependency1.jar
+file:/path/to/your/dependency2.jar
+```
+
+通过查看这些路径，你可以确认 `com.example.MyClass` 是否在类路径中。
+
+#### 总结
+
+`URLClassLoader` 是一种类加载器，它使用指定的 URLs 来查找和加载类和资源。在使用 Arthas 的 `classloader` 命令时，查看 `URLClassLoader` 实际的 URLs 可以帮助你诊断和调试类加载问题。
+
+## 177.4 系统类加载器（通常是 `AppClassLoader` 或 `Application ClassLoader`）是属于 `URLClassLoader` 
+
+是的，系统类加载器（通常是 `AppClassLoader` 或 `Application ClassLoader`）是 `URLClassLoader` 的一个子类。它负责加载应用程序类路径中的类和资源，包括用户代码和依赖的库。
+
+### 使用 `classloader` 命令查看 `AppClassLoader`
+
+你可以使用 `classloader` 命令查看 `AppClassLoader`（系统类加载器）的信息，并确认它实际加载的 URLs。以下是详细步骤：
+
+### 1. 查看所有 ClassLoader 信息
+
+首先，使用 `classloader` 命令查看当前 JVM 中所有 ClassLoader 实例及其 hashcode：
+
+```bash
+$ classloader
+```
+
+这将列出所有 ClassLoader 实例及其 hashcode。例如，你可能会看到类似的输出：
+
+```plaintext
+ name                                                  loaded-classes  loaded-resources
+ [1c405df7]sun.misc.Launcher$AppClassLoader@1c405df7   209             128
+ [31a41d21]sun.misc.Launcher$ExtClassLoader@31a41d21   50              28
+ [4554617c]java.net.FactoryURLClassLoader@4554617c     153             83
+ ...
+```
+
+### 2. 使用 hashcode 查看特定 ClassLoader 的 URLs
+
+找到 `AppClassLoader` 的 hashcode，然后使用 `classloader -c <hashcode>` 命令查看它实际加载的 URLs。例如：
+
+```bash
+$ classloader -c 1c405df7
+```
+
+### 3. 通过 ClassLoader 类名查看（更方便）
+
+如果你知道系统类加载器的类名（通常是 `sun.misc.Launcher$AppClassLoader`），你可以直接使用类名来查看：
+
+```bash
+$ classloader --classLoaderClass sun.misc.Launcher$AppClassLoader
+```
+
+#### 示例操作
+
+假设你已经确定了系统类加载器的 hashcode 或者类名，以下是如何查看它实际加载的 URLs 的示例：
+
+```bash
+$ classloader
+Affect(row-cnt:9) cost in 34 ms.
+
+$ classloader -c 1c405df7
+file:/path/to/your/application.jar
+file:/path/to/your/dependency1.jar
+file:/path/to/your/dependency2.jar
+Affect(row-cnt:9) cost in 3 ms.
+
+$ classloader --classLoaderClass sun.misc.Launcher$AppClassLoader
+file:/path/to/your/application.jar
+file:/path/to/your/dependency1.jar
+file:/path/to/your/dependency2.jar
+Affect(row-cnt:9) cost in 3 ms.
+```
+
+#### 实际用途
+
+查看系统类加载器的 URLs 在以下情况下非常有用：
+
+1. **诊断类加载问题**：确认类路径配置是否正确，以及类文件是否在预期的目录中。
+2. **分析依赖冲突**：识别加载类文件的 JAR 包，帮助解决依赖冲突问题。
+3. **确认运行时环境**：了解应用程序实际加载的类文件位置，确保运行时环境配置符合预期。
+
+#### 总结
+
+系统类加载器（通常是 `AppClassLoader` 或 `Application ClassLoader`）是 `URLClassLoader` 的一个子类，可以使用 `classloader` 命令查看其加载的 URLs。这对于诊断和调试类加载问题非常有帮助。
+
+ 
+
+## 177.5 

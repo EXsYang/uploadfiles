@@ -1733,6 +1733,61 @@ grep -ni "yes" /home/hello.txt
 
 在你提供的截图中，使用单引号、双引号或不使用引号似乎都得到了相同的结果。这是因为所使用的模式 `^y` 在这里并不包含任何shell会特别处理的字符，所以三种方法在这种情况下都有效。但是，最好的实践是使用单引号，以避免shell对特殊字符的意外解释，特别是当你的模式变得更复杂时。
 
+
+
+### 12.4 `>` 和 `>>` 和`tee`命令
+
+
+
+#### 比较 `tee` 与 `>` 和 `>>`
+
+#### `>` 和 `>>` 的用法
+
+- **`>`**：将输出重定向到文件，覆盖文件中的原有内容。
+    
+    ```bash
+    ls -l > output.txt
+    ```
+    - 作用：将 `ls -l` 的输出保存到 `output.txt` 文件中。如果文件已存在，它将被覆盖。
+    
+- **`>>`**：将输出追加到文件末尾，不覆盖文件中的原有内容。
+    ```bash
+    ls -l >> output.txt
+    ```
+    - 作用：将 `ls -l` 的输出追加到 `output.txt` 文件末尾。如果文件不存在，它将被创建。
+
+#### `tee` 的用法
+
+- **`tee`**：将输出同时写入文件和标准输出（终端），覆盖文件中的原有内容。
+    ```bash
+    ls -l | tee output.txt
+    ```
+    - 作用：将 `ls -l` 的输出保存到 `output.txt` 文件中，并在终端显示。如果文件已存在，它将被覆盖。
+
+- **`tee -a`**：将输出同时追加到文件和标准输出（终端），不覆盖文件中的原有内容。
+    ```bash
+    ls -l | tee -a output.txt
+    ```
+    - 作用：将 `ls -l` 的输出追加到 `output.txt` 文件中，并在终端显示。如果文件不存在，它将被创建。
+
+#### 总结
+
+- **覆盖文件**：
+  - `ls -l > output.txt`
+  - `ls -l | tee output.txt`
+
+- **追加到文件**：
+  - `ls -l >> output.txt`
+  - `ls -l | tee -a output.txt`
+
+- **区别**：
+  - `>` 和 `>>` 只是将输出重定向到文件，不会在终端显示输出。
+  - `tee` 同时将输出写入文件和标准输出（终端）。
+
+希望这些信息对你有帮助。如果有更多问题或需要进一步的帮助，请告诉我。
+
+
+
 ---
 
 ## 13. 压缩和解压类
@@ -5514,6 +5569,42 @@ NM_CONTROLLED="yes"
 - `ps -C` :`-C`选项用于指定进程的名称，以便`ps`仅显示那些名称匹配指定值的进程。换句话说，使用`-C`选项，你可以过滤并显示所有与给定进程名称相匹配的进程。
 
 `ps` 命令是 Linux 和 Unix 系统上常用的进程监控工具，特别适用于系统管理和调试。
+
+
+
+#### `ps`指令、`netstat`指令组合使用来检查进程号和端口号
+
+~~~
+#以下是查看端口和进程号的方式 查看是否启动成功
+ps -aux | grep redis
+
+netstat -anp | grep redis
+
+netstat -anp | more
+~~~
+
+使用案例：
+
+~~~
+#查看redis是否启动，是否在6379端口监听
+[root@hspEdu100 redis-6.2.6]# ps -aux | grep redis
+root      17163  0.0  0.3 162412  6684 ?        Ssl  20:41   0:00 /usr/local/bin/redis-server 127.0.0.1:6379
+root      17314  0.0  0.0 112728   988 pts/0    S+   20:57   0:00 grep --color=auto redis
+
+
+#查看redis是否启动，是否在6379端口监听
+[root@hspEdu100 redis-6.2.6]# netstat -anp | grep redis
+tcp        0      0 127.0.0.1:6379          0.0.0.0:*               LISTEN      17163/redis-server  
+tcp6       0      0 ::1:6379                :::*                    LISTEN      17163/redis-server  
+
+#查看redis是否启动，是否在6379端口监听
+[root@hspEdu100 redis-6.2.6]# netstat -anp | more
+Active Internet connections (servers and established)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp6       0      0 ::1:6379                :::*                    LISTEN      17163/redis-server  
+
+
+~~~
 
 
 
