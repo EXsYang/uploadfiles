@@ -2582,6 +2582,10 @@ Lily访问的页面索引是**7, 14, 28, 49, 56, 77, 91, 98**，并且需要排�
 
 # 168 指针压缩
 
+![image-20240723194125346](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240723194125346.png)
+
+## 168.1 压缩对象指针
+
 ![image-20240717184228215](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240717184228215.png)
 
  在大多数现代的64位Java虚拟机（JVM）上，包括Oracle的HotSpot JVM，指针压缩（Compressed Oops）是**默认启用**的，特别是在JDK 8中。指针压缩主要是为了减少Java对象的内存占用而不牺牲太多性能。
@@ -2594,12 +2598,120 @@ Lily访问的页面索引是**7, 14, 28, 49, 56, 77, 91, 98**，并且需要排�
 
 ### 配置与判断
 尽管在大多数情况下指针压缩是默认开启的，但开发者仍可以通过JVM启动参数手动控制这一行为：
+
+<mark>这里指的是压缩对象指针</mark>
+
 - **启用指针压缩**：`-XX:+UseCompressedOops`
 - **禁用指针压缩**：`-XX:-UseCompressedOops`
 
 确定是否启用了指针压缩可以通过检查JVM的启动日志或使用诸如`jinfo`的工具来查看运行中的Java应用的JVM参数。此外，可以通过使用诸如`java -XX:+PrintFlagsFinal -version`的命令来查看所有JVM参数的当前状态（包括指针压缩）。
 
 因此，对于您的使用情况，尤其是在考虑内存和对象大小计算时，默认情况下可以假设JDK 8的64位JVM启用了指针压缩。
+
+
+
+## 168.2 压缩类指针
+
+### 压缩类指针（Compressed Class Pointers）
+
+在 Java 虚拟机 (JVM) 中，`-XX:+UseCompressedClassPointers` 参数用于启用类指针的压缩。这个功能与压缩对象指针（Compressed Oops）类似，但它是针对类元数据指针的优化。
+
+#### 什么是类指针？
+
+在 JVM 中，每个对象不仅包含数据，还包含一个指向其类元数据的指针。这个指针用于指向对象所属的类，以便 JVM 能够访问类的信息和方法。通常，这个指针是 64 位的，在 64 位 JVM 上会占用较多的内存。
+
+#### 为什么需要压缩类指针？
+
+与对象指针类似，64 位的类指针会占用较多的内存。通过启用类指针压缩，JVM 可以将这些指针压缩为 32 位，以减少内存使用并提高性能。这在大对象数量和复杂应用程序中尤为重要。
+
+#### 如何实现压缩类指针？
+
+压缩类指针的原理与压缩对象指针类似，都是通过一种基于偏移的方式来实现的。JVM 会为类元数据区域分配一个内存块，然后使用一个基地址和偏移量的方式来引用类元数据。这使得 32 位的偏移量足以表示整个类元数据的内存区域。
+
+### 启用压缩类指针的 JVM 参数
+
+- `-XX:+UseCompressedClassPointers`：启用压缩类指针。
+- `-XX:-UseCompressedClassPointers`：禁用压缩类指针。
+
+### 示例
+
+假设有一个 JVM 参数配置如下：
+
+```shell
+java -Xmx4g -XX:+UseCompressedOops -XX:+UseCompressedClassPointers -jar myapp.jar
+```
+
+在这个配置中：
+- `-Xmx4g`：设置最大堆内存为 4 GB。
+- `-XX:+UseCompressedOops`：启用对象指针压缩。
+- `-XX:+UseCompressedClassPointers`：启用类指针压缩。
+
+### 影响
+
+启用压缩类指针可以显著减少内存占用，尤其是在大规模 Java 应用程序中。由于指针的大小减半，从而减少了指针在内存中的存储空间，同时也可能提高 CPU 缓存利用率，进而提高性能。
+
+### 适用范围
+
+- **大型 Java 应用程序**：如大数据处理、企业级应用等。
+- **内存密集型应用**：如需要大量类元数据的应用。
+
+### 总结
+
+压缩类指针（Compressed Class Pointers）是 JVM 的一个优化功能，通过压缩类元数据指针，可以减少内存占用并提高性能。在内存密集型和大规模应用中，这个功能尤为重要。启用压缩类指针的 JVM 参数为 `-XX:+UseCompressedClassPointers`。
+
+
+
+## 168.3 `-XX:+UseCompressedOops`（压缩对象指针）和 `-XX:+UseCompressedClassPointers`（压缩类指针）默认是开启的
+
+jdk8中使用JVM参数`-XX:+PrintFlagsFinal`打印到控制台的方式查看如下：
+
+![image-20240723194254121](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240723194254121.png)
+
+
+
+在大多数现代 JVM（例如 Oracle HotSpot 和 OpenJDK）中，`-XX:+UseCompressedOops`（压缩对象指针）和 `-XX:+UseCompressedClassPointers`（压缩类指针）默认是开启的。
+
+### 验证默认设置
+
+你可以通过查看 JVM 的默认参数来验证这些选项是否默认启用。可以使用以下命令：
+
+```sh
+java -XX:+PrintFlagsFinal -version | grep 'UseCompressed'
+```
+
+运行这个命令，你会看到类似下面的输出：
+
+```plaintext
+     bool UseCompressedClassPointers          = true                                {lp64_product}
+     bool UseCompressedOops                   = true                                {lp64_product}
+```
+
+这里的 `true` 表示这些选项默认是开启的。
+
+### 启用和禁用压缩指针
+
+- **启用**（默认情况下通常已启用）：
+  ```sh
+  java -XX:+UseCompressedOops -XX:+UseCompressedClassPointers -jar yourapp.jar
+  ```
+
+- **禁用**：
+  ```sh
+  java -XX:-UseCompressedOops -XX:-UseCompressedClassPointers -jar yourapp.jar
+  ```
+
+### 进一步解释
+
+- **UseCompressedOops**：用于启用或禁用压缩对象指针。
+- **UseCompressedClassPointers**：用于启用或禁用压缩类指针。
+
+在 64 位 JVM 中，默认情况下，这两个选项通常都是开启的，因为它们可以显著减少指针占用的内存空间，提高内存利用效率，并在许多情况下提升性能。
+
+### 总结
+
+默认情况下，压缩对象指针（UseCompressedOops）和压缩类指针（UseCompressedClassPointers）在现代 JVM 中通常是开启的。如果你需要确认或修改这些设置，可以使用相应的 JVM 参数。
+
+
 
 # 169 对象头大小的计算方式
 
@@ -3392,3 +3504,4 @@ Affect(row-cnt:9) cost in 3 ms.
  
 
 ## 177.5 
+
