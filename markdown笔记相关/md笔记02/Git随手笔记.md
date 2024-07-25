@@ -778,14 +778,13 @@ git remote remove origin
 1. **初始化 Git LFS**：如果您还没有在您的仓库中初始化 Git LFS，请运行：
 
    ```
-   bashCopy code
    git lfs install
    ```
-
+   
 2. **跟踪大文件**：使用 Git LFS 跟踪那些大文件。以您提到的文件为例：
 
    ```
-   bashCopy codegit lfs track "学习时的代码/springcloud/nacos/nacos-server-1.2.1/nacos/target/nacos-server.jar"
+   git lfs track "学习时的代码/springcloud/nacos/nacos-server-1.2.1/nacos/target/nacos-server.jar"
    git lfs track "学习时的代码/springcloud/nacos/nacos-server-1.2.1.zip"
    git lfs track "学习时的代码/javaweb/HTML/resources/video/命运石之门01.mp4"
    ```
@@ -811,7 +810,6 @@ git remote remove origin
 5. **推送到远程仓库**：强制推送您的更改到远程仓库。
 
    ```
-   bashCopy code
    git push mycode master --force
    ```
 
@@ -841,18 +839,17 @@ git remote remove origin
 2. **在仓库中初始化 Git LFS**：打开命令行工具，切换到您的 Git 仓库目录，然后运行：
 
    ```
-   bashCopy code
    git lfs install
    ```
-
-   这个命令会设置 Git LFS 的钩子（hooks）。这是在每个使用 Git LFS 的仓库中需要执行的步骤。
+   
+这个命令会设置 Git LFS 的钩子（hooks）。这是在每个使用 Git LFS 的仓库中需要执行的步骤。
 
 ### 配置文件跟踪
 
 1. **指定要跟踪的文件类型**：在仓库目录中，使用 `git lfs track` 命令来指定 Git LFS 应该跟踪哪些文件类型。例如，要跟踪所有 `.zip` 和 `.mp4` 文件，您可以执行：
 
    ```
-   bashCopy codegit lfs track "*.zip"
+   git lfs track "*.zip"
    git lfs track "*.mp4"
    ```
 
@@ -861,7 +858,7 @@ git remote remove origin
 2. **提交 `.gitattributes` 文件**：将更新后的 `.gitattributes` 文件提交到您的仓库：
 
    ```
-   bashCopy codegit add .gitattributes
+   git add .gitattributes
    git commit -m "Add LFS tracking for .zip and .mp4 files"
    ```
 
