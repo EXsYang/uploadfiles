@@ -1,8 +1,8 @@
 学习时的代码/springcloud/nacos/nacos-server-1.2.1/nacos/target/nacos-server.jar filter=lfs diff=lfs merge=lfs -text
 学习时的代码/springcloud/nacos/nacos-server-1.2.1.zip filter=lfs diff=lfs merge=lfs -text
 学习时的代码/javaweb/HTML/resources/video/命运石之门01.mp4 filter=lfs diff=lfs merge=lfs -text
-
 *.zip filter=lfs diff=lfs merge=lfs -text
 *.mp4 filter=lfs diff=lfs merge=lfs -text
 *.jar filter=lfs diff=lfs merge=lfs -text
 *.edf filter=lfs diff=lfs merge=lfs -text
+*.hprof filter=lfs diff=lfs merge=lfs -text
