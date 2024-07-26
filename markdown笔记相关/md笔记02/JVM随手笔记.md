@@ -4273,6 +4273,20 @@ Idea插件jprofiler：
 
 ![image-20240616100651657](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240616100651657.png)
 
+![image-20240726183147571](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240726183147571.png)
+
+![image-20240726183213065](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240726183213065.png)
+
+![image-20240726183411387](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240726183411387.png)
+
+![image-20240726183314815](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240726183314815.png)
+
+
+
+
+
+
+
 
 
 Minor GC主要是由Eden区域填满时触发的，而Survivor区是在此过程中被动参与的。下面是正确和详细的解释：
@@ -4291,11 +4305,37 @@ Minor GC主要是由Eden区域填满时触发的，而Survivor区是在此过程
    - 可由多种情况触发，如调用System.gc()、老年代或方法区（或元空间）空间不足。
    - 是所有GC类型中最耗时的，通常会造成较长时间的应用停顿。
 
-希望这次的解释更准确地反映了垃圾回收的机制。如有其他问题或需要进一步的解释，请随时告知！
 
 
 
 
+## 42.2 复习GC分类
+
+![image-20240726184708903](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240726184708903.png)
+
+
+
+
+
+![image-20240726184731635](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240726184731635.png)
+
+
+
+![image-20240726184746884](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240726184746884.png)
+
+
+
+
+
+
+
+
+
+## 42.3 16章-垃圾回收相关概念-STW（stop the world）
+
+![image-20240726182942067](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240726182942067.png)
+
+![image-20240726183042803](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240726183042803.png)
 
 
 
