@@ -212,12 +212,12 @@ git reset --hard 39128d1
 ~~~
 git init
 
-git remote add origin git@github.com:EXsYang/uploadfiles.git
+git remote add origin git@github.com:EXsYang/mycode_nolfs.git
 
 git remote add origin git@gitee.com:czbk_zhang_meng/git_test.git
 
 #使用 git remote set-url 命令来更新 origin  
-git remote set-url origin git@github.com:EXsYang/uploadfiles.git
+git remote set-url origin git@github.com:EXsYang/mycode_nolfs.git
 
 
 git remote -v
@@ -226,6 +226,7 @@ git status
 
 git add .
 
+git commi
 # --set-upstream 推送到远端的同时并且建立起和远端分支的关联关系。如果当前分支已经和远端分支关联，# 则可以省略分支名和远端名。
 git push --set-upstream origin main
 git push --set-upstream origin master
