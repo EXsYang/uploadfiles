@@ -1034,4 +1034,79 @@ Java 一直强调向下兼容性，即较新的 JDK 版本通常能够编译和�
 
 
 
-# 16 
+# 16 IDEA 运行程序报错：Lombok requires enabled annotation processing，Enable annotation processing
+
+
+
+![image-20240728182312849](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240728182312849.png)
+
+
+
+### 提取的文字
+
+```
+Lombok requires enabled annotation processing
+Enable annotation processing
+```
+
+### 解释
+
+这个错误信息表示 Lombok 需要启用注解处理才能正常工作。Lombok 是一个用于简化 Java 开发的库，通过注解生成代码，例如 `@Getter`、`@Setter` 等。这些注解需要注解处理器来处理，并生成相应的代码。
+
+### 解决方法
+
+你需要在你的 IDE 中启用注解处理。以下是如何在 IntelliJ IDEA 和 Eclipse 中启用注解处理的步骤：
+
+#### 在 IntelliJ IDEA 中启用注解处理
+
+1. **打开项目设置**：
+   - 点击顶部菜单中的 `File`。
+   - 选择 `Settings`（或按 `Ctrl+Alt+S` 快捷键）。
+
+2. **导航到注解处理设置**：
+   - 在设置窗口中，导航到 `Build, Execution, Deployment` -> `Compiler` -> `Annotation Processors`。
+
+3. **启用注解处理**：
+   - 勾选 `Enable annotation processing`。
+   - 确保选择了 `Obtain processors from project classpath` 选项。
+   - 你可以选择为整个项目启用注解处理，也可以单独为模块启用。
+
+4. **应用更改**：
+   - 点击 `Apply` 和 `OK` 以应用更改。
+
+5. **重新构建项目**：
+   - 点击顶部菜单中的 `Build`。
+   - 选择 `Rebuild Project`。
+
+#### 在 Eclipse 中启用注解处理
+
+1. **打开项目属性**：
+   - 右键点击你的项目。
+   - 选择 `Properties`。
+
+2. **导航到注解处理设置**：
+   - 在项目属性窗口中，导航到 `Java Compiler` -> `Annotation Processing`。
+
+3. **启用注解处理**：
+   - 勾选 `Enable annotation processing`。
+   - 确保勾选了 `Enable project specific settings`。
+
+4. **配置工厂路径**：
+   - 在 `Annotation Processing` 下，点击 `Factory Path`。
+   - 确保 Lombok.jar 文件在工厂路径中。
+
+5. **应用更改**：
+   - 点击 `Apply` 和 `OK` 以应用更改。
+
+6. **重新构建项目**：
+   - 点击顶部菜单中的 `Project`。
+   - 选择 `Clean`，然后选择 `Build Automatically`。
+
+通过上述步骤，你应该可以解决 Lombok 注解处理未启用的问题。如果问题仍然存在，确保你的 IDE 和 Lombok 插件版本都是最新的。
+
+
+
+
+
+
+

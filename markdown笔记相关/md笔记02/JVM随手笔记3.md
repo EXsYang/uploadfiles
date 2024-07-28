@@ -119,7 +119,249 @@ Linux 操作系统有 32 位和 64 位两种版本。可以通过 `uname -m`、`
 
 
 
-# 3 
+# 3 Windows64位32G内存操作系统上,在jdk8默认情况下堆大小为508M
+
+
+
+默认情况下jdk8分配的堆空间的大小为:  127 + 21 + 21 + 339 = 508M 【6:1:1】
+
+
+
+~~~bash
+yangda@F2 MINGW64 /d/Java_developer_tools/mycode/jvm/JVMdachang (main)
+$ jmap -heap 8384
+Attaching to process ID 8384, please wait...
+Debugger attached successfully.
+Server compiler detected.
+JVM version is 25.201-b09
+
+using thread-local object allocation.
+Parallel GC with 8 thread(s)
+
+Heap Configuration:
+   MinHeapFreeRatio         = 0
+   MaxHeapFreeRatio         = 100
+   MaxHeapSize              = 8497659904 (8104.0MB)
+   NewSize                  = 177209344 (169.0MB)
+   MaxNewSize               = 2832203776 (2701.0MB)
+   OldSize                  = 355467264 (339.0MB)
+   NewRatio                 = 2
+   SurvivorRatio            = 8
+   MetaspaceSize            = 21807104 (20.796875MB)
+   CompressedClassSpaceSize = 1073741824 (1024.0MB)
+   MaxMetaspaceSize         = 17592186044415 MB
+   G1HeapRegionSize         = 0 (0.0MB)
+
+Heap Usage:
+PS Young Generation
+Eden Space:
+   capacity = 133169152 (127.0MB)
+   used     = 10653592 (10.160057067871094MB)
+   free     = 122515560 (116.8399429321289MB)
+   8.00004493533157% used
+From Space:
+   capacity = 22020096 (21.0MB)
+   used     = 0 (0.0MB)
+   free     = 22020096 (21.0MB)
+   0.0% used
+To Space:
+   capacity = 22020096 (21.0MB)
+   used     = 0 (0.0MB)
+   free     = 22020096 (21.0MB)
+   0.0% used
+PS Old Generation
+   capacity = 355467264 (339.0MB)
+   used     = 0 (0.0MB)
+   free     = 355467264 (339.0MB)
+   0.0% used
+
+3151 interned Strings occupying 258840 bytes.
+
+
+~~~
+
+
+
+### 查看默认堆空间设置
+
+你可以使用以下命令来查看 JVM 启动时的默认堆空间设置：
+
+```
+java -XX:+PrintFlagsFinal -version | grep -i "heapsize"
+```
+
+这将列出 JVM 的所有默认堆大小设置，包括初始堆大小（`InitialHeapSize`）和最大堆大小（`MaxHeapSize`）。
+
+
+
+~~~bash
+/mycode/jvm/JVMdachang (main) $ java -XX:+PrintFlagsFinal -version | grep -i "heapsize"
+
+    uintx ErgoHeapSizeLimit                         = 0                                   {product}
+    uintx HeapSizePerGCThread                       = 87241520                            {product}
+    uintx InitialHeapSize                          := 532676608                           {product}
+    uintx LargePageHeapSizeThreshold                = 134217728                           {product}
+    uintx MaxHeapSize                              := 4202692608                          {product}
+java version "1.8.0_201"
+Java(TM) SE Runtime Environment (build 1.8.0_201-b09)
+Java HotSpot(TM) 64-Bit Server VM (build 25.201-b09, mixed mode)
+~~~
+
+根据输出结果：
+
+```plaintext
+    uintx ErgoHeapSizeLimit                         = 0                                   {product}
+    uintx HeapSizePerGCThread                       = 87241520                            {product}
+    uintx InitialHeapSize                          := 532676608                           {product}
+    uintx LargePageHeapSizeThreshold                = 134217728                           {product}
+    uintx MaxHeapSize                              := 4202692608                          {product}
+```
+
+这些是 JVM 默认配置的堆大小设置：
+
+- **InitialHeapSize**：`532676608` 字节（约 508 MB）
+- **MaxHeapSize**：`4202692608` 字节（约 4 GB）
+
+### 解释
+
+- **InitialHeapSize (初始堆大小)**：启动时分配的堆空间大小，约为 508 MB。
+- **MaxHeapSize (最大堆大小)**：JVM 能够使用的最大堆空间大小，约为 4 GB。
+
+### 你的系统信息
+
+- 物理内存：32 GB
+- JVM 版本：1.8.0_201
+
+### 默认堆大小的计算依据
+
+JVM 默认堆大小的计算通常基于以下标准：
+
+- 初始堆大小（`InitialHeapSize`）：通常设置为物理内存的 1/64，但不超过一定的上限。
+- 最大堆大小（`MaxHeapSize`）：通常设置为物理内存的 1/4，但有一个上限，具体数值视系统和 JVM 版本而定。
+
+在你的系统上，JVM 计算的初始堆大小和最大堆大小如下：
+
+- **初始堆大小**：约 508 MB
+- **最大堆大小**：约 4 GB
+
+### 如何调整堆大小
+
+如果需要调整堆大小，可以在启动 Java 应用程序时通过 `-Xms` 和 `-Xmx` 参数来指定。例如：
+
+```bash
+java -Xms1g -Xmx8g -jar your-application.jar
+```
+
+以上命令将初始堆大小设置为 1 GB，最大堆大小设置为 8 GB。
+
+通过调整这些参数，你可以根据应用程序的需求优化内存使用。
+
+
+
+
+
+
+
+### 确认 JVM 堆空间设置
+
+要确认你的 JVM 堆空间设置，可以运行以下命令并检查输出：
+
+```
+java -XX:+PrintFlagsFinal -version | grep -Ei "InitialHeapSize|MaxHeapSize"
+```
+
+例如，在我的系统上，输出可能如下所示：
+
+```
+uintx InitialHeapSize                          := 268435456       {product}
+uintx MaxHeapSize                              := 4294967296      {product}
+```
+
+### 如何解释结果
+
+- **InitialHeapSize**：初始堆大小。通常为物理内存的 1/64。
+- **MaxHeapSize**：最大堆大小。通常为物理内存的 1/4，但有上限。
+
+根据你的结果，如果默认堆空间大小为 508MB，那么你的 JVM 可能使用了一些自适应的策略来确定合适的堆大小。堆空间大小可以通过 `-Xms` 和 `-Xmx` 参数来调整。例如：
+
+```
+java -Xms512m -Xmx4g -jar your-application.jar
+```
+
+这样可以设置初始堆空间大小为 512MB，最大堆空间大小为 4GB。
+
+通过这种方式，你可以更好地管理你的 Java 应用程序的内存使用情况。
+
+
+
+# 4 为什么我的32 GB内存的计算机上的 JVM 初始堆大小是 508 MB，最大堆大小是 4 GB？而不是 512 MB和8G?
+
+### 注意：默认jdk8 JVM 使用 Parallel垃圾回收器
+
+
+
+**默认情况下，JVM 的初始堆大小通常设置为物理内存的 1/64，最大堆大小的默认值通常设置为物理内存的 1/4。**
+
+你的计算机具有 32 GB 物理内存，根据默认的 JVM 内存分配策略，初始堆大小和最大堆大小的具体数值可能受到多个因素的影响，包括操作系统、JVM 实现和版本等。以下是对这些因素的更详细解释：
+
+### 初始堆大小计算
+
+**默认情况下，JVM 的初始堆大小通常设置为物理内存的 1/64。**但具体数值也可能受到 JVM 内部策略和操作系统的限制。即使有一个大致的默认值，实际计算过程中 JVM 可能会根据不同的硬件和软件环境调整这个数值。
+
+对于 32 GB 的物理内存，物理内存的 1/64 应该是：
+
+ 512  MB
+
+### 具体值为 508 MB 的原因
+
+你的 JVM 初始堆大小显示为 532676608 字节，即约 508 MB。这一数值略低于理论计算的 512 MB，可能是因为 JVM 内部对内存分配进行了一些调整或优化，以确保在各种环境下的稳定运行。
+
+### 最大堆大小计算
+
+**最大堆大小的默认值通常设置为物理内存的 1/4**，但在某些情况下可能会被操作系统或 JVM 实现的其他限制调整。
+
+对于 32 GB 的物理内存，物理内存的 1/4 应该是：
+
+8GB
+
+但是，实际显示为约 4 GB（4202692608 字节）。这可能是由于以下原因之一：
+
+1. **操作系统限制**：某些操作系统在内存管理上可能对单个进程的内存使用量施加了限制。
+2. **JVM 实现策略**：JVM 可能基于其内部策略，设置了一个合理的默认最大堆大小上限，以防止应用程序占用过多的内存资源。
+3. **32 位和 64 位 JVM 的差异**：虽然你使用的是 64 位 JVM，但某些情况下，JVM 可能基于兼容性或稳定性考虑，设置了较低的默认最大堆大小。
+
+### 验证和调整堆大小
+
+如果需要验证和调整 JVM 的堆大小，你可以使用 `-Xms` 和 `-Xmx` 参数。例如：
+
+```bash
+java -Xms1g -Xmx8g -jar your-application.jar
+```
+
+这将显式设置初始堆大小为 1 GB，最大堆大小为 8 GB，避免默认策略的限制。
+
+### 总结
+
+- **初始堆大小**：尽管理论上 32 GB 内存的 1/64 应该是 512 MB，JVM 内部的调整和优化可能导致实际数值为 508 MB。
+- **最大堆大小**：默认最大堆大小为 4 GB（而不是理论上的 8 GB），可能是操作系统限制或 JVM 实现策略导致的。
+
+这些默认值旨在提供合理的内存管理策略，以确保 JVM 和应用程序在不同环境下的稳定运行。
+
+
+
+# 5 如果使用CMS垃圾回收器则：初始堆大小为 508 MB，最大堆大小为 8 GB。
+
+
+
+你的 JVM 正在使用 CMS 垃圾回收器，并且默认禁用了自适应大小调整策略。
+
+初始堆大小为 508 MB，最大堆大小为 8 GB。
+
+
+
+
+
+
 
 
 
