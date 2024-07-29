@@ -661,4 +661,233 @@ public class MathGame {
 
 
 
-# 3 
+# 3 `java -cp xx.jar xx.xx.xx.XX` 启动命令
+
+`java -jar xx.jar`命令启动的jar包启动类是已经确定好的(即约定好的)。
+
+而 `java -cp xx.jar xx.xx.xx.XX` 启动命令，则是自己指定一个启动类！
+
+指定xx.jar包中具体的某一个类来启动jar包程序。
+
+![image-20240729193524928](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240729193524928.png)
+
+以下是这两种启动命令的详细解释：
+
+### `java -jar xx.jar`
+这个命令用于运行一个可执行的JAR文件。JAR文件中的启动类是预先在JAR的 `META-INF/MANIFEST.MF` 文件中指定好的。具体来说，`MANIFEST.MF` 文件中会有一行 `Main-Class` ，指示JVM要执行哪个类的 `main` 方法。示例如下：
+
+```
+Manifest-Version: 1.0
+Main-Class: com.example.Main
+```
+
+在这种情况下，当你执行 `java -jar xx.jar` 时，JVM 会找到 `META-INF/MANIFEST.MF` 文件中的 `Main-Class` ，并运行该类的 `main` 方法。
+
+### `java -cp xx.jar xx.xx.xx.XX`
+这个命令允许你手动指定要运行的类。 `-cp` 选项（或 `-classpath`）用于指定JAR文件或目录作为类路径，然后你可以指定要运行的类（包含包名）。例如：
+
+```shell
+java -cp xx.jar com.example.Main
+```
+
+在这种情况下，JVM不会去查找 `META-INF/MANIFEST.MF` 文件中的 `Main-Class` 。相反，它会直接运行你在命令行中指定的类 `com.example.Main` 的 `main` 方法。
+
+### 总结
+- **`java -jar xx.jar`**：启动类在JAR的 `META-INF/MANIFEST.MF` 文件中指定，不能在命令行中覆盖。
+- **`java -cp xx.jar xx.xx.xx.XX`**：可以在命令行中指定要运行的类，灵活性更高。
+
+这两种启动方式在不同的场景下各有优劣：
+- 使用 `-jar` 更简单直观，适用于已经打包好并指定了启动类的JAR文件。
+- 使用 `-cp` 更灵活，适用于需要手动指定或测试不同启动类的情况。
+
+
+
+# 4 虚方法表
+
+字节码中的虚方法表（Virtual Method Table，简称VMT或vtable）是Java中的一个数据结构，用于支持运行时的多态性和动态方法分派。具体来说，它是每个类的一个数组或表格，用于保存该类的所有虚方法（即可以被子类重写的方法）的地址。
+
+### 虚方法表的结构和作用
+
+#### 结构
+每个类都有自己的虚方法表，虚方法表包含该类及其所有父类中可被重写的实例方法的指针。这些指针指向实际的方法实现。在Java中，虚方法表的存在和使用是由JVM（Java Virtual Machine）来管理的，并不是直接在Java代码中可见。
+
+#### 作用
+虚方法表的主要作用是支持运行时的动态方法分派。动态方法分派是在运行时根据对象的实际类型来决定调用哪个具体的实现方法。Java使用虚方法表来实现这一点，确保了方法调用的效率。
+
+### 虚方法表的工作原理
+1. **类加载时创建虚方法表**：当一个类被加载时，JVM会为该类创建虚方法表。这个表包含该类及其所有父类中的所有虚方法的地址。
+   
+2. **方法调用时查找虚方法表**：当调用一个方法时，JVM会检查该方法是否是一个虚方法。如果是虚方法，JVM会通过对象的类型信息找到相应的虚方法表，并从表中获取到实际的方法实现地址。
+
+3. **动态分派**：通过虚方法表，JVM可以在运行时动态地分派方法调用到实际的实现方法。这确保了多态性的正确实现，即使在继承链上有多个类重写了同一个方法。
+
+### 例子
+假设有以下类结构：
+
+```java
+class Parent {
+    void sayHello() {
+        System.out.println("Hello from Parent");
+    }
+}
+
+class Child extends Parent {
+    @Override
+    void sayHello() {
+        System.out.println("Hello from Child");
+    }
+}
+```
+
+在这个例子中，`sayHello` 方法是一个虚方法。JVM在加载 `Parent` 类时，会创建一个包含 `sayHello` 方法地址的虚方法表。然后在加载 `Child` 类时，会创建一个新的虚方法表，这个表包含 `Child` 类中 `sayHello` 方法的地址。这样，当调用 `Child` 对象的 `sayHello` 方法时，JVM会通过虚方法表找到 `Child` 类的实现，并调用该实现。
+
+### 总结
+虚方法表是JVM用于实现动态方法分派和多态性的重要机制。它通过在运行时查找方法实现，确保了方法调用的动态性和灵活性。这种机制在Java中是透明的，开发者不需要直接与虚方法表交互，但它是理解Java多态性和方法调用的重要概念。
+
+
+
+## 4.1 虚方法表的作用
+
+虚方法表（Virtual Method Table，简称vtable）在面向对象编程中，尤其是在Java中，扮演着非常重要的角色。它的主要作用包括：
+
+### 1. 实现动态方法分派（多态性）
+虚方法表是实现动态方法分派（即多态性）的关键机制。在面向对象编程中，多态性允许子类对象在父类对象的上下文中被使用，并且调用的方法在运行时被确定。这种能力使得代码更加灵活和可扩展。
+
+例如，当一个父类引用指向一个子类对象时，通过虚方法表可以调用子类的方法实现，而不是父类的方法实现：
+
+```java
+Parent obj = new Child();
+obj.sayHello(); // 调用的是Child类的sayHello方法，而不是Parent类的sayHello方法
+```
+
+### 2. 提高方法调用的效率
+虚方法表使得方法调用更高效。通过虚方法表，方法调用可以通过索引快速找到实际的方法实现地址，而不是每次调用时都进行复杂的查找操作。这个表在类加载时建立并固定，从而在运行时减少了方法查找的开销。
+
+### 3. 支持继承和方法重写
+在面向对象编程中，子类可以继承父类的方法，并对其进行重写。虚方法表支持这种继承关系，并确保子类的重写方法在运行时被正确调用。每个类都有一个虚方法表，包含了类及其父类中所有虚方法的地址。当子类重写父类的方法时，子类的虚方法表会更新为子类方法的地址。
+
+### 4. 确保接口实现的正确性
+在Java中，接口方法也是通过虚方法表来实现的。一个类实现了一个接口，就必须实现该接口中的所有方法。虚方法表保证了在调用接口方法时，实际执行的是实现类中的方法。
+
+### 5. 支持抽象类和抽象方法
+抽象类中可以包含抽象方法，这些方法没有具体实现，必须由子类提供实现。虚方法表确保了当调用这些方法时，能够找到子类提供的具体实现。
+
+### 总结
+虚方法表的主要作用可以概括为以下几点：
+- **实现多态性**：支持运行时的动态方法分派。
+- **提高效率**：通过索引快速找到方法实现地址，减少查找开销。
+- **支持继承和方法重写**：确保子类重写方法在运行时被正确调用。
+- **保证接口实现**：确保接口方法在实现类中被正确执行。
+- **支持抽象类和抽象方法**：确保抽象方法在子类中被实现。
+
+虚方法表是JVM在背后实现这些面向对象特性的关键数据结构，使得Java程序能够高效、正确地执行动态方法调用。
+
+## 4.2 虚方法表通过索引直接访问方法实现，提高了动态方法调用的效率举例
+
+虚方法表通过使用索引直接找到方法实现地址，大大提高了方法调用的效率。以下是一个详细的解释和示例，说明虚方法表如何工作以及如何提高效率的。
+
+### 虚方法表工作原理示例
+
+#### 类和方法定义
+
+假设我们有一个简单的类继承结构：
+
+```java
+class Parent {
+    void sayHello() {
+        System.out.println("Hello from Parent");
+    }
+}
+
+class Child extends Parent {
+    @Override
+    void sayHello() {
+        System.out.println("Hello from Child");
+    }
+
+    void sayGoodbye() {
+        System.out.println("Goodbye from Child");
+    }
+}
+```
+
+#### 虚方法表结构
+
+当这些类被加载时，JVM会为每个类创建虚方法表。虚方法表包含该类的所有虚方法的地址。
+
+对于`Parent`类，其虚方法表可能如下所示：
+
+| 索引 | 方法            |
+| ---- | --------------- |
+| 0    | Parent.sayHello |
+
+对于`Child`类，由于重写了`sayHello`方法并新增了`sayGoodbye`方法，其虚方法表如下：
+
+| 索引 | 方法             |
+| ---- | ---------------- |
+| 0    | Child.sayHello   |
+| 1    | Child.sayGoodbye |
+
+#### 方法调用过程
+
+当我们在运行时调用方法时，例如：
+
+```java
+Parent obj = new Child();
+obj.sayHello();
+```
+
+JVM会执行以下步骤：
+
+1. **确定对象的实际类型**：在这个例子中，`obj`的实际类型是`Child`。
+2. **查找虚方法表**：JVM通过对象的类型找到`Child`类的虚方法表。
+3. **使用索引查找方法实现**：`sayHello`方法在虚方法表中的索引是0，因此JVM通过索引0直接找到`Child.sayHello`方法的实现。
+4. **调用方法**：执行找到的方法实现。
+
+#### 提高效率的原因
+
+通过使用虚方法表，JVM避免了在继承层次结构中逐层查找方法实现的复杂过程。相反，它使用索引直接访问方法实现，类似于数组查找。这大大减少了方法调用的时间开销。
+
+### 示例代码
+
+以下是一个简单的代码示例，展示了方法调用如何使用虚方法表提高效率：
+
+```java
+class Parent {
+    void sayHello() {
+        System.out.println("Hello from Parent");
+    }
+}
+
+class Child extends Parent {
+    @Override
+    void sayHello() {
+        System.out.println("Hello from Child");
+    }
+
+    void sayGoodbye() {
+        System.out.println("Goodbye from Child");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Parent obj = new Child();
+        obj.sayHello(); // 调用的是Child类的sayHello方法
+    }
+}
+```
+
+在运行时，调用`obj.sayHello()`时，JVM会：
+
+1. 通过`obj`的实际类型`Child`找到其虚方法表。
+2. 通过索引0找到`Child.sayHello`方法的地址。
+3. 直接调用`Child.sayHello`方法。
+
+### 结论
+
+虚方法表通过索引直接访问方法实现，提高了动态方法调用的效率。这种机制避免了在继承层次结构中逐层查找方法实现的复杂过程，从而减少了运行时的开销。这也是为什么虚方法表在面向对象编程语言中是实现多态性的重要机制。
+
+
+
+# 5 
