@@ -2265,6 +2265,24 @@ hello.txt  info.txt  jack  milan  mycal  mydate2.txt  mydate3.txt  mydate.txt  m
 
 
 
+### 13.4 `jar -xvf xx.jar` 。Java中的jar解压命令
+
+#### 解压jar包的指令 `jar -xvf xx.jar` 
+
+
+
+
+
+![image-20240729185811986](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240729185811986.png)
+
+
+
+![image-20240729190007298](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240729190007298.png)
+
+
+
+![image-20240729190349759](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240729190349759.png)
+
 ---
 
 ## 

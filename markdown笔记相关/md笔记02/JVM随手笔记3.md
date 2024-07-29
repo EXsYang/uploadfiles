@@ -474,3 +474,191 @@ JMeter中的**响应时间**是指从请求发出到接收到响应所花费的�
 
 
 ![image-20240728225822263](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240728225822263.png)
+
+
+
+---
+
+
+
+# 00
+
+# 00
+
+# 00
+
+# 00
+
+# 00 黑马程序员JVM笔记如下：
+
+# 1 `jar -xvf xx.jar` 解压jar包的指令
+
+
+
+![image-20240729185811986](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240729185811986.png)
+
+
+
+![image-20240729190007298](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240729190007298.png)
+
+
+
+![image-20240729190349759](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240729190349759.png)
+
+
+
+
+
+# 2 arthas 命令
+
+## 2.1 `dump` 已加载类的 bytecode 到特定目录
+
+
+
+将运行中的程序的.class字节码文件保存到指定目录
+
+
+
+### 参数说明
+
+|              参数名称 | 参数说明                                   |
+| --------------------: | :----------------------------------------- |
+|       *class-pattern* | 类名表达式匹配                             |
+|                `[c:]` | 类所属 ClassLoader 的 hashcode             |
+| `[classLoaderClass:]` | 指定执行表达式的 ClassLoader 的 class name |
+|                `[d:]` | 设置类文件的目标目录                       |
+|                   [E] | 开启正则表达式匹配，默认为通配符匹配       |
+
+### 使用参考
+
+
+
+```bash
+$ dump java.lang.String
+ HASHCODE  CLASSLOADER  LOCATION
+ null                   /Users/admin/logs/arthas/classdump/java/lang/String.class
+Affect(row-cnt:1) cost in 119 ms.
+```
+
+
+
+```bash
+$ dump demo.*
+ HASHCODE  CLASSLOADER                                    LOCATION
+ 3d4eac69  +-sun.misc.Launcher$AppClassLoader@3d4eac69    /Users/admin/logs/arthas/classdump/sun.misc.Launcher$AppClassLoader-3d4eac69/demo/MathGame.class
+             +-sun.misc.Launcher$ExtClassLoader@66350f69
+Affect(row-cnt:1) cost in 39 ms.
+```
+
+
+
+指定要保存的目录 `-d /tmp/output`
+
+```bash
+$ dump -d /tmp/output java.lang.String
+ HASHCODE  CLASSLOADER  LOCATION
+ null                   /tmp/output/java/lang/String.class
+Affect(row-cnt:1) cost in 138 ms.
+```
+
+
+
+
+
+
+
+
+
+## 2.2 `jad`反编译指定已加载类的源码
+
+`jad` 命令将 JVM 中实际运行的 class 的 byte code 反编译成 java 代码，便于你理解业务逻辑；如需批量下载指定包的目录的 class 字节码可以参考 [dump](https://arthas.aliyun.com/doc/dump.html)。
+
+
+
+`jad` 命令将 JVM 中实际运行的 class 的 byte code 反编译成 java 代码，便于你理解业务逻辑；如需批量下载指定包的目录的 class 字节码可以参考 [dump](https://arthas.aliyun.com/doc/dump.html)。
+
+- 在 Arthas Console 上，反编译出来的源码是带语法高亮的，阅读更方便
+- 当然，反编译出来的 java 代码可能会存在语法错误，但不影响你进行阅读理解
+
+### [#](https://arthas.aliyun.com/doc/jad.html#参数说明)参数说明
+
+|              参数名称 | 参数说明                                   |
+| --------------------: | :----------------------------------------- |
+|       *class-pattern* | 类名表达式匹配                             |
+|                `[c:]` | 类所属 ClassLoader 的 hashcode             |
+| `[classLoaderClass:]` | 指定执行表达式的 ClassLoader 的 class name |
+|                   [E] | 开启正则表达式匹配，默认为通配符匹配       |
+
+### [#](https://arthas.aliyun.com/doc/jad.html#使用参考)使用参考
+
+### [#](https://arthas.aliyun.com/doc/jad.html#反编译java-lang-string)反编译`java.lang.String`
+
+
+
+```java
+$ jad java.lang.String
+
+ClassLoader:
+
+Location:
+
+
+        /*
+         * Decompiled with CFR.
+         */
+        package java.lang;
+
+        import java.io.ObjectStreamField;
+        import java.io.Serializable;
+...
+        public final class String
+        implements Serializable,
+        Comparable<String>,
+        CharSequence {
+            private final char[] value;
+            private int hash;
+            private static final long serialVersionUID = -6849794470754667710L;
+            private static final ObjectStreamField[] serialPersistentFields = new ObjectStreamField[0];
+            public static final Comparator<String> CASE_INSENSITIVE_ORDER = new CaseInsensitiveComparator();
+...
+            public String(byte[] byArray, int n, int n2, Charset charset) {
+/*460*/         if (charset == null) {
+                    throw new NullPointerException("charset");
+                }
+/*462*/         String.checkBounds(byArray, n, n2);
+/*463*/         this.value = StringCoding.decode(charset, byArray, n, n2);
+            }
+...
+```
+
+### [#](https://arthas.aliyun.com/doc/jad.html#反编译时只显示源代码)反编译时只显示源代码
+
+默认情况下，反编译结果里会带有`ClassLoader`信息，通过`--source-only`选项，可以只打印源代码。方便和[mc](https://arthas.aliyun.com/doc/mc.html)/[retransform](https://arthas.aliyun.com/doc/retransform.html)命令结合使用。
+
+
+
+```java
+$ jad --source-only demo.MathGame
+/*
+ * Decompiled with CFR 0_132.
+ */
+package demo;
+
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
+public class MathGame {
+    private static Random random = new Random();
+    public int illegalArgumentCount = 0;
+...
+```
+
+
+
+
+
+# 3 
