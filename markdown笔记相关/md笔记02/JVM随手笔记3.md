@@ -669,6 +669,10 @@ public class MathGame {
 
 指定xx.jar包中具体的某一个类来启动jar包程序。
 
+如：`java -cp sa-jdi.jar sun.jvm.hotspot.`
+
+
+
 ![image-20240729193524928](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240729193524928.png)
 
 以下是这两种启动命令的详细解释：
