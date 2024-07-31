@@ -577,7 +577,7 @@ public class Test {
 
 # 13 在maven-Java项目 maven_A中创建同级的 maven_D的方式
 
-
+![image-20240731215352177](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240731215352177.png)
 
 ![image-20240417194627807](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240417194627807.png)
 
@@ -608,6 +608,22 @@ public class Test {
 
 
 ![image-20240417195230474](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240417195230474.png)
+
+
+
+
+
+# 12.1 idea2024.1中创建Maven-Java项目的方式
+
+![image-20240731215352177](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240731215352177.png)
+
+
+
+### idea2024.1中创建Maven-Java项目的方式如下所示：
+
+![image-20240731215025916](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240731215025916.png)
+
+
 
 
 
