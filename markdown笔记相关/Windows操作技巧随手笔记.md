@@ -26,6 +26,44 @@
 
    - 这里 `/PID` 表示指定进程ID，`/F` 表示强制终止进程。
 
+
+
+在`taskkill`命令中，`/IM`参数代表"Image Name"，用于指定进程的名称（通常是可执行文件的名称，例如`notepad.exe`）。
+
+完整的使用说明如下：
+
+- `/IM <Image Name>`: 按进程的名称来杀死进程。
+
+例如：
+```shell
+taskkill /IM notepad.exe
+```
+这个命令将杀死所有名称为`notepad.exe`的进程。
+
+为了方便，以下是几个常见的`taskkill`命令示例：
+
+1. 按进程ID杀死进程：
+   ```shell
+   taskkill /PID 1234
+   ```
+
+2. 按进程名称杀死进程：
+   ```shell
+   taskkill /IM notepad.exe
+   ```
+
+3. 强制结束进程（即使进程没有响应）：
+   ```shell
+   taskkill /F /PID 1234
+   ```
+
+4. 强制按名称结束进程：
+   ```shell
+   taskkill /F /IM notepad.exe
+   ```
+
+这样你可以更灵活地控制和管理Windows系统中的进程。
+
 ### 使用 PowerShell
 
 1. **打开 PowerShell**：
@@ -198,3 +236,125 @@
 # 7 cmd命令行技巧
 
 ## 7.1 `cls` 清屏指令
+
+
+
+# 8 在 Windows 的 MINGW64 环境下，需要使用 Windows 特定的命令来查找和杀死进程。
+
+![image-20240731100817994](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240731100817994.png)
+
+看起来你在尝试使用 `ps` 命令来查找使用端口的进程时遇到了问题。在 Windows 的 MINGW64 环境下，可能需要使用 Windows 特定的命令来查找和杀死进程。
+
+你可以使用以下 Windows 特定的命令来查找和停止占用端口的进程：
+
+### 查找占用端口的进程
+
+1. 使用 `netstat` 命令来查找占用特定端口的进程ID（PID）：
+   ```shell
+   netstat -ano | findstr :3658
+   ```
+   这将显示占用端口3658的进程的PID。
+
+### 杀死占用端口的进程
+
+2. 使用 `taskkill` 命令来杀死进程：
+   ```shell
+   taskkill /PID <PID> /F
+   ```
+   将 `<PID>` 替换为从 `netstat` 命令中获取的进程ID。
+
+### 完整操作步骤示例
+
+1. 查找占用端口3658的进程：
+   ```shell
+   netstat -ano | findstr :3658
+   ```
+   输出示例：
+   ```
+   TCP    0.0.0.0:3658           0.0.0.0:0              LISTENING       7952
+   ```
+
+2. 杀死占用端口的进程：
+   ```shell
+   taskkill /PID 7952 /F
+   ```
+
+
+
+![image-20240731101624991](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240731101624991.png)
+
+通过这些步骤，你可以查找到并终止占用端口的进程，从而解决端口冲突问题。
+
+
+
+# 9 Windows 的 MINGW64 环境和 Linux 环境的不同之处
+
+
+
+#### MINGW64 环境简介
+
+Minimalist  /ˈmɪnɪməlɪst/ 极简主义者. 极简抽象艺术的，极简抽象风格的；最低必须限度的
+
+MINGW64 (Minimalist GNU for Windows) 是一个软件开发环境，旨在提供一套轻量级的GNU工具集，用于在Windows平台上编译和运行程序。它与MSYS2（一个包含了MINGW64工具链的独立项目）一起使用，提供类似于Linux的命令行体验。Git for Windows通常包含Git Bash，这是一个基于MINGW64的命令行界面，提供了一些基本的Linux命令。
+
+#### 主要区别
+
+1. **底层操作系统**
+   - **Linux**：基于Linux内核，是一个完整的操作系统，拥有自己的文件系统、进程管理、网络堆栈等。
+   - **MINGW64**：运行在Windows操作系统上，只是一个模拟Linux环境的工具集，依赖于Windows的内核和系统服务。
+
+2. **命令兼容性**
+   - **Linux**：几乎所有的Linux命令行工具都可以使用，包括系统级命令和服务管理工具。
+   - **MINGW64**：提供了一部分GNU工具的移植版本，并不包含所有的Linux命令，一些复杂的命令可能无法正常工作或行为不同。
+
+3. **文件系统**
+   - **Linux**：使用如ext4、btrfs等文件系统，有自己的一套目录结构（如 `/etc`, `/usr`, `/var` 等）。
+   - **MINGW64**：运行在Windows的NTFS文件系统上，目录结构也与Windows兼容（如 `C:\Program Files`, `C:\Windows` 等）。
+
+4. **进程管理**
+   - **Linux**：使用 `ps`, `top`, `kill` 等命令管理进程，可以直接与Linux内核进行交互。
+   - **MINGW64**：虽然提供了 `ps` 等类似命令，但这些命令是经过适配的，实际上仍然依赖于Windows的进程管理机制（如 `tasklist`, `taskkill`）。
+
+5. **包管理**
+   - **Linux**：使用包管理器（如 `apt`, `yum`, `pacman` 等）来安装和管理软件包。
+   - **MINGW64**：使用MSYS2提供的 `pacman` 来安装和管理基于MINGW的包，但这些包是为Windows环境定制的。
+
+6. **系统服务**
+   - **Linux**：可以管理和配置系统服务（如 `systemd`, `init.d` 等）。
+   - **MINGW64**：无法直接管理Windows的系统服务，需要使用Windows的服务管理工具（如 `sc`, `services.msc`）。
+
+### 实际应用中的例子
+
+#### 查找并终止进程
+
+- **在Linux中**：
+  ```bash
+  ps -aux | grep <process_name>
+  kill -9 <PID>
+  ```
+
+- **在MINGW64中**：
+  ```bash
+  netstat -ano | grep :<port>
+  taskkill //PID <PID> //F
+  ```
+
+#### 包管理
+
+- **在Linux中**：
+  ```bash
+  sudo apt update
+  sudo apt install <package_name>
+  ```
+
+- **在MINGW64中**：
+  ```bash
+  pacman -Sy
+  pacman -S <package_name>
+  ```
+
+### 总结
+虽然MINGW64为Windows用户提供了一个类似于Linux的命令行环境，但它并不能完全替代Linux。许多系统级操作仍然需要使用Windows特定的命令和工具。了解这些差异可以帮助你在需要使用系统命令时选择正确的方法和工具。
+
+
+

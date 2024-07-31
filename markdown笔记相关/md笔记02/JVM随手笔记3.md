@@ -659,9 +659,703 @@ public class MathGame {
 
 
 
+## 2.3 `classloader`指令
 
 
-# 3 `java -cp xx.jar xx.xx.xx.XX` 启动命令
+
+> 提示
+>
+> 查看 classloader 的继承树，urls，类加载信息
+
+
+
+`classloader` 命令将 JVM 中所有的 classloader 的信息统计出来，并可以展示继承树，urls 等。
+
+可以让指定的 classloader 去 getResources，打印出所有查找到的 resources 的 url。对于`ResourceNotFoundException`比较有用。
+
+### [#](https://arthas.aliyun.com/doc/classloader.html#参数说明)参数说明
+
+|              参数名称 | 参数说明                                   |
+| --------------------: | :----------------------------------------- |
+|                   [l] | 按类加载实例进行统计                       |
+|                   [t] | 打印所有 ClassLoader 的继承树              |
+|                   [a] | 列出所有 ClassLoader 加载的类，请谨慎使用  |
+|                `[c:]` | ClassLoader 的 hashcode                    |
+| `[classLoaderClass:]` | 指定执行表达式的 ClassLoader 的 class name |
+|             `[c: r:]` | 用 ClassLoader 去查找 resource             |
+|          `[c: load:]` | 用 ClassLoader 去加载指定的类              |
+
+### [#](https://arthas.aliyun.com/doc/classloader.html#使用参考)使用参考
+
+![image-20240731091612362](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240731091612362.png)
+
+常用指令：
+
+`classloader -l` **按类加载实例进行统计。**该指令也可以查看类加载器的hash码
+
+`classloader -c hashcode`可以**查看 URLClassLoader 实际的 urls**(即加载的路径，即加载了哪些jar包)。
+
+在Windows下推荐使用`Windows PowerShell`操作Arthas
+
+![image-20240731112437278](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240731112437278.png)
+
+![image-20240731111005249](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240731111005249.png)
+
+
+
+
+
+### 按类加载实例查看统计信息
+
+
+
+```bash
+$ classloader -l
+ name                                                loadedCount  hash      parent
+ BootstrapClassLoader                                1861         null      null
+ com.taobao.arthas.agent.ArthasClassloader@68b31f0a  2115         68b31f0a  sun.misc.Launcher$ExtClassLoader@66350f69
+ sun.misc.Launcher$AppClassLoader@3d4eac69           4            3d4eac69  sun.misc.Launcher$ExtClassLoader@66350f69
+ sun.misc.Launcher$ExtClassLoader@66350f69           1            66350f69  null
+Affect(row-cnt:4) cost in 2 ms.
+```
+
+### [#](https://arthas.aliyun.com/doc/classloader.html#查看-classloader-的继承树)查看 ClassLoader 的继承树
+
+
+
+```bash
+$ classloader -t
++-BootstrapClassLoader
++-sun.misc.Launcher$ExtClassLoader@66350f69
+  +-com.taobao.arthas.agent.ArthasClassloader@68b31f0a
+  +-sun.misc.Launcher$AppClassLoader@3d4eac69
+Affect(row-cnt:4) cost in 3 ms.
+```
+
+### [#](https://arthas.aliyun.com/doc/classloader.html#查看-urlclassloader-实际的-urls)查看 URLClassLoader 实际的 urls
+
+```bash
+$ classloader -c 3d4eac69
+file:/private/tmp/math-game.jar
+file:/Users/hengyunabc/.arthas/lib/3.0.5/arthas/arthas-agent.jar
+
+Affect(row-cnt:9) cost in 3 ms.
+```
+
+*注意* hashcode 是变化的，需要先查看当前的 ClassLoader 信息，提取对应 ClassLoader 的 hashcode。
+
+对于只有唯一实例的 ClassLoader 可以通过 class name 指定，使用起来更加方便：
+
+
+
+```bash
+$ classloader --classLoaderClass sun.misc.Launcher$AppClassLoader
+file:/private/tmp/math-game.jar
+file:/Users/hengyunabc/.arthas/lib/3.0.5/arthas/arthas-agent.jar
+
+Affect(row-cnt:9) cost in 3 ms.
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+## 2.4 `dashboard`指令
+
+> 提示
+>
+> 当前系统的实时数据面板，按 ctrl+c 退出。
+
+
+
+当运行在 Ali-tomcat 时，会显示当前 tomcat 的实时信息，如 HTTP 请求的 qps, rt, 错误数, 线程池信息等等。
+
+### [#](https://arthas.aliyun.com/doc/dashboard.html#参数说明)参数说明
+
+| 参数名称 | 参数说明                                 |
+| -------: | :--------------------------------------- |
+|     [i:] | 刷新实时数据的时间间隔 (ms)，默认 5000ms |
+|     [n:] | 刷新实时数据的次数                       |
+
+### [#](https://arthas.aliyun.com/doc/dashboard.html#使用参考)使用参考
+
+
+
+```text
+$ dashboard
+ID   NAME                           GROUP           PRIORITY   STATE     %CPU      DELTA_TIME TIME      INTERRUPTE DAEMON
+-1   C2 CompilerThread0             -               -1         -         1.55      0.077      0:8.684   false      true
+53   Timer-for-arthas-dashboard-07b system          5          RUNNABLE  0.08      0.004      0:0.004   false      true
+22   scheduling-1                   main            5          TIMED_WAI 0.06      0.003      0:0.287   false      false
+-1   C1 CompilerThread0             -               -1         -         0.06      0.003      0:2.171   false      true
+-1   VM Periodic Task Thread        -               -1         -         0.03      0.001      0:0.092   false      true
+49   arthas-NettyHttpTelnetBootstra system          5          RUNNABLE  0.02      0.001      0:0.156   false      true
+16   Catalina-utility-1             main            1          TIMED_WAI 0.0       0.000      0:0.029   false      false
+-1   G1 Young RemSet Sampling       -               -1         -         0.0       0.000      0:0.019   false      true
+17   Catalina-utility-2             main            1          WAITING   0.0       0.000      0:0.025   false      false
+34   http-nio-8080-ClientPoller     main            5          RUNNABLE  0.0       0.000      0:0.016   false      true
+23   http-nio-8080-BlockPoller      main            5          RUNNABLE  0.0       0.000      0:0.011   false      true
+-1   VM Thread                      -               -1         -         0.0       0.000      0:0.032   false      true
+-1   Service Thread                 -               -1         -         0.0       0.000      0:0.006   false      true
+-1   GC Thread#5                    -               -1         -         0.0       0.000      0:0.043   false      true
+Memory                     used     total    max      usage    GC
+heap                       36M      70M      4096M    0.90%    gc.g1_young_generation.count   12
+g1_eden_space              6M       18M      -1       33.33%                                  86
+g1_old_gen                 30M      50M      4096M    0.74%    gc.g1_old_generation.count     0
+g1_survivor_space          491K     2048K    -1       24.01%   gc.g1_old_generation.time(ms)  0
+nonheap                    66M      69M      -1       96.56%
+codeheap_'non-nmethods'    1M       2M       5M       22.39%
+metaspace                  46M      47M      -1       98.01%
+Runtime
+os.name                                                        Mac OS X
+os.version                                                     10.15.4
+java.version                                                   15
+java.home                                                      /Library/Java/JavaVirtualMachines/jdk-15.jdk/Contents/Home
+systemload.average                                             10.68
+processors                                                     8
+uptime                                                         272s
+```
+
+### [#](https://arthas.aliyun.com/doc/dashboard.html#数据说明)数据说明
+
+- ID: Java 级别的线程 ID，注意这个 ID 不能跟 jstack 中的 nativeID 一一对应。
+- NAME: 线程名
+- GROUP: 线程组名
+- PRIORITY: 线程优先级, 1~10 之间的数字，越大表示优先级越高
+- STATE: 线程的状态
+- CPU%: 线程的 cpu 使用率。比如采样间隔 1000ms，某个线程的增量 cpu 时间为 100ms，则 cpu 使用率=100/1000=10%
+- DELTA_TIME: 上次采样之后线程运行增量 CPU 时间，数据格式为`秒`
+- TIME: 线程运行总 CPU 时间，数据格式为`分:秒`
+- INTERRUPTED: 线程当前的中断位状态
+- DAEMON: 是否是 daemon 线程
+
+### [#](https://arthas.aliyun.com/doc/dashboard.html#jvm-内部线程)JVM 内部线程
+
+Java 8 之后支持获取 JVM 内部线程 CPU 时间，这些线程只有名称和 CPU 时间，没有 ID 及状态等信息（显示 ID 为-1）。 通过内部线程可以观测到 JVM 活动，如 GC、JIT 编译等占用 CPU 情况，方便了解 JVM 整体运行状况。
+
+- 当 JVM 堆(heap)/元数据(metaspace)空间不足或 OOM 时，可以看到 GC 线程的 CPU 占用率明显高于其他的线程。
+- 当执行`trace/watch/tt/redefine`等命令后，可以看到 JIT 线程活动变得更频繁。因为 JVM 热更新 class 字节码时清除了此 class 相关的 JIT 编译结果，需要重新编译。
+
+JVM 内部线程包括下面几种：
+
+- JIT 编译线程: 如 `C1 CompilerThread0`, `C2 CompilerThread0`
+- GC 线程: 如`GC Thread0`, `G1 Young RemSet Sampling`
+- 其它内部线程: 如`VM Periodic Task Thread`, `VM Thread`, `Service Thread`
+
+### [#](https://arthas.aliyun.com/doc/dashboard.html#截图展示)截图展示
+
+![dashboard](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/dashboard.png)
+
+processors在arthas里指的是 CPU 的核心数。这些核心可以是物理核心，也可以是通过超线程技术提供的逻辑核心。
+
+```text
+processors                                                     8
+```
+
+
+
+## 2.5 `sc`指令
+
+> 提示
+>
+> 查看 JVM 已加载的类信息
+
+“Search-Class” 的简写，这个命令能搜索出所有已经加载到 JVM 中的 Class 信息，这个命令支持的参数有 `[d]`、`[E]`、`[f]` 和 `[x:]`。
+
+```
+* 在arthas中使用`sc -d java.lang.String`指令查看，
+* 会发现class-loader那一行什么也不显示，即为启动类加载器加载的
+*
+* `sc`指令的[d]选项，输出当前类的详细信息，
+* 包括这个类所加载的原始文件来源、类的声明、加载的 ClassLoader 等详细信息。
+* 如果一个类被多个 ClassLoader 所加载，则会出现多次
+```
+
+
+
+![image-20240731095019470](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240731095019470.png)
+
+
+
+在 Arthas 的 `sc` 指令中，通配符匹配指的是使用通配符（例如 `*` 和 `?`）来匹配类名或类名的一部分。以下是一些常用的通配符及其含义：
+
+1. `*`（星号）：匹配零个或多个字符。例如：
+   - `com.example.*` 匹配 `com.example` 包下的所有类。
+   - `com.*.MyClass` 匹配 `com` 包下的所有子包中的 `MyClass` 类。
+
+2. `?`（问号）：匹配单个字符。例如：
+   - `com.example.MyCl?ss` 匹配 `com.example` 包下的 `MyClass` 和 `MyClxss` 等类。
+
+### 示例
+
+1. 匹配 `com.example` 包下的所有类：
+   ```shell
+   sc -d com.example.*
+   ```
+
+2. 匹配 `com.example` 包下名称为 `MyClass` 的类：
+   ```shell
+   sc -d com.example.MyClass
+   ```
+
+3. 匹配 `com.example` 包下所有名称以 `Service` 结尾的类：
+   ```shell
+   sc -d com.example.*Service
+   ```
+
+### 使用正则表达式
+
+如果你使用 `-e` 参数，则可以启用正则表达式匹配。这时你可以使用更强大的正则表达式语法来匹配类名。例如：
+
+1. 匹配 `com.example` 包下所有以 `Service` 结尾的类：
+   ```shell
+   sc -d -e com\.example\..*Service
+   ```
+
+2. 匹配 `com.example` 包下所有类：
+   ```shell
+   sc -d -e com\.example\..*
+   ```
+
+通过理解和使用这些通配符和正则表达式，你可以更精确地定位和操作目标类。
+
+## 2.6 
+
+
+
+# 3  Arthas遇到的问题
+
+## 3.1 Arthas使用`quit`退出，再次连接其他进程会出现问题。建议使用stop退出！
+
+
+
+使用 quit退出arthas再次连接会报以下错误信息。
+
+~~~shell
+yangda@F2 MINGW64 /d/Java_developer_tools/mycode/jvm/heimaJVM (main)
+$ java -jar arthas-boot.jar
+[INFO] JAVA_HOME: C:\jdk\jdk1.8\jre
+[INFO] arthas-boot version: 3.6.7
+[INFO] Found existing java process, please choose one and input the serial number of the process, eg : 1. Then hit ENTER.
+* [1]: 7796 hsdb.HsdbDemo
+  [2]: 17724 org.jetbrains.jps.cmdline.Launcher
+  [3]: 3788
+1
+[INFO] arthas home: C:\Users\yangd\.arthas\lib\3.7.2\arthas
+[INFO] Try to attach process 7796
+[INFO] Attach process 7796 success.
+[INFO] arthas-client connect 127.0.0.1 3658
+  ,---.  ,------. ,--------.,--.  ,--.  ,---.   ,---.
+ /  O  \ |  .--. ''--.  .--'|  '--'  | /  O  \ '   .-'
+|  .-.  ||  '--'.'   |  |   |  .--.  ||  .-.  |`.  `-.
+|  | |  ||  |\  \    |  |   |  |  |  ||  | |  |.-'    |
+`--' `--'`--' '--'   `--'   `--'  `--'`--' `--'`-----'
+
+wiki       https://arthas.aliyun.com/doc
+tutorials  https://arthas.aliyun.com/doc/arthas-tutorials.html
+version    3.7.2
+main_class
+pid        7796
+time       2024-07-31 10:32:22
+
+[arthas@7796]$ quit
+quit
+
+yangda@F2 MINGW64 /d/Java_developer_tools/mycode/jvm/heimaJVM (main)
+$ java -jar arthas-boot.jar
+[INFO] JAVA_HOME: C:\jdk\jdk1.8\jre
+[INFO] arthas-boot version: 3.6.7
+[INFO] Process 7796 already using port 3658
+[INFO] Process 7796 already using port 8563
+[INFO] Found existing java process, please choose one and input the serial number of the process, eg : 1. Then hit ENTER.
+* [1]: 7796 hsdb.HsdbDemo
+  [2]: 17724 org.jetbrains.jps.cmdline.Launcher
+  [3]: 3788
+1
+[INFO] arthas home: C:\Users\yangd\.arthas\lib\3.7.2\arthas
+[INFO] The target process already listen port 3658, skip attach.
+[INFO] arthas-client connect 127.0.0.1 3658
+  ,---.  ,------. ,--------.,--.  ,--.  ,---.   ,---.
+ /  O  \ |  .--. ''--.  .--'|  '--'  | /  O  \ '   .-'
+|  .-.  ||  '--'.'   |  |   |  .--.  ||  .-.  |`.  `-.
+|  | |  ||  |\  \    |  |   |  |  |  ||  | |  |.-'    |
+`--' `--'`--' '--'   `--'   `--'  `--'`--' `--'`-----'
+
+wiki       https://arthas.aliyun.com/doc
+tutorials  https://arthas.aliyun.com/doc/arthas-tutorials.html
+version    3.7.2
+main_class
+pid        7796
+time       2024-07-31 10:32:22
+
+[arthas@7796]$ quit
+quit
+
+yangda@F2 MINGW64 /d/Java_developer_tools/mycode/jvm/heimaJVM (main)
+$ java -jar arthas-boot.jar
+[INFO] JAVA_HOME: C:\jdk\jdk1.8\jre
+[INFO] arthas-boot version: 3.6.7
+[INFO] Process 7796 already using port 3658
+[INFO] Process 7796 already using port 8563
+[INFO] Found existing java process, please choose one and input the serial number of the process, eg : 1. Then hit ENTER.
+* [1]: 7796 hsdb.HsdbDemo
+  [2]: 4260 arthas.BootstrapClassLoaderDemo
+  [3]: 8932 org.jetbrains.jps.cmdline.Launcher
+  [4]: 3788
+2
+[ERROR] The telnet port 3658 is used by process 7796 instead of target process 4260, you will connect to an unexpected process.
+[ERROR] 1. Try to restart arthas-boot, select process 7796, shutdown it first with running the 'stop' command.
+[ERROR] 2. Or try to stop the existing arthas instance: java -jar arthas-client.jar 127.0.0.1 3658 -c "stop"
+[ERROR] 3. Or try to use different telnet port, for example: java -jar arthas-boot.jar --telnet-port 9998 --http-port -1
+
+yangda@F2 MINGW64 /d/Java_developer_tools/mycode/jvm/heimaJVM (main)
+
+~~~
+
+这个报错信息是因为Arthas已经在端口3658上运行了一个进程，并且你试图连接到另一个进程时，该端口仍然被占用。具体的错误信息说明了原因：你试图连接的目标进程（7796）不能使用端口3658，因为它已经被另一个进程（7952）占用。
+
+
+
+**验证端口是否释放**：
+
+- 在Git Bash或Windows命令行中运行：
+
+  ```
+  netstat -ano | grep :3658
+  ```
+
+  或
+
+  ```
+  netstat -ano | findstr :3658
+  ```
+
+  确认端口3658未被占用。
+
+
+
+
+
+### 3658端口被占用的原因
+
+端口3658通常被Arthas用于Telnet连接，这是Arthas用于与客户端通信的默认端口。当你启动Arthas时，它会在该端口上启动一个Telnet服务器，以便你可以通过命令行与Arthas进行交互。如果你在没有正确停止Arthas的情况下退出，它会继续在该端口上运行，这就是为什么你看到端口3658被占用。
+
+### 3658端口的作用
+
+- **Telnet连接**：Arthas使用3658端口作为Telnet服务器端口，允许你通过命令行与Arthas进行交互。你可以发送命令并接收Arthas的输出。
+- **管理进程**：通过Telnet连接，你可以管理Java进程，执行各种诊断和调试任务。
+
+### 解决端口被占用的方法
+
+如果端口3658被占用，你可以选择以下几种方法解决：
+
+1. **正确停止Arthas**：
+
+   - 使用`stop`命令停止Arthas，这样会释放端口3658。
+
+2. **使用不同的端口**：
+
+   - 启动Arthas时指定不同的Telnet端口，例如9998。
+
+   ```shell
+   java -jar arthas-boot.jar --telnet-port 9998 --http-port -1
+   ```
+
+3. **手动杀死占用端口的进程**：
+
+   - 使用`netstat`查找占用端口的进程ID，然后使用`taskkill`命令终止该进程。
+
+### 操作步骤
+
+#### 1. 正确停止Arthas
+
+1. 启动Arthas并选择进程：
+
+   ```shell
+   java -jar arthas-boot.jar
+   ```
+
+   选择正在运行的进程，例如：
+
+   ```shell
+   * [1]: 7952 arthas.BootstrapClassLoaderDemo
+   1
+   ```
+
+2. 使用`stop`命令停止Arthas：
+
+   ```shell
+   stop
+   ```
+
+#### 2. 使用不同的端口
+
+1. 启动Arthas时指定不同的Telnet端口：
+
+   ```shell
+   java -jar arthas-boot.jar --telnet-port 9998 --http-port -1
+   ```
+
+#### 3. 手动杀死占用端口的进程
+
+1. 使用`netstat`查找占用端口的进程ID：
+
+   ```shell
+   netstat -ano | findstr :3658
+   ```
+
+2. 使用`taskkill`命令终止该进程：
+
+   ```shell
+   taskkill /PID <PID> /F
+   ```
+
+### 详细操作步骤
+
+1. **停止已有的Arthas实例**
+
+   运行`arthas-boot`并选择进程7952：
+
+   ```shell
+   java -jar arthas-boot.jar
+   ```
+
+   在提示符下输入`1`，选择进程7952：
+
+   ```shell
+   * [1]: 7952 arthas.BootstrapClassLoaderDemo
+     [2]: 7796 hsdb.HsdbDemo
+     [3]: 17724 org.jetbrains.jps.cmdline.Launcher
+     [4]: 3788
+   1
+   ```
+
+   使用`stop`命令停止Arthas服务器：
+
+   ```shell
+   stop
+   ```
+
+2. **验证端口是否释放**
+
+   在Git Bash或Windows命令行中运行：
+
+   ```shell
+   netstat -ano | findstr :3658
+   ```
+
+   确认端口3658未被占用。
+
+3. **重新启动Arthas并选择目标进程**
+
+   运行`arthas-boot`并选择新的目标进程：
+
+   ```shell
+   java -jar arthas-boot.jar
+   ```
+
+4. **使用不同的端口（如果需要）**
+
+   如果端口仍然被占用，可以使用不同的Telnet端口启动Arthas：
+
+   ```shell
+   java -jar arthas-boot.jar --telnet-port 9998 --http-port -1
+   ```
+
+通过这些步骤，你可以确保Arthas服务器正确停止，并避免端口冲突。如果再次连接时，选择正确的进程以启动新的Arthas会话。
+
+## 3.2 通过正确使用`stop`命令，你可以避免端口冲突，确保Arthas正常工作，并能够连接到新的目标进程。
+
+通过你的描述和提供的日志信息，可以看出以下现象和规律：
+
+1. **成功连接到HsdbDemo进程**：
+   - 当你第一次运行`arthas-boot`并选择连接到进程`HsdbDemo`时，连接成功，Arthas在端口3658上监听。
+   - 使用`quit`命令退出会话，但Arthas实例仍然运行，并继续监听端口3658。
+
+2. **尝试连接到其他进程失败**：
+   - 再次运行`arthas-boot`并尝试连接到其他进程（如`BootstrapClassLoaderDemo`），系统提示端口3658已被进程`HsdbDemo`占用，导致连接失败。
+
+3. **再次连接到HsdbDemo成功**：
+   - 再次运行`arthas-boot`并选择连接到进程`HsdbDemo`时，连接成功，Arthas继续使用端口3658。
+
+### 现象总结
+
+- **规律1**：当你使用`quit`命令退出Arthas会话后，Arthas实例仍然在后台运行，并继续占用端口3658。
+- **规律2**：只要端口3658被占用，尝试连接到其他进程（非`HsdbDemo`）都会失败，因为Arthas实例仍然监听在该端口。
+- **规律3**：再次连接到`HsdbDemo`时，由于Arthas实例已经在监听，因此可以成功连接。
+
+### 原因分析
+
+- **Arthas实例未完全停止**：`quit`命令只是退出当前的Arthas会话，但并没有完全停止Arthas实例。这导致端口3658继续被占用。
+- **端口冲突**：由于端口3658已经被占用，当你尝试连接到其他进程时，无法重新使用该端口，导致连接失败。
+
+### 解决方案
+
+要解决这个问题，你需要确保在退出Arthas时完全停止Arthas实例。以下是详细步骤：
+
+1. **使用`stop`命令完全停止Arthas实例**：
+
+   - 启动Arthas并选择当前使用端口的进程（如`HsdbDemo`）。
+
+   - 在Arthas会话中使用`stop`命令，而不是`quit`命令：
+
+     ```shell
+     stop
+     ```
+
+   - 这将完全停止Arthas实例，并释放端口3658。
+
+2. **验证端口是否被释放**：
+
+   - 使用`netstat`命令检查端口3658是否被释放：
+
+     ```shell
+     netstat -ano | findstr :3658
+     ```
+
+   - 如果没有输出，说明端口已经被释放。
+
+3. **重新启动Arthas并选择目标进程**：
+
+   - 运行`arthas-boot`并选择新的目标进程（如`BootstrapClassLoaderDemo`）：
+
+     ```shell
+     java -jar arthas-boot.jar
+     ```
+
+     选择新的目标进程，例如4260：
+
+     ```shell
+     * [1]: 7796 hsdb.HsdbDemo
+       [2]: 4260 arthas.BootstrapClassLoaderDemo
+       [3]: 8932 org.jetbrains.jps.cmdline.Launcher
+       [4]: 3788
+     2
+     ```
+
+### 总结
+
+- **问题根本原因**：`quit`命令没有完全停止Arthas实例，导致端口3658继续被占用。
+- **解决方法**：使用`stop`命令完全停止Arthas实例，确保端口被释放，然后重新启动Arthas并连接到新的目标进程。
+- **验证步骤**：通过`netstat`命令确认端口是否被释放，确保Arthas实例正确停止。
+
+通过正确使用`stop`命令，你可以避免端口冲突，确保Arthas正常工作，并能够连接到新的目标进程。
+
+### 3.2.1 测试quit指令导致的报错问题的核心log记录
+
+以下是你提供的log记录的核心部分，这些记录展示了Arthas实例在使用`quit`命令退出后仍然占用端口3658的情况，以及尝试连接到新进程时的错误信息。
+
+#### 成功连接到HsdbDemo进程
+
+```shell
+$ java -jar arthas-boot.jar
+[INFO] JAVA_HOME: C:\jdk\jdk1.8\jre
+[INFO] arthas-boot version: 3.6.7
+[INFO] Found existing java process, please choose one and input the serial number of the process, eg : 1. Then hit ENTER.
+* [1]: 7796 hsdb.HsdbDemo
+  [2]: 17724 org.jetbrains.jps.cmdline.Launcher
+  [3]: 3788
+1
+[INFO] arthas home: C:\Users\yangd\.arthas\lib\3.7.2\arthas
+[INFO] Try to attach process 7796
+[INFO] Attach process 7796 success.
+[INFO] arthas-client connect 127.0.0.1 3658
+  ,---.  ,------. ,--------.,--.  ,--.  ,---.   ,---.
+ /  O  \ |  .--. ''--.  .--'|  '--'  | /  O  \ '   .-'
+|  .-.  ||  '--'.'   |  |   |  .--.  ||  .-.  |`.  `-.
+|  | |  ||  |\  \    |  |   |  |  |  ||  | |  |.-'    |
+`--' `--'`--' '--'   `--'   `--'  `--'`--' `--'`-----'
+wiki       https://arthas.aliyun.com/doc
+tutorials  https://arthas.aliyun.com/doc/arthas-tutorials.html
+version    3.7.2
+main_class
+pid        7796
+time       2024-07-31 10:32:22
+```
+
+#### 使用`quit`命令退出会话
+
+```shell
+[arthas@7796]$ quit
+quit
+```
+
+#### 尝试连接到新进程失败
+
+```shell
+$ java -jar arthas-boot.jar
+[INFO] JAVA_HOME: C:\jdk\jdk1.8\jre
+[INFO] arthas-boot version: 3.6.7
+[INFO] Process 7796 already using port 3658
+[INFO] Process 7796 already using port 8563
+[INFO] Found existing java process, please choose one and input the serial number of the process, eg : 1. Then hit ENTER.
+* [1]: 7796 hsdb.HsdbDemo
+  [2]: 4260 arthas.BootstrapClassLoaderDemo
+  [3]: 8932 org.jetbrains.jps.cmdline.Launcher
+  [4]: 3788
+2
+[ERROR] The telnet port 3658 is used by process 7796 instead of target process 4260, you will connect to an unexpected process.
+[ERROR] 1. Try to restart arthas-boot, select process 7796, shutdown it first with running the 'stop' command.
+[ERROR] 2. Or try to stop the existing arthas instance: java -jar arthas-client.jar 127.0.0.1 3658 -c "stop"
+[ERROR] 3. Or try to use different telnet port, for example: java -jar arthas-boot.jar --telnet-port 9998 --http-port -1
+```
+
+#### 再次连接到HsdbDemo成功
+
+```shell
+$ java -jar arthas-boot.jar
+[INFO] JAVA_HOME: C:\jdk\jdk1.8\jre
+[INFO] arthas-boot version: 3.6.7
+[INFO] Process 7796 already using port 3658
+[INFO] Process 7796 already using port 8563
+[INFO] Found existing java process, please choose one and input the serial number of the process, eg : 1. Then hit ENTER.
+* [1]: 7796 hsdb.HsdbDemo
+  [2]: 17724 org.jetbrains.jps.cmdline.Launcher
+  [3]: 3788
+1
+[INFO] arthas home: C:\Users\yangd\.arthas\lib\3.7.2\arthas
+[INFO] The target process already listen port 3658, skip attach.
+[INFO] arthas-client connect 127.0.0.1 3658
+  ,---.  ,------. ,--------.,--.  ,--.  ,---.   ,---.
+ /  O  \ |  .--. ''--.  .--'|  '--'  | /  O  \ '   .-'
+|  .-.  ||  '--'.'   |  |   |  .--.  ||  .-.  |`.  `-.
+|  | |  ||  |\  \    |  |   |  |  |  ||  | |  |.-'    |
+`--' `--'`--' '--'   `--'   `--'  `--'`--' `--'`-----'
+wiki       https://arthas.aliyun.com/doc
+tutorials  https://arthas.aliyun.com/doc/arthas-tutorials.html
+version    3.7.2
+main_class
+pid        7796
+time       2024-07-31 10:32:22
+```
+
+### 总结
+
+通过上述日志记录，我们可以得出以下结论：
+
+- **现象**：使用`quit`命令退出Arthas会话后，实例继续运行，占用端口3658。尝试连接新进程时，Arthas无法重新使用该端口，导致连接失败。
+- **解决方法**：使用`stop`命令而不是`quit`命令，确保Arthas实例完全停止，端口3658被释放。
+- **结论**：为了避免端口冲突和连接失败问题，建议在退出Arthas时使用`stop`命令，而不是`quit`命令。
+
+通过以上分析和总结，可以明确使用`stop`命令的重要性，从而确保Arthas实例正确停止，避免端口占用问题。
+
+
+
+
+
+
+
+
+
+# 4 `java -cp xx.jar xx.xx.xx.XX` 启动命令
 
 `java -jar xx.jar`命令启动的jar包启动类是已经确定好的(即约定好的)。
 
@@ -669,7 +1363,7 @@ public class MathGame {
 
 指定xx.jar包中具体的某一个类来启动jar包程序。
 
-如：`java -cp sa-jdi.jar sun.jvm.hotspot.`
+如：`java -cp sa-jdi.jar sun.jvm.hotspot.HSDB`
 
 
 
@@ -706,7 +1400,7 @@ java -cp xx.jar com.example.Main
 
 
 
-# 4 虚方法表
+# 5 虚方法表
 
 字节码中的虚方法表（Virtual Method Table，简称VMT或vtable）是Java中的一个数据结构，用于支持运行时的多态性和动态方法分派。具体来说，它是每个类的一个数组或表格，用于保存该类的所有虚方法（即可以被子类重写的方法）的地址。
 
@@ -894,4 +1588,4 @@ public class Main {
 
 
 
-# 5 
+# 6 
