@@ -398,7 +398,11 @@ MINGW64 (Minimalist GNU for Windows) 是一个软件开发环境，旨在提供�
    - 在打开的文件中添加以下内容并保存：
 
      ```powershell
+     # 设置控制台输出编码为 UTF-8
      [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+     
+     # 设置控制台输入编码为 UTF-8
+     $OutputEncoding = [System.Text.Encoding]::UTF8
      ```
 
 ### 示例操作
@@ -438,3 +442,140 @@ MINGW64 (Minimalist GNU for Windows) 是一个软件开发环境，旨在提供�
 
 通过这些步骤，应该可以解决 PowerShell 中的中文乱码问题，确保正确显示中文字符。
 
+
+
+## 10.1 PowerShell 配置文件设置
+
+PowerShell 配置文件是一个特定名称的脚本文件，通常名为 `Microsoft.PowerShell_profile.ps1`。这个文件的后缀是 `.ps1`，它是 PowerShell 脚本文件的标准扩展名。
+
+### 创建和编辑 PowerShell 配置文件
+
+1. **查看当前 PowerShell 配置文件路径**：
+   在 PowerShell 中运行以下命令来查看当前用户的 PowerShell 配置文件路径：
+   ```powershell
+   $PROFILE
+   ```
+
+   ![image-20240802010600772](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240802010600772.png)
+   
+2. **创建或编辑配置文件**：
+   使用以下命令打开配置文件。如果文件不存在，命令会自动创建它：
+   
+   ```powershell
+   notepad $PROFILE
+   ```
+   或者，你可以使用其他文本编辑器，如 VSCode：
+   ```powershell
+   code $PROFILE
+   ```
+   
+   或者直接创建对应的目录结构
+   
+   `C:\Users\yangd\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1`
+   
+   并在文件中添加配置内容：`[Console]::OutputEncoding = [System.Text.Encoding]::UTF8`
+   
+3. **在配置文件中添加内容**：
+   在打开的配置文件中添加你需要的配置。例如，要设置 PowerShell 控制台的编码为 UTF-8，可以添加以下内容：
+   
+   ```powershell
+   # 设置控制台输出编码为 UTF-8
+   [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+   
+   # 设置控制台输入编码为 UTF-8
+   $OutputEncoding = [System.Text.Encoding]::UTF8
+   ```
+   
+4. **保存并关闭编辑器**：
+   保存你在配置文件中所做的更改并关闭编辑器。
+
+### 示例操作
+
+1. **打开 PowerShell 配置文件**：
+   ```powershell
+   notepad $PROFILE
+   ```
+
+2. **在配置文件中添加内容**：
+   ```powershell
+   [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+   ```
+
+3. **保存并关闭**：
+
+### 验证配置文件是否生效
+
+重新启动 PowerShell 或者运行以下命令重新加载配置文件，以确保配置文件中的设置生效：
+```powershell
+. $PROFILE
+```
+
+通过这些步骤，你可以创建和编辑 PowerShell 配置文件，并在其中添加自定义设置，以便每次启动 PowerShell 时自动应用这些配置。
+
+
+
+## 如果重启后报错如下：
+
+![image-20240802011352101](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240802011352101.png)
+
+## 则需要：
+
+这是因为你的 PowerShell 执行策略设置为禁止运行脚本。要允许运行脚本，你需要更改 PowerShell 的执行策略。可以按照以下步骤操作：
+
+### 修改 PowerShell 执行策略
+
+1. **打开 PowerShell**：
+   以管理员身份打开 PowerShell（右键点击 PowerShell 图标，选择“以管理员身份运行”）。
+
+2. **查看当前执行策略**：
+   运行以下命令查看当前执行策略：
+   
+   ```powershell
+   Get-ExecutionPolicy			#默认是返回Restricted，受限制的权限。
+   ```
+   
+3. **设置执行策略为 `RemoteSigned` 或 `Unrestricted`**：**Restricted(受限制的)**
+   为了允许运行本地脚本，可以将执行策略设置为 `RemoteSigned`（允许本地脚本运行，要求远程脚本有签名）或 `Unrestricted`（允许所有脚本运行）：
+   
+   ```powershell
+   Set-ExecutionPolicy RemoteSigned
+   ```
+   或者：
+   ```powershell
+   Set-ExecutionPolicy Unrestricted
+   ```
+   
+4. **确认更改**：
+   在提示时，输入 `Y` 确认更改。
+
+### 示例操作
+
+1. **以管理员身份打开 PowerShell**。
+
+2. **设置执行策略为 `RemoteSigned`**：
+   ```powershell
+   Set-ExecutionPolicy RemoteSigned
+   ```
+   确认更改：
+   ```plaintext
+   Execution Policy Change
+   The execution policy helps protect you from scripts that you do not trust. Changing the execution policy might expose
+   you to the security risks described in the about_Execution_Policies help topic at
+   https:/go.microsoft.com/fwlink/?LinkID=135170. Do you want to change the execution policy?
+   [Y] Yes  [A] Yes to All  [N] No  [L] No to All  [S] Suspend  [?] Help (default is "N"): Y
+   ```
+
+3. **再次运行配置文件**：
+   关闭并重新打开 PowerShell，然后运行以下命令重新加载配置文件：
+   ```powershell
+   . $PROFILE
+   ```
+
+### 恢复默认执行策略（可选）
+
+如果你希望在设置完成后恢复默认的执行策略，可以将执行策略设置回默认的 `Restricted`：
+```powershell
+Set-ExecutionPolicy Restricted
+```
+
+通过以上步骤，你应该能够解决执行策略的问题，并允许 PowerShell 加载和运行你的配置文件。
