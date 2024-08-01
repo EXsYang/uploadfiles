@@ -8353,3 +8353,238 @@ $ getconf LONG_BIT
 ### 总结
 
 Linux 操作系统有 32 位和 64 位两种版本。可以通过 `uname -m`、`lscpu` 或 `getconf LONG_BIT` 等命令来检查当前系统是 32 位还是 64 位。64 位系统可以处理更大的内存和更高效的数据处理，因此在现代计算环境中更为常见。
+
+
+
+# 4 `curl`指令，类似于浏览器发送httpqing'q
+
+
+
+![image-20240801225704935](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240801225704935.png)
+
+`curl` 是一个命令行工具，用于通过各种协议（如 HTTP、HTTPS、FTP 等）传输数据。`curl` 具有广泛的应用场景，包括下载文件、测试 API 接口、模拟 HTTP 请求等。以下是对 `curl` 的详细解释及一些常见用法示例。
+
+### 基本用法
+
+1. **下载文件**：
+   
+   ```sh
+   curl -O http://example.com/file.txt
+   ```
+   - `-O`：将下载的文件保存为本地同名文件。
+   
+2. **保存文件为指定名称**：
+   ```sh
+   curl -o localfile.txt http://example.com/file.txt
+   ```
+   - `-o`：将下载的文件保存为指定的名称 `localfile.txt`。
+
+3. **显示 HTTP 响应内容**：
+   ```sh
+   curl http://example.com
+   ```
+   - 直接访问 URL 并显示响应内容。
+
+4. **显示 HTTP 响应头信息**：
+   ```sh
+   curl -I http://example.com
+   ```
+   - `-I`：仅显示响应头信息。
+
+### 进阶用法
+
+1. **发送 POST 请求**：
+   ```sh
+   curl -X POST -d "param1=value1&param2=value2" http://example.com/resource
+   ```
+   - `-X POST`：指定请求方法为 POST。
+   - `-d`：发送 POST 数据。
+
+2. **发送 JSON 数据的 POST 请求**：
+   ```sh
+   curl -X POST -H "Content-Type: application/json" -d '{"key1":"value1", "key2":"value2"}' http://example.com/resource
+   ```
+   - `-H`：添加 HTTP 头部信息，指定内容类型为 `application/json`。
+
+3. **添加请求头**：
+   ```sh
+   curl -H "Authorization: Bearer token" http://example.com/resource
+   ```
+   - `-H`：添加自定义请求头，如认证头。
+
+4. **下载文件到指定目录**：
+   ```sh
+   curl -o /path/to/directory/localfile.txt http://example.com/file.txt
+   ```
+   - `-o`：将下载的文件保存到指定目录下。
+
+5. **跟踪重定向**：
+   ```sh
+   curl -L http://example.com
+   ```
+   - `-L`：跟踪重定向。
+
+6. **带认证的请求**：
+   ```sh
+   curl -u username:password http://example.com
+   ```
+   - `-u`：指定用户名和密码进行 HTTP 基本认证。
+
+7. **保存响应到文件**：
+   ```sh
+   curl http://example.com -o output.txt
+   ```
+   - `-o`：将响应保存到 `output.txt` 文件。
+
+### 常见选项
+
+- `-v`：显示详细的请求和响应过程信息（verbose）。
+- `-s`：静默模式，不显示进度条或错误信息（silent）。
+- `-k`：忽略 SSL 证书错误（insecure）。
+- `-C -`：断点续传，继续上次中断的下载。
+- `-F`：模拟表单提交文件上传（multipart/form-data）。
+
+### 示例
+
+1. **模拟登录并保存 cookie**：
+   ```sh
+   curl -c cookies.txt -d "username=user&password=pass" http://example.com/login
+   ```
+   - `-c`：保存 cookie 到 `cookies.txt` 文件。
+
+2. **使用 cookie 进行请求**：
+   ```sh
+   curl -b cookies.txt http://example.com/resource
+   ```
+   - `-b`：从 `cookies.txt` 文件中读取 cookie。
+
+3. **上传文件**：
+   ```sh
+   curl -F "file=@/path/to/file.txt" http://example.com/upload
+   ```
+   - `-F`：模拟表单提交文件上传。
+
+### 总结
+
+`curl` 是一个功能强大的命令行工具，可以用于多种网络请求和数据传输操作。通过灵活使用其选项和参数，`curl` 可以完成从简单的数据下载到复杂的 API 测试等各种任务。
+
+
+
+# 5 `ab`压测工具
+
+`ab`（ApacheBench）是一个命令行工具，用于对 Web 服务器进行性能测试和基准测试（benchmarking）。它是 Apache HTTP 服务器项目的一部分，通常用于衡量 HTTP 服务器在高负载下的表现。以下是对 `ab` 工具的详细介绍及其常见用法示例。
+
+
+
+使用案例：
+
+~~~
+ab -n 1000 -c 100 -p ~/postfile -T application/x-www-form-urlencoded
+http://192.168.198.1:8080/seckill/secKillServlet
+~~~
+
+~~~
+ab -n 1000 -c 100 http://192.168.198.1:8080/redisTest/testLock
+~~~
+
+
+
+### 安装 `ab`
+
+在大多数 Linux 发行版中，`ab` 工具随 Apache HTTP 服务器一起提供，可以通过以下命令安装：
+
+#### Ubuntu/Debian
+```sh
+sudo apt-get install apache2-utils
+```
+
+#### CentOS/RHEL
+```sh
+sudo yum install httpd-tools
+```
+
+安装完成后，你可以通过运行 `ab -V` 来验证安装和查看版本信息。
+
+### 基本用法
+
+`ab` 的基本语法如下：
+```sh
+ab [options] [http[s]://]hostname[:port]/path
+```
+
+例如，要对 `http://example.com/` 进行测试，可以运行：
+```sh
+ab -n 100 -c 10 http://example.com/
+```
+上述命令表示对 `http://example.com/` 发起 100 次请求，10 个并发请求。
+
+### 常用选项
+
+- `-n requests`：总请求数，即测试过程中发送的请求总数。
+- `-c concurrency`：并发请求数，即一次生成的并发请求数。
+- `-t timelimit`：测试的最大持续时间（秒）。在这段时间内，`ab` 尽可能多地发起请求。
+- `-p postfile`：包含 HTTP POST 数据的文件路径。发送 POST 请求时使用。
+- `-T content-type`：POST 数据的内容类型，例如 `application/x-www-form-urlencoded`。
+- `-H attribute`：附加 HTTP 头信息，如 `-H "Authorization: Basic dXNlcjpwYXNz"`。
+- `-A username:password`：HTTP 基本认证用户名和密码。
+- `-C cookie-name=value`：附加请求的 Cookie 信息。
+- `-v verbosity`：设置详细程度，`-v 2` 显示头信息。
+- `-r`：即使出现 socket 接收错误或超时也继续测试。
+
+### 详细示例
+
+1. **简单测试**
+   ```sh
+   ab -n 100 -c 10 http://example.com/
+   ```
+   - 发起 100 次请求，10 个并发请求。
+
+2. **POST 请求**
+   ```sh
+   ab -n 100 -c 10 -p postfile.txt -T application/x-www-form-urlencoded http://example.com/form-handler
+   ```
+   - 发起 100 次 POST 请求，10 个并发，请求数据从 `postfile.txt` 文件中读取。
+
+3. **带认证的请求**
+   ```sh
+   ab -n 100 -c 10 -A user:password http://example.com/protected
+   ```
+   - 对受保护的资源发起 100 次请求，使用基本认证。
+
+4. **附加头信息的请求**
+   ```sh
+   ab -n 100 -c 10 -H "Accept-Encoding: gzip,deflate" http://example.com/
+   ```
+   - 发起 100 次请求，包含自定义的头信息 `Accept-Encoding`。
+
+### 结果分析
+
+运行 `ab` 命令后，会输出详细的结果信息，包括但不限于以下内容：
+
+- **Server Software**：服务器软件信息。
+- **Server Hostname**：服务器主机名。
+- **Server Port**：服务器端口。
+- **Document Path**：请求的路径。
+- **Document Length**：响应文档的长度（字节）。
+- **Concurrency Level**：并发级别。
+- **Time taken for tests**：测试总耗时。
+- **Complete requests**：完成的请求数。
+- **Failed requests**：失败的请求数。
+- **Total transferred**：总传输数据量。
+- **HTML transferred**：HTML 内容传输量。
+- **Requests per second**：每秒请求数（吞吐量）。
+- **Time per request**：每个请求的平均耗时（包括并发影响）。
+- **Time per request (across all concurrent requests)**：所有并发请求的平均耗时。
+- **Transfer rate**：传输速率（每秒传输的字节数）。
+- **Connection Times**：连接时间分布（包括最小值、最大值、平均值、中位数和标准差）。
+
+### 总结
+
+`ab` 是一个简单而强大的工具，适用于对 Web 服务器进行性能测试和基准测试。通过设置不同的请求数和并发数，可以模拟高负载场景，分析服务器在不同负载下的响应能力和性能瓶颈。使用 `ab` 进行测试时，应根据实际应用场景设置合适的参数，以获得更有意义的测试结果。
+
+# 6 `jemeter`压测工具
+
+讲解Jemeter工具的地方是韩顺平秒杀项目和宋红康JVM性能调优中的压测
+
+![image-20240801230412053](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240801230412053.png)
+

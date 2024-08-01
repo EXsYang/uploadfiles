@@ -927,7 +927,92 @@ processors                                                     8
 
 通过理解和使用这些通配符和正则表达式，你可以更精确地定位和操作目标类。
 
-## 2.6 
+## 2.6 `mc`指令
+
+> 提示
+>
+> Memory Compiler/内存编译器，编译`.java`文件生成`.class`。
+
+
+
+```bash
+mc /tmp/Test.java
+```
+
+可以通过`-c`参数指定 classloader：
+
+
+
+```bash
+mc -c 327a647b /tmp/Test.java
+```
+
+也可以通过`--classLoaderClass`参数指定 ClassLoader：
+
+
+
+```bash
+$ mc --classLoaderClass org.springframework.boot.loader.LaunchedURLClassLoader /tmp/UserController.java -d /tmp
+Memory compiler output:
+/tmp/com/example/demo/arthas/user/UserController.class
+Affect(row-cnt:1) cost in 346 ms
+```
+
+可以通过`-d`命令指定输出目录：
+
+
+
+```bash
+mc -d /tmp/output /tmp/ClassA.java /tmp/ClassB.java
+```
+
+编译生成`.class`文件之后，可以结合[retransform](https://arthas.aliyun.com/doc/retransform.html)命令实现热更新代码。
+
+注意
+
+注意，mc 命令有可能失败。如果编译失败可以在本地编译好`.class`文件，再上传到服务器。具体参考[retransform](https://arthas.aliyun.com/doc/retransform.html)命令说明。
+
+
+
+### 例子
+
+假设 `Test` 类由类加载器 `327a647b` 加载：
+
+```bash
+mc -c 327a647b /tmp/Test.java
+```
+
+在这个命令中，`-c 327a647b` 参数指定了类加载器的标识符，确保 `mc` 指令使用正确的类加载器来加载重新编译的类。
+
+### 类加载器的获取
+
+在实际操作中，你可以通过以下方式获取类加载器的标识符：
+
+1. **通过 Arthas 的 `sc` 命令**：
+
+   - **使用 `sc` 命令查看类的详细信息，包括类加载器信息。**例如：
+
+     ```bash
+     sc -d com.example.Test
+     ```
+
+     这条命令会显示 `Test` 类的详细信息，包括加载它的类加载器的标识符。
+
+2. **通过日志或调试信息**：
+
+   - 在某些情况下，类加载器的信息可能会在应用的日志或调试信息中出现，可以通过这些途径获取类加载器标识符。
+
+### 总结
+
+在使用 Arthas 的 `mc` 指令进行类热替换时，指定类加载器是为了确保重新编译的类被正确加载。由于 Java 中类加载器的唯一性和复杂性，不同的类加载器加载的类是不同的，如果不指定类加载器，可能会导致找不到指定类的错误。因此，通过 `-c` 参数指定正确的类加载器，可以确保 `mc` 指令成功加载重新编译的类。
+
+
+
+
+
+
+
+
 
 
 
@@ -1940,12 +2025,14 @@ mc -c 327a647b /tmp/Test.java
 在实际操作中，你可以通过以下方式获取类加载器的标识符：
 
 1. **通过 Arthas 的 `sc` 命令**：
+   
    - **使用 `sc` 命令查看类的详细信息，包括类加载器信息。**例如：
+     
      ```bash
      sc -d com.example.Test
      ```
      这条命令会显示 `Test` 类的详细信息，包括加载它的类加载器的标识符。
-
+   
 2. **通过日志或调试信息**：
    - 在某些情况下，类加载器的信息可能会在应用的日志或调试信息中出现，可以通过这些途径获取类加载器标识符。
 
@@ -2014,3 +2101,396 @@ mc -c 327a647b /tmp/Test.java
 - 类的重新转换和加载新定义通常是 `retransform` 指令的工作。
 - 指定类加载器是为了确保编译和加载过程中的一致性，避免在复杂应用环境中出现类加载错误。
 
+
+
+
+
+# 11 在Windows上使用Arthas的jad指令反编译某个运行着的项目中的某个.class类的方法
+
+具体类的位置是：
+
+~~~
+D:\Java_developer_tools\mycode\jvm\JVMDemo1\springboot-classfile\target\classes\com\itheima\springbootclassfile\controller\UserController.class
+~~~
+
+具体的业务测试代码如下：
+
+~~~java
+package com.itheima.springbootclassfile.controller;
+
+import com.itheima.springbootclassfile.common.UserType;
+import com.itheima.springbootclassfile.pojo.vo.UserVO;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/user")
+public class UserController {
+
+    //企业中代码一般通过调用service从数据库查,本案例简化代码
+    // http://localhost:8080/user/1001/1
+    // D:\Java_developer_tools\mycode\jvm\JVMDemo1\springboot-classfile\target\classes\com\itheima\springbootclassfile\controller\UserController.class
+    @GetMapping("/{type}/{id}")
+    public UserVO user(@PathVariable("type") Integer type, @PathVariable("id") Integer id) {
+        //前边有一大堆逻辑，巴拉巴拉
+        // 如果用户的type是 1001 则会进入到下面这行代码
+        // 但是这里使用的是 == 引用数据类型做等等比较为false!
+        // 即如果传入的type是非1002(普通用户),也会看到VIP用户的内容！
+        if (type == UserType.REGULAR.getType()) {
+            // if(type.equals(UserType.REGULAR.getType())){
+            return new UserVO(id, "普通用户无权限查看");
+        }
+
+        return new UserVO(id, "这是尊贵的收费用户才能看的秘密!");
+    }
+}
+
+~~~
+
+
+
+使用 Arthas 的 `jad` 命令可以反编译 Java 类文件。以下是使用 `jad` 命令反编译特定类文件的步骤。
+
+### 步骤
+
+1. **启动 Arthas**：
+   - 在你的 JVM 应用程序中嵌入 Arthas，或者通过命令行启动 Arthas 以连接到正在运行的 JVM 应用程序。
+   - 例如，假设你的 Spring Boot 应用程序已经在运行，运行以下命令来启动 Arthas：
+     ```sh
+     java -jar arthas-boot.jar
+     ```
+
+2. **选择目标进程**：
+   - 在启动 Arthas 后，它会列出当前运行的所有 Java 进程。选择目标应用程序的 PID（进程 ID）。
+     ```
+     * [1] 3284 com.example.MyApplication
+       [2] 5678 another.JavaProcess
+     ```
+   - 输入目标应用程序的编号（例如，输入 `1` 选择 PID 为 3284 的进程）。
+
+3. **查找并反编译类文件**：
+   - 使用 `sc` 命令查找加载的类：
+     ```sh
+     sc -d com.itheima.springbootclassfile.controller.UserController
+     ```
+   - 查找到具体的类加载器后，使用 `jad` 命令反编译类文件：
+     ```sh
+     jad com.itheima.springbootclassfile.controller.UserController
+     ```
+
+### 示例步骤
+
+1. **启动 Arthas 并连接到目标 JVM 进程**：
+   ```sh
+   java -jar arthas-boot.jar
+   ```
+   选择正确的 JVM 进程（例如，输入 `1`）。
+
+2. **查找类的具体加载器**：
+   ```sh
+   sc -d com.itheima.springbootclassfile.controller.UserController
+   ```
+   这将显示加载 `UserController` 类的类加载器及其详细信息。
+
+3. **使用 `jad` 命令反编译类文件**：
+   ```sh
+   jad com.itheima.springbootclassfile.controller.UserController
+   ```
+   这将反编译并显示 `UserController` 类的源代码。
+
+### 注意事项
+
+- 确保你的 JVM 应用程序正在运行并且 Arthas 可以连接到该进程。
+- 确保目标类文件已经被 JVM 加载，否则 `sc` 命令可能无法找到该类。
+
+通过这些步骤，你可以使用 Arthas 的 `jad` 命令反编译特定的类文件，并查看其源代码。
+
+## 11.1 arthas连接上就不用指定盘符了，而是使用项目的相对路径就行
+
+是的，当使用 Arthas 连接到正在运行的 JVM 进程时，你不需要指定磁盘驱动器的绝对路径。**Arthas 操作的是 JVM 进程内存中的类，所以你只需提供类的完全限定名，而不需要考虑文件系统的路径。**
+
+### 操作步骤详解
+
+1. **启动 Arthas 并连接到目标 JVM 进程**：
+   ```sh
+   java -jar arthas-boot.jar
+   ```
+   启动 Arthas 后，选择需要连接的 JVM 进程。假设列表中显示的进程如下：
+   ```
+   * [1] 3284 com.example.MyApplication
+     [2] 5678 another.JavaProcess
+   ```
+   你可以通过输入数字选择相应的进程，例如输入 `1` 选择 PID 为 3284 的进程。
+
+2. **查找目标类**：
+   使用 `sc`（Search Class）命令查找 JVM 中已加载的类：
+   ```sh
+   sc -d com.itheima.springbootclassfile.controller.UserController
+   ```
+   这将显示 `UserController` 类的详细信息，包括类加载器信息。
+
+3. **反编译目标类**：
+   使用 `jad`（Java Decompiler）命令反编译目标类：
+   ```sh
+   jad com.itheima.springbootclassfile.controller.UserController
+   ```
+   这将反编译 `UserController` 类，并在控制台显示反编译后的源代码。
+
+### 示例操作
+
+假设你的项目结构如下，并且目标类是 `UserController`：
+```
+D:\Java_developer_tools\mycode\jvm\JVMDemo1\springboot-classfile\target\classes\com\itheima\springbootclassfile\controller\UserController.class
+```
+
+当你启动并连接到 JVM 进程后，只需要提供类的完全限定名（即包名+类名）即可。
+
+1. **启动 Arthas 并连接到 JVM 进程**：
+   ```sh
+   java -jar arthas-boot.jar
+   ```
+   选择对应的 JVM 进程。
+
+2. **查找类信息**：
+   ```sh
+   sc -d com.itheima.springbootclassfile.controller.UserController
+   ```
+   这将列出所有已加载的 `UserController` 类的信息。
+
+3. **反编译类**：
+
+   ```sh
+   jad com.itheima.springbootclassfile.controller.UserController
+   ```
+   这将反编译并显示 `UserController` 类的源代码。
+
+4. **反编译时只显示源代码**：
+
+   ```sh
+   jad --source-only com.itheima.springbootclassfile.controller.UserController
+   ```
+
+   这将反编译并显示 `UserController` 类的源代码。
+
+**反编译时只显示源代码并写入到指定文件**：
+
+```sh
+jad --source-only com.itheima.springbootclassfile.controller.UserController > D:\\aatest\\arthas_jad\\UserController.java
+```
+
+注意: 在Windows环境下需要使用双反斜杠才能保存至目标目录中！在Linux环境下则可以使用单正斜杠`/`即可
+
+### 总结
+
+在使用 Arthas 进行类操作时，你只需要知道类的完全限定名（如 `com.itheima.springbootclassfile.controller.UserController`），而不需要知道或指定类文件在磁盘上的物理路径。Arthas 通过连接到 JVM 进程，直接在内存中操作这些类。
+
+
+
+
+
+# 12 使用arthas进行热部署
+
+
+
+
+
+当你启动并连接到 JVM 进程后，只需要提供类的完全限定名（即包名+类名）即可。
+
+1. **启动 Arthas 并连接到 JVM 进程**：
+
+   ```sh
+   java -jar arthas-boot.jar
+   ```
+
+   选择对应的 JVM 进程。
+
+2. **查找类信息**：
+
+   ```sh
+   sc -d com.itheima.springbootclassfile.controller.UserController
+   ```
+
+   这将列出所有已加载的 `UserController` 类的信息。
+
+3. **反编译类**：
+
+   ```sh
+   jad com.itheima.springbootclassfile.controller.UserController
+   ```
+
+   这将反编译并显示 `UserController` 类的源代码。
+
+4. **反编译时只显示源代码**：
+
+   ```sh
+   jad --source-only com.itheima.springbootclassfile.controller.UserController
+   ```
+
+   这将反编译并显示 `UserController` 类的源代码。
+
+   
+
+1. **反编译时只显示源代码并写入到指定文件**：
+
+   ```sh
+   jad --source-only com.itheima.springbootclassfile.controller.UserController > D:\\aatest\\arthas_jad\\UserController.java
+   ```
+
+   注意: 在Windows环境下需要使用双反斜杠才能保存至目标目录中！在Linux环境下则可以使用单正斜杠`/`即可
+
+   ![image-20240801234357992](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240801234357992.png)
+
+
+
+热替换的步骤：
+
+![image-20240802001302021](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240802001302021.png)
+
+
+
+**通过 Arthas 的 `sc` 命令**：
+
+- **使用 `sc` 命令查看类的详细信息，包括类加载器信息。**例如：
+
+     ~~~
+     sc -d com.itheima.springbootclassfile.controller.UserController
+     ~~~
+
+![image-20240802001804732](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240802001804732.png)
+
+
+
+假设 `Test` 类由类加载器 `18b4aac2` 加载（Linux下的指令）：
+
+```bash
+mc -c 18b4aac2 /tmp/Test.java
+```
+
+在这个命令中，`-c 18b4aac2` 参数指定了类加载器的标识符，确保 `mc` 指令使用正确的类加载器来加载重新编译的类。
+
+Windows下的 `mc` 指令使用（错误示例，但是在Windows下并没有像Linux执行类似操作时报错`符号找不到`）：
+
+~~~
+mc D:\\aatest\\arthas_jad\\UserController.java        #需要使用`-c`指定类的加载器hashcode才可以编译成功
+~~~
+
+Windows下的 `mc` 指令使用（正确示例）：
+
+~~~
+mc -c 18b4aac2 D:\\aatest\\arthas_jad\\UserController.java
+~~~
+
+**如果是在Linux环境下不指定类的加载器的hashcode,会报错`找不到很多的类`**
+
+![image-20240802002628547](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240802002628547.png)
+
+![image-20240802002726391](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240802002726391.png)
+
+
+
+**`-d`参数指定编译后的.class文件的输出目录**
+
+~~~
+mc -c 18b4aac2 D:\\aatest\\arthas_jad\\UserController.java -d D:\\aatest\\arthas_jad\\
+~~~
+
+
+
+使用`retransform`指令，进行热加载/热部署
+
+~~~
+retransform D:\\aatest\\arthas_jad\\com\\itheima\\springbootclassfile\\controller\\UserController.class
+~~~
+
+热部署成功再次使用jad查看当前运行的程序中的类是否被替换掉了
+
+~~~sh
+jad --source-only com.itheima.springbootclassfile.controller.UserController
+~~~
+
+![image-20240802003918321](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240802003918321.png)
+
+发现热部署成功！
+
+## 注意：程序/进程重新启动后,这样使用Arthas热部署的代码就失效了！因为重新启动程序会重新加载原来项目中没有实时修改过的类。retransform指令只是将最新的.class文件信息更新到了内存中，重启后更新的信息就丢失了。
+
+如果想要永久修改，可以将发布后的项目的jar包中的.class文件替换掉。
+
+![image-20240802004324397](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240802004324397.png)
+
+
+
+### 总结
+
+## 所以Arthas的热部署只是一个应急手段，正常的修复liu'c还是需要将你的程序重新进行编译、打包并部署到服务器上去修复这个bug!
+
+在使用 Arthas 进行类操作时，你只需要知道类的完全限定名（如 `com.itheima.springbootclassfile.controller.UserController`），而不需要知道或指定类文件在磁盘上的物理路径。Arthas 通过连接到 JVM 进程，直接在内存中操作这些类。
+
+
+
+# 13 Windows PowerShell 中文乱码问题
+
+![image-20240801231754005](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240801231754005.png)
+
+
+
+在 Windows PowerShell 中，中文字符显示乱码通常是由于编码设置不正确引起的。要解决这个问题，可以按照以下步骤操作：
+
+### 设置 PowerShell 的编码
+
+1. **设置 PowerShell 控制台的编码为 UTF-8**：
+   - 在 PowerShell 中运行以下命令，将控制台输出的编码设置为 UTF-8：
+     ```powershell
+     [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+     ```
+
+2. **更改 PowerShell 使用的字体**：
+   - 在 PowerShell 控制台窗口的标题栏上右键点击，选择 “属性”。
+   - 在 “字体” 选项卡中，选择支持中文显示的字体，如 “Consolas” 或 “等宽字体（等宽宋体）”。
+
+3. **确保文件编码为 UTF-8**：
+   - 如果你的源文件包含中文字符，确保这些文件的编码是 UTF-8。在大多数文本编辑器中都可以设置文件编码。例如，在 Visual Studio Code 中，可以通过点击右下角的编码信息并选择 “UTF-8” 来更改文件编码。
+
+4. **设置 PowerShell 配置文件（可选）**：
+   - 你可以将上述编码设置添加到 PowerShell 配置文件中，以便每次启动 PowerShell 时都自动应用这些设置。
+   - 打开 PowerShell 配置文件（如果不存在，可以创建一个）：
+     ```powershell
+     notepad $PROFILE
+     ```
+   - 在打开的文件中添加以下内容并保存：
+     ```powershell
+     [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+     ```
+
+### 示例操作
+
+1. **设置控制台输出编码**：
+   ```powershell
+   [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+   ```
+
+2. **检查文件编码**：
+   - 确保包含中文字符的源文件（如 Java 文件）使用的是 UTF-8 编码。
+
+3. **配置文件自动设置**（可选）：
+   - 编辑 PowerShell 配置文件：
+     ```powershell
+     notepad $PROFILE
+     ```
+   - 添加以下内容：
+     ```powershell
+     [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+     ```
+
+### 验证
+
+完成以上步骤后，可以重新运行 Arthas 的 `jad` 命令，验证中文字符是否正确显示。
+
+### 注意
+
+- 如果你使用的是 PowerShell Core（`pwsh`），同样适用上述方法。
+- 确保你的 PowerShell 控制台能够正确显示其他 UTF-8 编码的中文内容，以验证编码设置是否生效。
+
+通过这些步骤，应该可以解决 PowerShell 中的中文乱码问题，确保正确显示中文字符。

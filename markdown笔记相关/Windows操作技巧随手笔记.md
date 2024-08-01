@@ -358,3 +358,83 @@ MINGW64 (Minimalist GNU for Windows) 是一个软件开发环境，旨在提供�
 
 
 
+# 10 Windows PowerShell 中文乱码问题
+
+![image-20240801231754005](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240801231754005.png)
+
+
+
+在 Windows PowerShell 中，中文字符显示乱码通常是由于编码设置不正确引起的。要解决这个问题，可以按照以下步骤操作：
+
+### 设置 PowerShell 的编码
+
+1. **设置 PowerShell 控制台的编码为 UTF-8**：
+
+   - 在 PowerShell 中运行以下命令，将控制台输出的编码设置为 UTF-8：
+
+     ```powershell
+     [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+     ```
+
+2. **更改 PowerShell 使用的字体**：
+
+   - 在 PowerShell 控制台窗口的标题栏上右键点击，选择 “属性”。
+   - 在 “字体” 选项卡中，选择支持中文显示的字体，如 “Consolas” 或 “等宽字体（等宽宋体）”。
+
+3. **确保文件编码为 UTF-8**：
+
+   - 如果你的源文件包含中文字符，确保这些文件的编码是 UTF-8。在大多数文本编辑器中都可以设置文件编码。例如，在 Visual Studio Code 中，可以通过点击右下角的编码信息并选择 “UTF-8” 来更改文件编码。
+
+4. **设置 PowerShell 配置文件（可选）**：
+
+   - 你可以将上述编码设置添加到 PowerShell 配置文件中，以便每次启动 PowerShell 时都自动应用这些设置。
+
+   - 打开 PowerShell 配置文件（如果不存在，可以创建一个）：
+
+     ```powershell
+     notepad $PROFILE
+     ```
+
+   - 在打开的文件中添加以下内容并保存：
+
+     ```powershell
+     [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+     ```
+
+### 示例操作
+
+1. **设置控制台输出编码**：
+
+   ```powershell
+   [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+   ```
+
+2. **检查文件编码**：
+
+   - 确保包含中文字符的源文件（如 Java 文件）使用的是 UTF-8 编码。
+
+3. **配置文件自动设置**（可选）：
+
+   - 编辑 PowerShell 配置文件：
+
+     ```powershell
+     notepad $PROFILE
+     ```
+
+   - 添加以下内容：
+
+     ```powershell
+     [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+     ```
+
+### 验证
+
+完成以上步骤后，可以重新运行 Arthas 的 `jad` 命令，验证中文字符是否正确显示。
+
+### 注意
+
+- 如果你使用的是 PowerShell Core（`pwsh`），同样适用上述方法。
+- 确保你的 PowerShell 控制台能够正确显示其他 UTF-8 编码的中文内容，以验证编码设置是否生效。
+
+通过这些步骤，应该可以解决 PowerShell 中的中文乱码问题，确保正确显示中文字符。
+
