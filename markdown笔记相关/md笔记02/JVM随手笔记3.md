@@ -1723,3 +1723,294 @@ public class CustomClassLoaderTest {
 3. **安全性和正确性**：无论是否在加载时显式调用`resolveClass`，Java虚拟机都会确保类在使用前已经完成解析阶段，从而保证程序的安全性和正确性。
 
 通过这些机制，Java虚拟机能够确保即使在自定义类加载器中没有显式调用`resolveClass`，类的解析阶段也会在适当的时候自动进行。
+
+
+
+# 7 **OSGi** 是 **Open Services Gateway Initiative** 的缩写。OSGi 是一个动态模块化系统
+
+**JDK 本身没有使用过 OSGi。**OSGi 是一种模块化系统和服务平台，主要用于 Java，但它并不是 JDK 的一部分。
+
+**OSGi** 是 **Open Services Gateway Initiative** 的缩写。OSGi 是一个动态模块化系统，它为 Java 应用程序提供了一个组件模型，使开发者可以将应用程序分解成多个模块（称为捆绑包，bundles），这些模块可以在运行时独立安装、启动、停止、更新和卸载。
+
+OSGi 的主要特点和优势包括：
+
+1. **动态模块化**：允许模块在运行时动态地加载和卸载，从而使得应用程序可以灵活地进行更新和维护。
+2. **服务导向**：OSGi 提供了服务注册和发现的机制，使得模块之间可以通过服务进行通信，而不需要直接依赖。
+3. **版本控制**：支持模块的版本控制，允许同一个模块的不同版本共存，以解决版本冲突问题。
+4. **隔离和封装**：每个模块有自己的类加载器，实现了类和资源的隔离，增强了应用程序的安全性和稳定性。
+
+OSGi 被广泛应用于企业级应用、嵌入式系统和其他需要动态模块化和服务管理的场景。例如，Apache Karaf 和 Eclipse IDE 都是基于 OSGi 技术的。
+
+总结来说，虽然 JDK 没有使用 OSGi，但 OSGi 作为一种独立的模块化系统，为许多 Java 应用程序提供了强大的模块化和动态管理功能。
+
+
+
+
+
+**Jigsaw**	拼图；竖锯；拼图玩具	/ˈdʒɪɡsɔː/
+
+
+
+**JDK 现在使用的是 Jigsaw 模块系统，而不是 OSGi。**Jigsaw 项目在 JDK 9 中引入了模块系统，以替代传统的 monolithic JAR 文件结构。这种模块系统使得 Java 平台和应用程序可以更好地组织代码，并提供更强的封装和模块化支持。
+
+Jigsaw 模块系统的主要特点包括：
+
+1. **模块定义**：使用 `module-info.java` 文件定义模块及其依赖关系。
+2. **强封装**：模块只能访问明确导出的包，从而提高了代码的封装性和安全性。
+3. **可靠配置**：模块系统在编译时和运行时都能检测模块依赖关系和版本冲突。
+4. **改进的性能**：模块系统减少了类加载的开销，提高了启动性能和运行效率。
+
+尽管 OSGi 也是一种模块化系统，并且在许多企业级应用中被广泛使用，但 JDK 自身并没有直接使用 OSGi，而是通过 Jigsaw 项目引入了原生的模块化支持。
+
+
+
+# 8 使用Arthas实现热部署机制
+
+
+
+![image-20240801181138313](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240801181138313.png)
+
+
+
+
+
+- `jad` 命令将 JVM 中实际运行的 class 的 byte code 反编译成 java 代码，便于你理解业务逻辑；如需批量下载指定包的目录的 class 字节码可以参考 [dump](https://arthas.aliyun.com/doc/dump.html)。
+
+默认情况下，反编译结果里会带有`ClassLoader`信息，通过`--source-only`选项，可以只打印源代码。方便和[mc](https://arthas.aliyun.com/doc/mc.html)/[retransform](https://arthas.aliyun.com/doc/retransform.html)命令结合使用。
+
+```java
+ jad --source-only demo.MathGame
+```
+
+
+
+- `mc` 命令, Memory Compiler/内存编译器，编译`.java`文件生成`.class`。
+
+可以通过`-c`参数指定 classloader：
+
+```bash
+mc -c 327a647b /tmp/Test.java
+```
+
+可以通过`-d`命令指定输出目录：
+
+```bash
+mc -d /tmp/output /tmp/ClassA.java /tmp/ClassB.java
+```
+
+编译生成`.class`文件之后，可以结合[retransform](https://arthas.aliyun.com/doc/retransform.html)命令实现热更新代码。
+
+注意
+
+注意，mc 命令有可能失败。如果编译失败可以在本地编译好`.class`文件，再上传到服务器。具体参考[retransform](https://arthas.aliyun.com/doc/retransform.html)命令说明。
+
+
+
+
+
+- `retransform`命令，加载外部的`.class`文件，retransform jvm 已加载的类。
+
+
+
+
+
+
+
+# 9 在 Java 中，使用 Arthas 的 `retransform` 进行类的 retransformation（重新转换）时，有一些重要的限制需要注意。以下是这些限制及其解释：
+
+### 1. 不能增加字段和方法
+使用Arthas 的 `retransform` 对类进行重新转换时，不能增加新的字段（fields）和方法（methods）。这意味着只能对现有的方法进行修改，而不能添加新的成员变量或新方法。这是因为 JVM 在加载类时已经分配了内存结构，并且新增字段和方法会改变类的内存布局，可能导致内存访问错误和 JVM 崩溃。
+
+### 2. 正在运行的方法不能立即生效
+如果一个方法正在运行中，重新转换后的代码不会立即生效，只有当方法重新被调用时，新的代码才会生效。具体来说，如果一个方法正在执行，它所对应的字节码已经加载到 JVM 中，直到方法执行完毕退出，再次调用该方法时，JVM 才会使用重新转换后的字节码。
+
+### 示例代码解释
+
+```java
+public class MathGame {
+    public static void main(String[] args) throws InterruptedException {
+        MathGame game = new MathGame();
+        while (true) {
+            game.run();
+            TimeUnit.SECONDS.sleep(1);
+            // 这个不生效，因为代码一直跑在 while里
+            System.out.println("in loop");
+        }
+    }
+
+    public void run() throws InterruptedException {
+        // 这个生效，因为run()函数每次都可以完整结束
+        System.out.println("call run()");
+        try {
+            int number = random.nextInt();
+            List<Integer> primeFactors = primeFactors(number);
+            print(number, primeFactors);
+
+        } catch (Exception e) {
+            System.out.println(String.format("illegalArgumentCount:%3d, ", illegalArgumentCount) + e.getMessage());
+        }
+    }
+}
+```
+
+### 代码详细解释
+
+1. **`main` 方法中的 `while` 循环**
+
+```java
+while (true) {
+    game.run();
+    TimeUnit.SECONDS.sleep(1);
+    // 这个不生效，因为代码一直跑在 while里
+    System.out.println("in loop");
+}
+```
+
+- `while` 循环中的 `System.out.println("in loop");` 不会立即生效，因为 `while` 循环一直在运行，即使进行了类的重新转换，这段代码也不会重新被编译和执行。(即旧的死循环中的代码一直在运行，不会得到更新，因为一直再跑旧的死循环中的代码)
+- 只有当整个 `while` 循环体结束后再次进入循环时，新的字节码才会生效，但在无限循环中，这段代码永远不会退出，所以不会生效。
+
+2. **`run` 方法**
+
+```java
+public void run() throws InterruptedException {
+    // 这个生效，因为run()函数每次都可以完整结束
+    System.out.println("call run()");
+    try {
+        int number = random.nextInt();
+        List<Integer> primeFactors = primeFactors(number);
+        print(number, primeFactors);
+
+    } catch (Exception e) {
+        System.out.println(String.format("illegalArgumentCount:%3d, ", illegalArgumentCount) + e.getMessage());
+    }
+}
+```
+
+- `run` 方法中的 `System.out.println("call run()");` 会生效，因为 `run` 方法每次调用都会完整结束。当 `run` 方法结束后，再次调用 `run` 时，重新转换的代码会生效。
+
+### 总结
+
+在使用 Java Instrumentation API 进行类的重新转换时，需要注意以下几点：
+
+- **不能增加字段和方法**：只能修改现有的方法。
+- **正在运行的方法不能立即生效**：只有当方法重新调用时，新的字节码才会生效。
+
+在示例代码中，`main` 方法中的 `while` 循环代码因为不会退出，所以重新转换的代码不会生效，而 `run` 方法中的代码因为每次调用都会完整结束，所以会生效。
+
+
+
+
+
+
+
+# 10 在使用Arthas指令`mc -c 327a647b /tmp/Test.java`时，为什么需要指定类的加载器？才能加载成功？否则会出现许多找不到指定的类的提示？
+
+在使用 Arthas 的 `mc`（`mc` 是 `Memory Compiler` 的缩写）指令进行类热替换时，指定类加载器是至关重要的。以下是原因及详细解释：
+
+### 类加载器的作用
+
+Java 中的类加载器（ClassLoader）负责加载类文件到 JVM 中。在复杂的应用程序中，通常会有多个类加载器，每个类加载器加载不同的类集合。类加载器的设计允许在不同的上下文中加载同名类，使得类的命名空间更加灵活。
+
+### 为什么需要指定类加载器
+
+1. **类加载器的唯一性**：
+   - 在 Java 中，同一个类名可以由不同的类加载器加载，形成不同的类定义。每个类加载器加载的类是唯一的，JVM 将由不同类加载器加载的类视为不同的类。
+
+2. **准确定位目标类**：
+   - 当你使用 Arthas 的 `mc` 指令对一个类进行重新编译和加载时，需要确保该类被正确的类加载器加载。如果不指定类加载器，Arthas 可能会使用错误的类加载器进行加载，从而导致找不到指定的类。
+
+### 问题分析
+
+当你不指定类加载器时，`mc` 指令会使用默认的系统类加载器或当前线程的上下文类加载器。如果目标类不是由这些类加载器加载的，`mc` 就无法找到该类，从而出现找不到指定类的错误提示。
+
+例如，在一个复杂的应用环境中（如 Spring、Tomcat 等），应用可能会使用多个自定义类加载器来隔离不同模块或组件。如果你要重新编译和加载一个由自定义类加载器加载的类，必须指定正确的类加载器，否则会出现找不到类的情况。
+
+### 例子
+
+假设 `Test` 类由类加载器 `327a647b` 加载：
+
+```bash
+mc -c 327a647b /tmp/Test.java
+```
+
+在这个命令中，`-c 327a647b` 参数指定了类加载器的标识符，确保 `mc` 指令使用正确的类加载器来加载重新编译的类。
+
+### 类加载器的获取
+
+在实际操作中，你可以通过以下方式获取类加载器的标识符：
+
+1. **通过 Arthas 的 `sc` 命令**：
+   - **使用 `sc` 命令查看类的详细信息，包括类加载器信息。**例如：
+     ```bash
+     sc -d com.example.Test
+     ```
+     这条命令会显示 `Test` 类的详细信息，包括加载它的类加载器的标识符。
+
+2. **通过日志或调试信息**：
+   - 在某些情况下，类加载器的信息可能会在应用的日志或调试信息中出现，可以通过这些途径获取类加载器标识符。
+
+### 总结
+
+在使用 Arthas 的 `mc` 指令进行类热替换时，指定类加载器是为了确保重新编译的类被正确加载。由于 Java 中类加载器的唯一性和复杂性，不同的类加载器加载的类是不同的，如果不指定类加载器，可能会导致找不到指定类的错误。因此，通过 `-c` 参数指定正确的类加载器，可以确保 `mc` 指令成功加载重新编译的类。
+
+
+
+
+
+类的重新加载和替换现有的类定义通常是通过 `retransform` 这样的指令完成的。`mc`（Memory Compiler）指令的主要工作是将 .java 文件编译为 .class 文件。下面是一个更清晰的解释：
+
+### `mc` 和 `retransform` 的角色区分
+
+1. **`mc`（Memory Compiler）指令**：
+   - 主要用于编译 .java 源文件并生成 .class 字节码文件。
+   - 这个过程中，`mc` 需要使用正确的类加载器来查找和加载编译过程中所需的类（如依赖类、父类、接口等），但它本身不负责将新的类定义加载到 JVM 中。
+
+2. **`retransform` 指令**：
+   - 主要用于在运行时重新转换（retransform）和重新定义（redefine）类。
+   - 通过这个指令，可以将新的类定义加载到 JVM 中，以替换现有的类定义。
+
+### 为什么 `mc` 需要指定类加载器
+
+尽管 `mc` 主要用于编译源码，但在以下情况下需要指定类加载器：
+
+1. **查找依赖类**：编译过程中，`mc` 需要查找源文件中引用的其他类（如父类、接口、方法参数类型等）。如果这些类由自定义类加载器加载，则需要指定正确的类加载器，以确保编译过程中能找到这些依赖类。
+
+2. **编译环境一致性**：在复杂的应用中，不同模块可能使用不同的类加载器。如果不指定类加载器，可能会导致编译环境与运行时环境不一致，从而引发类加载错误。
+
+### 实际操作流程
+
+1. **使用 `mc` 编译源文件**：
+   ```bash
+   mc -c 327a647b /tmp/Test.java
+   ```
+   这一步确保 `Test.java` 被正确编译，并生成 `Test.class` 文件。在编译过程中，指定的类加载器 `327a647b` 会被用来查找编译过程中所需的依赖类。
+
+2. **使用 `retransform` 重新转换类**：
+   一旦 `Test.class` 文件生成，可以使用 `retransform` 指令将新的类定义加载到 JVM 中，以替换现有的类定义。例如：
+   ```bash
+   retransform Test
+   ```
+   这一步将新的 `Test` 类定义加载到 JVM 中，实际执行重新转换和替换操作。
+
+### 示例
+
+假设你有一个 `MathGame` 类，并希望在运行时修改这个类：
+
+1. **编译 `MathGame.java`**：
+   ```bash
+   mc -c 327a647b /tmp/MathGame.java
+   ```
+   这一步确保 `MathGame.java` 被正确编译，并生成 `MathGame.class` 文件。
+
+2. **重新转换 `MathGame` 类**：
+   ```bash
+   retransform MathGame
+   ```
+   这一步将新的 `MathGame` 类定义加载到 JVM 中。
+
+### 总结
+
+- `mc` 指令用于编译 .java 文件，需要指定类加载器以确保编译过程中能正确查找依赖类。
+- 类的重新转换和加载新定义通常是 `retransform` 指令的工作。
+- 指定类加载器是为了确保编译和加载过程中的一致性，避免在复杂应用环境中出现类加载错误。
+

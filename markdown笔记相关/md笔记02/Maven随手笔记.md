@@ -791,4 +791,55 @@ mvn help:describe -Dplugin=org.apache.maven.plugins:maven-source-plugin -Ddetail
 
 
 
-# 17 
+# 17  idea导入Maven项目报错 ,在包信息上提示需要`Add Library xx to classpath`
+
+> 问题出现的背景是，在JVMDemo1项目中引入一个Maven-java项目，该操作导致出现了大面积报错！
+
+
+
+![image-20240801192945078](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240801192945078.png)
+
+
+
+解决方案: 
+
+https://stackoverflow.com/questions/38854465/cannot-access-org-springframework-context-configurableapplicationcontext-class-f
+
+![image-20240801193907250](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240801193907250.png)
+
+
+
+# 18 java: java.lang.NoSuchFieldError: Class com.sun.tools.javac.tree.JCTree$JCImport does not have member field 'com.sun.tools.javac.tree.JCTree qualid'
+
+解决方案：
+
+https://stackoverflow.com/questions/77171270/compilation-error-after-upgrading-to-jdk-21-nosuchfielderror-jcimport-does-n
+
+
+
+报错原因是选择了过高版本的jdk，修改项目modules依赖的jdk版本
+
+,改为pom中指定的对应版本的jdk依赖
+
+通过`File -> New -> Project from existing source`的方式选择一个.pom文件来打开项目
+
+会使得idea自动管理该项目，默认会使用项目配置的jdk，我这里配置的的jdk22
+
+![image-20240801194556812](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240801194556812.png)
+
+
+
+查看.pom文件指定的jdk版本是1.8
+
+![image-20240801194713874](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240801194713874.png)
+
+
+
+修改项目依赖的版本为1.8
+
+![image-20240801194327287](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240801194327287.png)
+
+
+
+项目启动成功！
+

@@ -1110,3 +1110,43 @@ Enable annotation processing
 
 
 
+# 17 调整 IntelliJ IDEA 右侧小工具的布局并设置默认显示项
+
+![image-20240801190424024](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240801190424024.png)
+
+要调整 IntelliJ IDEA 右侧小工具的布局并设置默认显示项，可以按照以下步骤操作：
+
+1. **固定工具窗口位置**：
+   - 先把你需要的工具窗口（如 `Structure`）拖到右侧，然后右键点击工具窗口标题栏，选择 `Move to Right` 或直接将窗口拖到右侧边缘。这样在重启 IDE 时，工具窗口会记住这个位置。
+
+2. **隐藏不需要的工具窗口**：
+   - 对于你不需要显示的工具窗口（如 `Database`），你可以右键点击工具窗口标题栏，然后选择 `Hide` 或 `Close`。这样这些窗口就不会默认显示。
+
+3. **显示需要的工具窗口**：
+   - 对于你想显示的工具窗口（如 `Maven`），你可以通过 `View` 菜单中的 `Tool Windows` 找到并打开该工具窗口。这样在重启 IDE 时，工具窗口会记住这个设置。
+
+4. **固定工具窗口布局**：
+   - 确保所有需要的工具窗口都已经设置好位置并显示。然后，右键点击任意工具窗口的标题栏，选择 `Store Current Layout as Default`（如果有这个选项）。这样可以将当前布局保存为默认布局，IDE 重启时会自动恢复这个布局。
+
+### 具体步骤示例
+
+1. **移动 `Structure` 到右侧**：
+   - 打开 `Structure` 窗口，点击并拖动窗口标题栏到右侧边缘，直到看到窗口在右侧停靠。
+
+2. **隐藏 `Database` 窗口**：
+   - 打开 `Database` 窗口，右键点击窗口标题栏，选择 `Hide` 或 `Close`或`Remove from Sidebar`。
+   - ![image-20240801190757118](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240801190757118.png)
+   
+3. **显示 `Maven` 窗口**：
+   - 在顶部菜单中选择 `View` -> `Tool Windows` -> `Maven`，确保 `Maven` 窗口打开并停靠在合适的位置。
+
+4. **保存布局**：
+   - 右键点击任意工具窗口的标题栏（如 `Structure`），如果有 `Store Current Layout as Default` 选项，选择它来保存当前布局。
+
+这些步骤应该能帮助你定制 IntelliJ IDEA 工具窗口的布局，并在重启时保持设置。如果有任何特定的问题，欢迎随时提出。
+
+
+
+# 18 idea导入Maven项目报错 ,需要`Add Library xx to classpath`
+
+![image-20240801192945078](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240801192945078.png)
