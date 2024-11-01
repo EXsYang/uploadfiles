@@ -2740,4 +2740,116 @@ https://www.bilibili.com/video/BV1r94y1b7eS?p=42&vd_source=5b09ee9382c8983b40a66
 
 
 
-# 15 
+# 15 Linux指令`nohup`与行尾添加`&`
+
+## 15.1 `nohup`命令
+
+`nohup` 是一个 Linux/Unix 命令，用于在终端会话中运行一个进程，确保该进程在用户注销或关闭终端后继续运行。它的全称是 "no hang up"，意思是“不会挂起”。以下是 `nohup` 的主要特性和用法：
+
+1. **持久运行**：使用 `nohup` 启动的进程不会因为用户注销或终端关闭而终止。这对于长时间运行的任务非常有用，比如数据处理、服务器程序等。
+
+2. **输出重定向**：默认情况下，`nohup` 会将进程的标准输出和标准错误输出重定向到一个名为 `nohup.out` 的文件中。这意味着即使在用户退出后，程序的输出也不会丢失。
+
+3. **后台运行**：通常与 `&` 符号结合使用，将进程放入后台运行，这样用户可以继续使用终端。比如你的命令 `nohup java -jar arthas-tunnel-server-3.7.1-fatjar.jar &` 就是这样。
+
+4. **基本用法**：
+   ```bash
+   nohup command [arguments] &
+   ```
+
+   其中 `command` 是你希望执行的命令，`arguments` 是传递给该命令的参数。
+
+在你提供的示例中：
+```bash
+nohup java -jar -Darthas.enable-detail-pages=true arthas-tunnel-server-3.7.1-fatjar.jar &
+```
+这个命令的作用是使用 `nohup` 运行一个 Java 应用程序，具体是 `arthas-tunnel-server-3.7.1-fatjar.jar`，并将其放到后台运行，确保它即使在终端会话结束后也能继续运行。同时，所有输出将被追加到 `nohup.out` 文件中。
+
+
+
+## 15.2 末尾的 `&` 符号命令
+
+~~~bash
+nohup java -jar -Darthas.enable-detail-pages=true arthas-tunnel-server-3.7.1-fatjar.jar &
+~~~
+
+
+
+在 Linux/Unix 系统中，末尾的 `&` 符号用于将一个命令放入后台运行。其作用如下：
+
+1. **后台执行**：当你在命令后面添加 `&` 时，操作系统会将该命令放入后台，这样你可以在终端继续使用其他命令，而不必等待该命令完成。例如，执行命令时，如果没有 `&`，你必须等待该命令执行完毕才能输入新的命令。
+
+2. **进程管理**：使用 `&` 后，终端会立即返回一个提示符，你可以继续执行其他任务。后台进程会继续运行，但如果你想查看它的状态或输出，通常需要查看输出文件（如 `nohup.out`）或使用命令如 `jobs`、`ps` 来管理和监视后台进程。
+
+3. **分离进程**：将进程放入后台后，即使你关闭终端，进程仍会在后台继续运行。这对于长时间运行的任务尤其有用，可以避免因为终端会话结束而导致的任务中断。
+
+总之，末尾的 `&` 使得命令在后台运行，从而允许用户在同一终端继续执行其他命令或退出终端而不影响后台进程的执行。
+
+
+
+# 16 阿里云服务器遇到的问题
+
+## 16.1 要想访问到阿里云服务器端口如8080端口，需要在安全组里配置并开放阿里云服务器访问端口的权限
+
+
+
+![image-20241102060629411](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20241102060629411.png)
+
+
+
+### 配置规则1（开放端口范围全部勾选）：
+
+![image-20241102060717857](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20241102060717857.png)
+
+
+
+
+
+为了方便可以配置开启所有访问权限
+
+### 配置规则2（开放全部端口）：
+
+https://developer.aliyun.com/article/793961
+
+![image-20241102061035549](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20241102061035549.png)
+
+再次点开规则2后，显示如下，会多出几个框，不用管
+
+![image-20241102060842467](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20241102060842467.png)
+
+
+
+配置规则1就够用了，但也规则1和规则2同时配置，可以保证全部端口打开，更加保险。
+
+
+
+## 16.2 arthas-tunnel服务已经在阿里云服务器8080端口监听
+
+![image-20241102060002861](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20241102060002861.png)
+
+使用电脑访问**arthas-tunnel服务的控制台** http://101.200.134.24:8080/apps.html 
+
+发现一直转圈，访问不到，但是使用手机访问却访问到了
+
+分析原因，电脑端DNS污染
+
+**解决方案：**
+
+修改电脑端网络IPV4 DNS
+
+改为114.114.114.114   和  8.8.8.8 后成功访问到阿里云服务器上部署在8080端口的arthas-tunnel服务的控制台页面 
+
+![image-20241102060218461](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20241102060218461.png)
+
+
+
+
+
+
+
+# 17 
+
+
+
+
+
