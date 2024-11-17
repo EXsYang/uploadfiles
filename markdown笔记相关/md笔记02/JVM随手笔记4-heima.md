@@ -20,6 +20,10 @@
 
 
 
+**关于rabbitmq的这个报错，在老韩的秒杀项目教学中有提到，具体位置在视频1-14如下**
+
+![image-20241116175238257](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20241116175238257.png)
+
 
 
 
