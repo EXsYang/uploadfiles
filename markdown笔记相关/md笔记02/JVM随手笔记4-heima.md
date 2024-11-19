@@ -69,6 +69,8 @@
 
 
 
+
+
 导入两个依赖：
 
 ~~~xml
@@ -247,7 +249,23 @@ jvm_memory_committed_bytes{application="jvm-test",area="nonheap",id="Compressed 
 
 
 
-# 3 
+# 3 Jemeter给请求接口携带随机参数
+
+
+
+![image-20241118174404896](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20241118174404896.png)
+
+
+
+
+
+![image-20241118174523428](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20241118174523428.png)
+
+
+
+点击**生成** 后会自动将随机函数复制到剪切板中，只需要CTRL+V 将其复制到请求要携带的参数列表中即可。
+
+![image-20241118174550139](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20241118174550139.png)
 
 
 
@@ -255,7 +273,12 @@ jvm_memory_committed_bytes{application="jvm-test",area="nonheap",id="Compressed 
 
 
 
+# 4 分析超大堆的内存快照 
 
 
 
+直达链接：https://www.bilibili.com/video/BV1r94y1b7eS?vd_source=5b09ee9382c8983b40a6600e7faeb262&spm_id_from=333.788.videopod.episodes&p=54
 
+
+
+![image-20241118180643252](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20241118180643252.png)
