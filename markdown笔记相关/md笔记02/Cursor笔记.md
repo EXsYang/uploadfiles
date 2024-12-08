@@ -16,7 +16,9 @@
 
 # 1 Cursor setting - 提示词设置 Rules for AI
 
+安装位置：
 
+C:\Users\用户\AppData\Local\Programs\cursor\
 
 ~~~
 Always respond in 中文.

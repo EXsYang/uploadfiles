@@ -1150,3 +1150,24 @@ Enable annotation processing
 # 18 idea导入Maven项目报错 ,需要`Add Library xx to classpath`
 
 ![image-20240801192945078](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240801192945078.png)
+
+
+
+
+
+# 19 IDEA关闭自动AI代码补全功能
+
+新版的Intellij IDEA 2024.1，发现在自己写代码时不但有常用的类和方法的提示，还有自动AI代码生成（类似Github的Copilot），想要关闭这个功能，可以在File->Setting->Editor->General->Code Completion中关闭，去掉Enable Full Line suggestions选项即可。
+
+
+
+![image-20241208083211139](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20241208083211139.png)
+
+
+
+
+
+
+
+
+
