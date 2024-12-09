@@ -286,3 +286,60 @@ java -cp target/classes com.atguigu.sparsearray.SparseArray
 
 
 
+# 3 [【2024-12-09】最新解决Cursor试用账号机器被封锁（附成品软件一键修改）](https://linux.do/t/topic/287438)
+
+最近我也无缘无故出现了下面的提示
+
+```md
+Too many free trial accounts used on this machine. Please upgrade to pro. We have this limit in place to prevent abuse. Please let us know if you believe this is a mistake.
+```
+
+仔细研究了一下论坛开源脚本和大佬们的只言片语，用只学几天的go，写了一个小脚本，核心就是修改三个参数`macMachineId`、`machineId`、`devDeviceId`之后立马设置`只读`即可。
+
+### 手动重置
+
+1. 完全关闭Cursor
+
+2. 找到storage.json文件：
+
+   - Windows: `%APPDATA%\Cursor\User\globalStorage\storage.json`
+   - MacOS: `~/Library/Application Support/Cursor/User/globalStorage/storage.json`
+   - Linux: `~/.config/Cursor/User/globalStorage/storage.json`
+
+3. 修改文件为可写（如果需要）：
+
+   - Windows: 右键 → 属性 → 取消勾选"只读"
+   - MacOS/Linux: `chmod 666 storage.json`
+
+4. 编辑文件，替换以下字段为新的随机值：
+
+   ```json
+   {
+     "telemetry.macMachineId": "生成64位十六进制",
+     "telemetry.machineId": "生成64位十六进制",
+     "telemetry.devDeviceId": "生成UUID格式"
+   }
+   ```
+
+   - 十六进制值：使用64个字符(0-9, a-f)
+   - UUID格式：类似 “xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx”
+
+5. 将文件设为只读：
+
+   - Windows: 右键 → 属性 → 勾选"只读"
+   - MacOS/Linux: `chmod 444 storage.json`
+
+6. 重启Cursor
+
+### ![:warning:](https://tgimgbed.999190.xyz/file/1733737109725_warning.png) 注意事项
+
+1. 使用本工具需要您自行承担风险
+2. 建议在重要数据做好备份后使用
+3. 本工具仅用于学习研究,请勿用于商业用途
+
+开源如下：
+[yuaotian/go-cursor-help: 解决Cursor在免费订阅期间出现以下提示的问题: Too many free trial accounts used on this machine. Please upgrade to pro. We have this limit in place to prevent abuse. Please let us know if you believe this is a mistake.](https://github.com/yuaotian/go-cursor-help)
+
+------
+
+![img](https://iconce.com/api/v1?type=text&w=600&h=35&value=Let's do it without Linux.| 👮‍♂️老实交代：你是来划水的🏊    还是来摸鱼的🐟&animate=true&fillType=Linear&primaryColor=%23DD1818&secondaryColor=%23380202&angle=45&radialGlare=false&radius=8&strokeSize=0&strokeColor=%23FFFFFF&strokeOpacity=100&color=%23FFFFFF&size=16&family=cursiveLet%27s%20do%20it%20without%20Linux.|%20👮%E2%80%8D♂%EF%B8%8F老实交代：你是来划水的🏊%20%20%20%20还是来摸鱼的🐟&PC=U316&FORM=CHROMN)
