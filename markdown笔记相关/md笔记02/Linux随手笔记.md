@@ -328,6 +328,14 @@ Type `help' to learn how to use Xshell prompt.
 useradd 用户名
 ```
 
+~~~
+#在 CentOS 系统中，创建用户的推荐方式有所不同，主要是因为 CentOS 使用 wheel 组来代替 sudo 组：
+# 创建用户并添加到 wheel 组
+useradd -m -G wheel -s /bin/bash gura
+~~~
+
+
+
 常用选项：
 
 1. **-c**：用于添加用户账户的描述（通常是用户的全名）。

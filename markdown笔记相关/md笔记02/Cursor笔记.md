@@ -343,3 +343,40 @@ Too many free trial accounts used on this machine. Please upgrade to pro. We hav
 ------
 
 ![img](https://iconce.com/api/v1?type=text&w=600&h=35&value=Let's do it without Linux.| 👮‍♂️老实交代：你是来划水的🏊    还是来摸鱼的🐟&animate=true&fillType=Linear&primaryColor=%23DD1818&secondaryColor=%23380202&angle=45&radialGlare=false&radius=8&strokeSize=0&strokeColor=%23FFFFFF&strokeOpacity=100&color=%23FFFFFF&size=16&family=cursiveLet%27s%20do%20it%20without%20Linux.|%20👮%E2%80%8D♂%EF%B8%8F老实交代：你是来划水的🏊%20%20%20%20还是来摸鱼的🐟&PC=U316&FORM=CHROMN)
+
+
+
+
+
+# 4 突破免费试用封锁
+
+
+
+~~~sh
+@echo off
+setlocal EnableDelayedExpansion
+
+:: 生成新的UUID和随机字符串
+for /f %%i in ('powershell -Command "[guid]::NewGuid().ToString().ToLower()"') do set new_machine_id=%%i
+for /f %%i in ('powershell -Command "[guid]::NewGuid().ToString().ToLower()"') do set new_dev_device_id=%%i
+for /f %%i in ('powershell -Command "-join ((0..31)|%%{(48..57)+(97..102)|Get-Random|%%{[char]$_}})"') do set new_mac_machine_id=%%i
+
+:: 设置Cursor配置文件路径
+set "cursor_path=%APPDATA%\Cursor"
+set "storage_path=%cursor_path%\User\globalStorage\storage.json"
+
+:: 写入新的machine id
+echo !new_machine_id! > "%cursor_path%\machineid"
+
+:: 使用PowerShell更新storage.json文件
+powershell -Command ^
+    "$content = Get-Content '%storage_path%' -Raw; ^
+     $content = $content -replace '""telemetry.devDeviceId"": "".*""', '""telemetry.devDeviceId"": ""%new_dev_device_id%""'; ^
+     $content = $content -replace '""telemetry.macMachineId"": "".*""', '""telemetry.macMachineId"": ""%new_mac_machine_id%""'; ^
+     $content | Set-Content '%storage_path%'"
+
+echo "Cursor本地数据重置完成！"
+~~~
+
+
+
