@@ -8797,3 +8797,23 @@ ab -n 100 -c 10 http://example.com/
 
 ![image-20240801230412053](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240801230412053.png)
 
+
+
+
+
+# 7 AlmaLinux
+
+**AlmaLinux**是自由且开放源代码的[Linux发行版](https://zh.wikipedia.org/wiki/Linux发行版)，最初由CloudLinux建立，旨在提供一个社群支持、可用于生产环境的企业级操作系统，并与[Red Hat Enterprise Linux](https://zh.wikipedia.org/wiki/Red_Hat_Enterprise_Linux) (RHEL)二进制兼容。AlmaLinux的第一个稳定版本于2021年3月30日发布[[3\]](https://zh.wikipedia.org/wiki/AlmaLinux#cite_note-release-3)。
+
+## 历史
+
+[[编辑](https://zh.wikipedia.org/w/index.php?title=AlmaLinux&action=edit&section=1)]
+
+2020年12月8日，[红帽公司](https://zh.wikipedia.org/wiki/紅帽公司)宣布将停止开发[CentOS](https://zh.wikipedia.org/wiki/CentOS)，此为商业版Red Hat Enterprise Linux (RHEL)的免费下游分支，并将其官方支持缩短，专心开发CentOS Stream，这是红帽公司用于预览打算包含在RHEL更新内容的正式滚动版本[[4\]](https://zh.wikipedia.org/wiki/AlmaLinux#cite_note-4)[[5\]](https://zh.wikipedia.org/wiki/AlmaLinux#cite_note-5)。
+
+作为回应，维护自己的商业Linux散布版([CloudLinux OS](https://zh.wikipedia.org/w/index.php?title=CloudLinux_OS&action=edit&redlink=1))的CloudLinux公司建立了AlmaLinux，为提供社群支持的CentOS精神继承者，旨在与目前的RHEL二进制兼容[[6\]](https://zh.wikipedia.org/wiki/AlmaLinux#cite_note-FAQ-6)。AlmaLinux的第一个测试版本于2021年2月1日发布[[7\]](https://zh.wikipedia.org/wiki/AlmaLinux#cite_note-7)，而第一个稳定版本则于2021年3月30日发布[[3\]](https://zh.wikipedia.org/wiki/AlmaLinux#cite_note-release-3)。AlmaLinux 8.x将会支持至2029年[[6\]](https://zh.wikipedia.org/wiki/AlmaLinux#cite_note-FAQ-6)。2021年3月30日，AlmaLinux OS基金会成立，并从CloudLinux公司接管AlmaLinux的开发与治理，CloudLinux公司并承诺为AlmaLinux项目提供每年一百万美元的资金[[8\]](https://zh.wikipedia.org/wiki/AlmaLinux#cite_note-8)。
+
+此散布版的名称来自于拉丁文单字"alma"，意为“灵魂”，是为了向Linux社群致敬[[9\]](https://zh.wikipedia.org/wiki/AlmaLinux#cite_note-9)。
+
+
+
