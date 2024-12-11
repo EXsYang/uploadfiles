@@ -628,7 +628,7 @@ userdel: user mycentos is currently used by process 8188
 
 常用选项：
 
-- `-a`：显示当前目录所有的文件和目录，e包括隐藏的。
+- `-a`：显示当前目录所有的文件和目录，ye包括隐藏的。
 
 - `-l`：以列表的方式显示信息
 
@@ -7695,7 +7695,7 @@ mysqldump -u"${DB_USER}" -p"${DB_PW}" --host="${HOST}" -q -R --databases ${DATAB
 
 在 MySQL 命令行工具（如 `mysqldump` 和 `mysql`）中，`-u` 和 `-p` 选项用于指定数据库的用户名和密码。这里是这些选项的简洁说明以及使用时的注意点：
 
-1. **`-u` 和 `-uroot`**：
+1. **`-u` 和 `-uroot`**： 
    - **意义**：`-u` 选项后跟着的是要连接到数据库的用户名。例如，`-uroot` 表示使用用户名 `root` 进行连接。
    - **格式**：选项 `-u` 与用户名之间不需要空格。例如，`-uroot`。
    - **注意点**：在脚本或命令行中明确指定用户名是安全的。
@@ -8817,3 +8817,62 @@ ab -n 100 -c 10 http://example.com/
 
 
 
+# 8 vim系统没有安装，如何开启？
+
+
+
+在 AlmaLinux 中安装 vim 有两种方式：
+
+1 使用 dnf 直接安装 vim：
+
+~~~
+sudo dnf install -y vim
+~~~
+
+2 安装 vim 增强版（包含更多功能）：
+
+~~~
+sudo dnf install -y vim-enhanced
+~~~
+
+
+
+
+
+如果你暂时还没有安装 vim，可以使用系统自带的其他编辑器：
+
+1 使用 nano（如果已安装）：
+
+~~~
+sudo nano /etc/ssh/sshd_config.d/99-custom.conf
+~~~
+
+2 或使用最基础的 vi：
+
+~~~
+sudo vi xxx.conf
+~~~
+
+\3. 也可以直接使用 echo 命令写入文件：
+
+~~~
+sudo bash -c 'cat > /etc/ssh/sshd_config.d/99-custom.conf << EOL
+# 自定义 SSH 安全配置
+Port 2233
+PermitRootLogin prohibit-password
+PasswordAuthentication no
+PubkeyAuthentication yes
+AuthorizedKeysFile .ssh/authorized_keys
+MaxAuthTries 3
+LoginGraceTime 30
+ClientAliveInterval 300
+ClientAliveCountMax 2
+PermitEmptyPasswords no
+X11Forwarding no
+AllowTcpForwarding no
+AllowAgentForwarding no
+LogLevel VERBOSE
+EOL'
+~~~
+
+建议安装 vim，因为它是最常用的文本编辑器，具有语法高亮等实用功能。安装后可以通过 vimtutor 命令学习基本使用方法。

@@ -717,5 +717,148 @@ C:\Users\xxx>ipconfig /all
 
 
 
+# 13 windows修改定时任务步骤(github自动每天推送脚本)
 
+
+
+调查运行窗口输入：
+
+~~~
+taskschd.msc
+~~~
+
+![image-20241210203539288](https://tgimgbed.999190.xyz/file/1733834161157_image-20241210203539288.png)
+
+
+
+![image-20241210203914102](https://tgimgbed.999190.xyz/file/1733834374965_image-20241210203914102.png)
+
+![image-20241210203934370](https://tgimgbed.999190.xyz/file/1733834400495_image-20241210203934370.png)
+
+
+
+附脚本：
+
+~~~bash
+@echo off
+setlocal enabledelayedexpansion
+chcp 65001
+
+:: 设置Git环境变量
+set "GIT_PATH=D:\Java_developer_tools\Git\Git"
+set "PATH=%PATH%;%GIT_PATH%\cmd;%GIT_PATH%\bin;%GIT_PATH%\mingw64\bin"
+
+:: 设置日志文件路径和计数器文件路径
+set "LOG_FILE=%~dp0git_auto_commit_log.txt"
+set "COUNTER_FILE=%~dp0log_counter.txt"
+
+:: 初始化或读取计数器
+if not exist "!COUNTER_FILE!" (
+    echo 0 > "!COUNTER_FILE!"
+)
+set /p COUNTER=<"!COUNTER_FILE!"
+set /a COUNTER+=1
+
+:: 如果计数达到180次，重置日志文件
+if !COUNTER! GEQ 180 (
+    echo 日志计数达到180次，重置日志文件...
+    set COUNTER=1
+    if exist "!LOG_FILE!" (
+        :: 创建备份文件（可选）
+        copy "!LOG_FILE!" "!LOG_FILE!.bak" >nul
+        del "!LOG_FILE!"
+    )
+)
+
+:: 保存新的计数
+echo !COUNTER! > "!COUNTER_FILE!"
+
+:: 初始化或追加到日志文件
+if !COUNTER! EQU 1 (
+    echo 新日志周期开始 - %date% %time% > "!LOG_FILE!"
+) else (
+    echo. >> "!LOG_FILE!"
+    echo 第 !COUNTER! 次提交 - %date% %time% >> "!LOG_FILE!"
+)
+echo -------------------------------- >> "!LOG_FILE!"
+
+:: 验证Git是否可用
+where git >nul 2>nul
+if %ERRORLEVEL% NEQ 0 (
+    echo Git命令不可用，正在检查环境... >> "!LOG_FILE!"
+    if exist "%GIT_PATH%\cmd\git.exe" (
+        echo 找到Git执行文件，正在设置环境变量... >> "!LOG_FILE!"
+        set "PATH=%PATH%;%GIT_PATH%\cmd;%GIT_PATH%\bin;%GIT_PATH%\mingw64\bin"
+    ) else (
+        echo 错误：未找到Git执行文件，请检查安装路径：%GIT_PATH% >> "!LOG_FILE!"
+        pause
+        exit /b 1
+    )
+)
+
+:: 定义需要检查的Git仓库目录
+set REPOSITORIES="D:\Java_developer_tools\uploadfiles" "D:\Java_developer_tools\mycode"
+
+:: 遍历每个Git仓库目录
+for %%d in (%REPOSITORIES%) do (
+    echo 正在检查Git仓库: %%d
+    echo 正在检查Git仓库: %%d >> "!LOG_FILE!"
+    
+    if not exist "%%d" (
+        echo 警告：目录 %%d 不存在 >> "!LOG_FILE!"
+        echo 警告：目录 %%d 不存在
+        continue
+    )
+
+    pushd %%d
+    
+    :: 检查是否是Git仓库
+    if not exist ".git" (
+        echo 警告：%%d 不是Git仓库 >> "!LOG_FILE!"
+        echo 警告：%%d 不是Git仓库
+        popd
+        continue
+    )
+
+    :: 检查是否有文件变动
+    git status --porcelain > temp_status.txt 2>nul
+    if %ERRORLEVEL% NEQ 0 (
+        echo Git命令执行失败，请检查权限或Git配置 >> "!LOG_FILE!"
+        echo Git命令执行失败，请检查权限或Git配置
+        del temp_status.txt 2>nul
+        popd
+        continue
+    )
+
+    findstr /r /c:"^ M" /c:"^??" temp_status.txt > nul
+    if !ERRORLEVEL! EQU 1 (
+        echo No changes in "%%d", no commit needed. >> "!LOG_FILE!"
+        echo No changes in "%%d", no commit needed.
+    ) else (
+        echo 检测到变更，正在提交... >> "!LOG_FILE!"
+        echo 检测到变更，正在提交...
+        
+        git add . >> "!LOG_FILE!" 2>&1
+        git commit -m "自动提交 #!COUNTER!: %date% %time%" >> "!LOG_FILE!" 2>&1
+        git push >> "!LOG_FILE!" 2>&1
+        
+        if !ERRORLEVEL! EQU 0 (
+            echo 成功推送更改 >> "!LOG_FILE!"
+            echo 成功推送更改
+        ) else (
+            echo 推送失败，请检查网络或远程仓库配置 >> "!LOG_FILE!"
+            echo 推送失败，请检查网络或远程仓库配置
+        )
+    )
+    
+    :: 删除临时状态文件
+    del temp_status.txt 2>nul
+    popd
+)
+
+echo 所有仓库处理完成。（第 !COUNTER! 次运行） >> "!LOG_FILE!"
+echo 所有仓库处理完成。（第 !COUNTER! 次运行）
+echo 详细日志请查看: !LOG_FILE!
+pause
+~~~
 
