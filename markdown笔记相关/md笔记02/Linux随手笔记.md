@@ -628,7 +628,7 @@ userdel: user mycentos is currently used by process 8188
 
 常用选项：
 
-- `-a`：显示当前目录所有的文件和目录，ye包括隐藏的。
+- `-a`：显示当前目录所有的文件和目录，也包括隐藏的。
 
 - `-l`：以列表的方式显示信息
 
@@ -1773,6 +1773,7 @@ grep -ni "yes" /home/hello.txt
     - 作用：将 `ls -l` 的输出保存到 `output.txt` 文件中，并在终端显示。如果文件已存在，它将被覆盖。
 
 - **`tee -a`**：将输出同时追加到文件和标准输出（终端），不覆盖文件中的原有内容。
+    
     ```bash
     ls -l | tee -a output.txt
     ```
@@ -8817,7 +8818,7 @@ ab -n 100 -c 10 http://example.com/
 
 
 
-# 8 vim系统没有安装，如何开启？
+# 8 vim系统没有安装，如何开启？安装vim
 
 
 
