@@ -350,7 +350,7 @@ Too many free trial accounts used on this machine. Please upgrade to pro. We hav
 
 # 4 突破免费试用封锁
 
-
+## 4.1
 
 ~~~sh
 @echo off
@@ -380,8 +380,19 @@ echo "Cursor本地数据重置完成！"
 
 
 
+## 4.2
 
 
 
+听说了cursor只有250额度了，马上重新注册确实250，但发现用不了 ![:cold_face:](https://tgimgbed.999190.xyz/file/1734001367791_cold_face.png)
+限制一个机器三个号(包括重新注册？？？
 
-![image-20241212172414394](https://tgimgbed.999190.xyz/file/1733995479842_image-20241212172414394.png)
+下面操作是我倒序发出，可能只需要第一步，已解决 ![:blush:](https://tgimgbed.999190.xyz/file/1734001369078_blush.png)
+
+### 修改`telemetry.macMachineId`值
+
+修改`C:\Users\{用户名}\AppData\Roaming\Cursor\User\globalStorage\storage.json`文件的`telemetry.macMachineId`
+
+### 不行就再删除`machineid`文件
+
+删除`C:\Users\{用户名}\AppData\Roaming\Cursor`下名为`machineid`的文件
