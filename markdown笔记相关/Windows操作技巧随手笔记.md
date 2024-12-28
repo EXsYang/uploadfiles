@@ -862,3 +862,41 @@ echo 详细日志请查看: !LOG_FILE!
 pause
 ~~~
 
+
+
+# 14 Windows系统本身就自带了很多提效的小工具
+
+### 高效操作,用好这些自带神器 ![:wrench:](https://tgimgbed.999190.xyz/file/1735341080265_wrench.png)
+
+其实Windows系统本身就自带了很多提效的小工具,善加利用能让你的操作更高效。
+
+- 快捷键"Win + ."快速打开emoji表情面板
+- "Win + V"打开方便好用的云剪贴板
+- "Win + Shift + S"随时随地截图,支持矩形、任意形状、窗口截图
+- "Win + G"打开Xbox游戏栏,轻松录制屏幕
+- "Win + Tab"进入时间线视图,管理多个虚拟桌面
+- "Win + 数字键"快速打开或切换任务栏固定的程序
+
+
+
+
+
+
+
+# 15 装机必备,这些软件值得一试 ![:gem:](https://tgimgbed.999190.xyz/file/1735341134070_gem.png)
+
+除了系统自带工具,这些第三方软件也是装机必备,推荐你尝试:
+
+- 压缩/解压: Bandizip、7-Zip
+- 看图: 2345看图王、Honeyview
+- 播放器: PotPlayer、VLC
+- 下载器: IDM、FDM
+- 输入法: 搜狗拼音、微软必应输入法
+- 浏览器: Chrome、新版Edge
+- 安全防护: 火绒、Windows Defender
+- 清理优化: Dism++、CCleaner
+- 磁盘分析工具: SpaceSniffer
+
+它们都是同类软件中的佼佼者,而且大多免费好用,满足你日常使用的各种需求。还有很多像Listary、Ditto、Snipaste这样的效率软件,大家可以根据需求尝试。总之用好工具,事半功倍。
+
+选择靠谱的云存储服务,如OneDrive
