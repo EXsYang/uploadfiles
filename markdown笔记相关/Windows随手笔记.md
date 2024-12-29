@@ -900,3 +900,147 @@ pause
 它们都是同类软件中的佼佼者,而且大多免费好用,满足你日常使用的各种需求。还有很多像Listary、Ditto、Snipaste这样的效率软件,大家可以根据需求尝试。总之用好工具,事半功倍。
 
 选择靠谱的云存储服务,如OneDrive
+
+
+
+
+
+# 16 关闭WPS打开图片的方法
+
+
+
+用WPS自带的配置工具取消勾选打开图片的复选框就可以了，不用担心死灰复燃
+
+直接搜在win搜索栏中搜配置工具
+
+![image-20241229014748904](https://tgimgbed.999190.xyz/file/1735408079319_image-20241229014748904.png)
+
+
+
+进入高级选项
+
+![image-20241229015207770](https://tgimgbed.999190.xyz/file/1735408333860_image-20241229015207770.png)
+
+
+
+取消勾选图片文件
+
+![image-20241229015145991](https://tgimgbed.999190.xyz/file/1735408313448_image-20241229015145991.png)
+
+
+
+
+
+# 17 [查找您的 Windows 10 、11 激活密钥，以及（OEM 数字许可证密钥）](https://www.freedidi.com/13758.html)
+
+
+
+1、CMD命令终端下以管理员身份输入命令：
+
+~~~
+wmic path softwareLicensingService get OA3xOriginalProductKey
+~~~
+
+
+
+如果你通过上方的命令运行后没有看到密钥，那是因为你用的是OEM数字许可证密钥，这种情况请使用下面的第2种方法来获取密钥。
+
+2、注册表下：计算机\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SoftwareProtectionPlatform
+
+找到 BackupProductKeyDefault，在其后面就能找到你的激活密钥
+
+ 
+
+![image-20241229020713452](https://tgimgbed.999190.xyz/file/1735409242718_image-20241229020713452.png)
+
+
+
+ 
+
+3、Windows 10 /11 KMS激活方式
+
+**注意：以管理员身份运行CMD，然后依次输入下面的命令即可**、
+
+~~~
+slmgr /ipk 这里填写你的OEM密钥
+
+slmgr /skms kms.loli.best
+
+slmgr /ato
+
+slmgr /xpr
+~~~
+
+
+
+  
+
+OEM激活密钥可以去微软官方免费获取 【**[点击前往](https://learn.microsoft.com/zh-cn/windows-server/get-started/kms-client-activation-keys?tabs=server2022%2Cwindows10ltsc%2Cversion1803%2Cwindows81)**】
+
+
+
+# 18 下载Chrome
+
+https://www.google.com/chrome/index.html
+
+
+
+
+
+# 19 Win10 激活
+
+首先访问激活教程网站： https://massgrave.dev/
+
+
+
+~~~
+irm https://get.activated.win | iex
+~~~
+
+
+
+![image-20241229065659239](https://tgimgbed.999190.xyz/file/1735427226006_1735426623124_image-20241229065659239.png)
+
+
+
+![image-20241229065641635](https://tgimgbed.999190.xyz/file/1735427227416_1735426612743_image-20241229065641635.png)
+
+~~~
+Checking OS Info                        [Windows 10 专业版 | 19045.3803 | AMD64]
+Checking Internet Connection            [Connected]
+Initiating Diagnostic Tests...
+Checking WPA Registry Count             [24]
+
+Installing Generic Product Key          [VK7JG-NPHTM-C97JM-9MPGT-3V66T] [Successful]
+Changing Windows Region To USA          [Successful]
+Generating GenuineTicket.xml            [Successful]
+Done.
+Converted license Microsoft.Windows.48.X19-98841_8wekyb3d8bbwe and stored at C:\ProgramData\Microsoft\Windows\ClipSvc\Install\Migration\ade72f16-a55a-496f-a964-4f3f37e925c0.xml.
+Successfully converted 1 licenses from genuine authorization tickets on disk.
+Done.
+
+Activating...
+
+Windows 10 专业版 is permanently activated with a digital license.
+
+Restoring Windows Region                [Successful]
+
+Press any key to Go back...
+
+
+~~~
+
+
+
+![image-20241229070127723](https://tgimgbed.999190.xyz/file/1735427233957_1735426893807_image-20241229070127723.png)
+
+~~~
+slmgr.vbs -xpr
+~~~
+
+
+
+
+
+![image-20241229070101212](https://tgimgbed.999190.xyz/file/1735427228374_1735426867350_image-20241229070101212.png)
+
