@@ -1,4 +1,2 @@
- D markdown笔记相关/Windows操作技巧随手笔记.md
+ M markdown笔记相关/Windows随手笔记.md
  M temp_status.txt
-?? markdown笔记相关/Windows随手笔记.md
-?? markdown笔记相关/重装系统随笔.md
