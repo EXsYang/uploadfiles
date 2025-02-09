@@ -287,6 +287,18 @@ taskkill /IM notepad.exe
 
 
 
+### win11重置网络
+
+~~~
+netsh winsock reset
+~~~
+
+
+
+![image-20250209081729631](https://tgimgbed.999190.xyz/file/1739060261235_image-20250209081729631.png)
+
+
+
 # 9 Windows 的 MINGW64 环境和 Linux 环境的不同之处
 
 
