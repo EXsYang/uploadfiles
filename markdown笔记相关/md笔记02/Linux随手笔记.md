@@ -10,6 +10,41 @@
 
 ![image-20240115152514028](https://raw.githubusercontent.com/EXsYang/PicGo-images-hosting/main/images/image-20240115152514028.png)
 
+
+
+# 补充：nano和vim的区别，哪个好？
+
+
+
+`nano` 和 `vim` 都是流行的文本编辑器，各有优缺点，适用于不同的使用场景和用户偏好。
+
+### **nano**
+
+- **优点**：
+  - **易于使用**：`nano` 的界面直观，适合初学者，不需要学习复杂的命令。
+  - **功能简单**：提供基本的文本编辑功能，适用于快速编辑文件。
+  - **快捷键提示**：底部显示常用快捷键提示，方便操作。
+- **缺点**：
+  - **功能有限**：相比 `vim`，`nano` 的功能较少，无法满足高级编辑需求。
+  - **缺少插件**：`nano` 不支持插件，无法扩展功能。
+
+### **vim**
+
+- **优点**：
+  - **功能强大**：`vim` 提供丰富的文本编辑功能，支持多种操作模式。
+  - **高效编辑**：熟练使用 `vim` 后，可以快速编辑和处理文本，提高效率。
+  - **插件支持**：`vim` 有大量插件可用，能根据需要扩展功能。
+- **缺点**：
+  - **学习曲线陡峭**：`vim` 的操作方式复杂，需要一定的学习时间和实践。
+  - **不直观**：初学者可能觉得 `vim` 的界面和操作方式不直观，不易上手。
+
+### 选择
+
+- 如果您是初学者，或者只是需要简单快速地编辑文件，可以选择 `nano`。
+- 如果您需要更强大的编辑功能，并愿意花时间学习 `vim`，那么 `vim` 将是一个强大的工具。
+
+
+
 # Vim指令
 
 
@@ -87,6 +122,15 @@
 ## 1 vi 和 vim 快捷键
 
 ### 1.1 快捷键使用练习
+
+在 Vim 编辑器中，`Ctrl+U` 的功能因模式不同而有所不同：
+
+- **插入模式**：`Ctrl+U` 是删除光标前的所有文本。
+- **正常模式**：`u` 是撤销命令，而 `Ctrl+R` 是重做命令。
+
+所以在插入模式下，`Ctrl+U` 不是用于撤销，而是用于删除当前行光标之前的所有文本。
+
+
 
 `:wq`  在命令行模式下的写入并退出 即write + quit
 
@@ -815,6 +859,10 @@ bashCopy code
 
 `cp` 是一个常用的Linux命令，用于复制文件或目录。
 
+`cp example.txt /home/user/` 是将文件 `example.txt` 拷贝到 `/home/user/` 目录下，保持原文件名不变。
+
+`cp example.txt ex.txt` 是将文件 `example.txt` 拷贝并重命名为 `ex.txt`，新的文件将会出现在当前工作目录下。
+
 **基本语法:**
 
 - 复制单个文件到另一个目录：
@@ -828,6 +876,14 @@ bashCopy code
   ```
   cp example.txt /home/user/
   ```
+
+- `cp example.txt ex.txt` 是将文件 `example.txt` **拷贝并重命名**为 `ex.txt`，新的文件将会出现在**当前工作目录**下。
+
+      ~~~
+      cp example.txt ex.txt
+      ~~~
+
+
 
 - 复制目录（包括其中的所有文件和子目录）：
 
@@ -1773,7 +1829,7 @@ grep -ni "yes" /home/hello.txt
     - 作用：将 `ls -l` 的输出保存到 `output.txt` 文件中，并在终端显示。如果文件已存在，它将被覆盖。
 
 - **`tee -a`**：将输出同时追加到文件和标准输出（终端），不覆盖文件中的原有内容。
-    
+  
     ```bash
     ls -l | tee -a output.txt
     ```
@@ -6181,6 +6237,16 @@ cmd命令行中 **`telnet`**指令
 - 重新载入, 才能生效: `firewall-cmd --reload`
 - 查询端口是否开放: `firewall-cmd --query-port=端口/协议`
 - 查询和显示当前活动的防火墙区域（zone）的详细信息`firewall-cmd --list-all` 
+
+
+
+
+
+sudo firewall-cmd --zone=public --add-port=9200/tcp --permanent
+
+sudo firewall-cmd --add-port=27017/tcp --permanent
+
+如果您不指定 `--zone` 选项，默认情况下将使用 `public` 区域。
 
 
 
