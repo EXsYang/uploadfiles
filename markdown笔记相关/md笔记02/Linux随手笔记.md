@@ -6565,6 +6565,743 @@ https://www.bilibili.com/video/BV1r94y1b7eS?p=42&vd_source=5b09ee9382c8983b40a66
 
 
 
+## 
+
+
+
+## 18.7.1 `htop`，系统监视工具 （下面主要是监视内存）
+
+安装`htop`
+
+`sudo apt-get install htop` 是用于基于 Debian 系统的 Linux 发行版上的包管理命令。这些系统通常使用 `apt` 或 `apt-get` 包管理器来安装和管理软件包。以下是一些常见的基于 Debian 的系统：
+
+1. **Ubuntu**
+2. **Debian**
+3. **Linux Mint**
+4. **Kali Linux**
+5. **Raspbian**
+
+如果您使用的是基于 Red Hat 的系统（如 CentOS 或 Fedora），则使用 `yum` 或 `dnf` 包管理器来安装软件包。例如，您可以使用以下命令在 CentOS 或 Fedora 上安装 `htop`：
+
+##### CentOS（使用 `yum`）：
+```bash
+sudo yum install -y htop
+```
+
+##### Fedora（使用 `dnf`）：
+```bash
+sudo dnf install -y htop
+```
+
+请根据您的系统类型使用相应的包管理命令。
+
+~~~bash
+[root@racknerd-8454f32 ~]# sudo apt-get install htop 
+sudo: apt-get: command not found 
+[root@racknerd-8454f32 ~]#
+~~~
+
+
+
+
+
+看来您的系统可能是基于 Red Hat（RHEL）、CentOS 或其他使用 `yum` 或 `dnf` 包管理器的发行版。您可以使用 `yum` 或 `dnf` 命令来安装 `htop`。以下是具体步骤：
+
+##### **使用 `yum` 安装 `htop`**
+如果您的系统使用 `yum` 作为包管理器，可以使用以下命令安装 `htop`：
+
+```bash
+sudo yum install -y htop
+```
+
+##### **使用 `dnf` 安装 `htop`**
+如果您的系统使用 `dnf` 作为包管理器，可以使用以下命令安装 `htop`：
+
+```bash
+sudo dnf install -y htop
+```
+
+##### **其他资源查看工具**
+如果您找不到 `htop` 或需要其他工具查看资源使用情况，可以使用以下命令：
+
+1. **使用 `vmstat` 查看内存使用情况**
+   ```bash
+   vmstat -s
+   ```
+
+2. **使用 `slabtop` 查看内存缓存使用情况**
+   ```bash
+   slabtop
+   ```
+
+3. **查看 `/proc/meminfo` 文件**
+   ```bash
+   cat /proc/meminfo
+   ```
+
+**完整操作示例**
+
+以下是使用 `yum` 安装 `htop` 的完整示例：
+
+```bash
+# 更新包管理器
+sudo yum update -y
+
+# 安装 htop
+sudo yum install -y htop
+
+# 运行 htop
+htop
+```
+
+
+
+#### 18.7.2 htop常用指令
+
+
+
+`htop` 是一个交互式的系统监视工具，比传统的 `top` 命令更直观和用户友好。以下是一些常用的 `htop` 指令和操作：
+
+##### **启动** `htop`
+
+```
+htop
+```
+
+启动 `htop` 后，您将看到一个实时更新的系统资源使用情况界面。
+
+##### **常用快捷键**
+
+- **F1**：帮助菜单
+- **F2**：设置菜单
+- **F3**：搜索进程
+- **F4**：过滤进程
+- **F5**：树状视图
+- **F6**：排序方式
+- **F7**：增加优先级（降低 nice 值）
+- **F8**：降低优先级（增加 nice 值）
+- **F9**：杀死进程
+- **F10**：退出 `htop`
+
+##### **常用选项**
+
+- **-d**：设置刷新延迟时间（单位：秒）
+
+  ```
+  htop -d 10
+  ```
+
+- **-u**：按用户过滤进程
+
+  ```
+  htop -u username
+  ```
+
+- **-p**：按进程 ID 过滤进程
+
+  ```
+  htop -p 1234
+  ```
+
+- **-C**：以彩色显示 CPU 使用率
+
+  ```
+  htop -C
+  ```
+
+- **--tree**：以树状结构显示进程
+
+  ```
+  htop --tree
+  ```
+
+##### **界面说明**
+
+- **顶部**：显示系统的总体资源使用情况，包括 CPU、内存和交换分区的使用率。
+- **中部**：显示各个进程的详细信息，包括 PID、用户、优先级、内存使用、CPU 使用率等。
+- **底部**：显示可用的快捷键和操作提示。
+
+##### **示例**
+
+启动 `htop` 并以彩色显示 CPU 使用率：
+
+bash
+
+```
+htop -C
+```
+
+通过这些指令和操作，您可以更好地监控和管理系统资源。如果有任何问题或需要进一步的帮助，请随时告诉我！😊
+
+您对这些指令有何看法呢？
+
+
+
+#### 18.7.3 `htop`针对内存的常用指令
+
+如果主要监视内存使用情况，`htop` 也提供了一些便捷的功能和快捷键来帮助您聚焦于内存信息。以下是一些常用的 `htop` 操作和快捷键，特别是与内存监视相关的部分：
+
+##### **启动 `htop`**
+```bash
+htop
+```
+启动 `htop` 后，您将看到一个实时更新的系统资源使用情况界面。
+
+![image-20250211095213091](https://tgimgbed.999190.xyz/file/1739238749440_image-20250211095213091.png)
+
+##### **常用快捷键和操作**
+
+- **F6**：排序方式
+  
+  ```bash
+  F6
+  ```
+  按 F6 后，可以选择按内存使用情况排序，确保内存使用较高的进程显示在前面。
+  
+- **Shift + M**：按内存使用情况排序
+  在 `htop` 界面中按下 `Shift + M` 直接按内存使用情况排序。
+
+- **F4**：过滤进程
+  
+  ```bash
+  F4
+  ```
+  按 F4 键可以输入过滤条件，例如按进程名称过滤。
+  
+- **F5**：树状视图
+  
+  ```bash
+  F5
+  ```
+  切换到树状视图模式，显示进程的层级结构。
+
+##### **监视内存的具体步骤**
+
+1. **启动 `htop`**
+   ```bash
+   htop
+   ```
+
+2. **按 `Shift + M`**
+   按下 `Shift + M` 键，将进程按内存使用情况排序。
+
+3. **查看进程信息**
+   查看内存使用较高的进程，观察其内存占用情况。
+
+##### **界面说明**
+
+- **Mem [memory usage]**：在 `htop` 界面的顶部会显示内存的总量和使用情况，使用条形图显示使用率。
+- **Swap [swap usage]**：在 `htop` 界面的顶部会显示交换分区的使用情况。
+
+##### **示例**
+启动 `htop` 并按内存使用情况排序：
+```bash
+htop
+Shift + M
+```
+
+通过这些操作，您可以有效地监视系统的内存使用情况。
+
+
+
+## 18.7.2 `smem`，系统监视工具 （可以更好地显示实际内存使用情况）
+
+
+
+如果在 `htop` 中看到多个进程显示相同的内存占用，而实际内存总占用却没有那么多，这是因为 `htop` 显示的是每个进程独立的内存使用量，不包括共享内存的重叠部分。以下是一些可能的原因和解释：
+
+### **1. 共享内存**
+多个进程可能共享某些内存区域，但 `htop` 会将这些共享内存分别计入每个进程的内存使用量中。这样，内存占用看起来会比实际总量大。
+
+### **2. 虚拟内存 vs 物理内存**
+`htop` 显示的 `VIRT`（虚拟内存）包括了进程可能使用的总内存，这些内存不一定都实际分配。而 `RES`（驻留内存）和 `SHR`（共享内存）则显示实际使用的物理内存。驻留内存是进程实际使用的物理内存，而共享内存是多个进程之间共享的内存。
+
+### **3. 内存缓存和缓冲区**
+Linux 系统会利用未使用的内存作为缓存和缓冲区，以提高系统性能。尽管这些内存显示为已用，但在需要时可以立即释放给应用程序使用。
+
+### **如何进一步分析内存占用**
+
+#### **使用 `smem` 命令**
+`smem` 命令可以更好地显示实际内存使用情况，包括共享内存的影响：
+
+```bash
+# 安装 smem
+sudo yum install smem -y
+
+# 运行 smem 查看内存使用情况
+smem -tk
+```
+
+#### **查看 `/proc` 文件系统**
+查看 `/proc` 文件系统中的内存信息，例如 `/proc/meminfo`：
+```bash
+cat /proc/meminfo
+```
+
+#### **示例**
+```bash
+# 安装 smem
+sudo yum install smem -y
+
+# 运行 smem 查看内存使用情况
+smem -tk
+
+# 查看内存详细信息
+cat /proc/meminfo
+```
+
+通过这些工具和方法，您可以更准确地了解实际内存使用情况，以及进程之间的内存共享。
+
+
+
+~~~bash
+[root@racknerd-8454f32 ~]# smem -tk
+  PID User     Command                         Swap      USS      PSS      RSS
+2911854 root     /bin/sh -c yarn start              0    84.0K   273.0K     1.3M
+2911909 root     /bin/sh -c npx lerna run st        0    92.0K   281.0K     1.3M
+2911936 root     /bin/sh -c cross-env NODE_E        0    92.0K   302.0K     1.4M
+  911 root     /usr/sbin/crond -n             44.0K   868.0K   980.0K     3.0M
+607328 root     /sbin/auditd                   20.0K   940.0K     1.0M     2.6M
+  918 root     login -- root                  60.0K   892.0K     1.1M     4.2M
+ 1259 root     -bash                           4.0K   640.0K     1.2M     3.5M
+2911056 root     -bash                              0   700.0K     1.4M     3.8M
+  553 root     /usr/sbin/irqbalance --fore    20.0K   832.0K     1.5M     5.4M
+  563 chrony   /usr/sbin/chronyd              32.0K     1.3M     1.6M     4.7M
+  556 dbus     /usr/bin/dbus-daemon --syst        0     1.1M     1.6M     5.4M
+2822719 root     /usr/sbin/sshd -D -oCiphers        0  1016.0K     1.8M     6.8M
+2911051 root     sshd: root@pts/0                   0   468.0K     1.8M     5.9M
+  555 root     /usr/lib/systemd/systemd-lo    48.0K     1.1M     1.8M     7.3M
+ 1252 root     (sd-pam)                      412.0K     1.3M     1.8M     3.7M
+  479 root     /usr/lib/systemd/systemd-ud   128.0K     1.4M     2.1M     7.5M
+2687191 root     /usr/bin/docker-proxy -prot   540.0K     2.0M     2.4M     4.8M
+2686780 root     /usr/bin/docker-proxy -prot   536.0K     2.1M     2.4M     4.9M
+ 1250 root     /usr/lib/systemd/systemd --    56.0K     1.3M     2.6M     8.8M
+2911045 root     sshd: root [priv]                  0     1.5M     3.0M     9.2M
+2858239 root     nginx: master process nginx        0     1.0M     3.3M     5.7M
+    1 root     /usr/lib/systemd/systemd --   224.0K     2.0M     3.7M    10.2M
+2858270 104      nginx: worker process              0     1.5M     3.9M     6.2M
+  907 root     /usr/sbin/rsyslogd -n          14.1M     2.5M     4.2M     9.2M
+2858204 root     /usr/bin/docker-proxy -prot        0     4.5M     4.9M     7.5M
+2858192 root     /usr/bin/docker-proxy -prot        0     4.6M     5.0M     7.5M
+2911818 root     /usr/bin/docker-proxy -prot        0     4.6M     5.0M     7.5M
+2687205 root     /usr/bin/containerd-shim-ru    52.0K     5.3M     6.8M    11.3M
+2686794 root     /usr/bin/containerd-shim-ru   108.0K     5.4M     6.9M    11.4M
+2858217 root     /usr/bin/containerd-shim-ru        0     5.4M     8.4M    14.4M
+2911833 root     /usr/bin/containerd-shim-ru        0     5.4M     8.4M    14.4M
+  447 root     /usr/lib/systemd/systemd-jo   296.0K     6.8M     8.8M    15.9M
+2971980 root     /usr/libexec/platform-pytho        0     8.0M     9.1M    14.1M
+2911937 root     /usr/local/bin/node /usr/ap        0     6.8M    12.3M    34.4M
+  875 polkitd  /usr/lib/polkit-1/polkitd -     1.7M    10.9M    12.4M    18.9M
+2687226 systemd-coredump redis-server *:6379            52.0K    13.2M    13.2M    13.2M
+613989 root     /usr/bin/python3.6 -s /usr/    16.0M    17.2M    19.5M    27.9M
+2911910 root     /usr/local/bin/node /usr/lo        0    15.5M    21.2M    43.8M
+2674932 root     /usr/bin/containerd             2.6M    26.1M    26.1M    27.4M
+  906 root     /usr/local/x-ui/x-ui            4.8M    31.2M    31.2M    31.2M
+2911887 root     node /opt/yarn-v1.22.5/bin/        0    29.4M    35.4M    58.9M
+2911921 root     /usr/local/bin/node /opt/ya        0    31.2M    37.2M    60.7M
+  903 root     /usr/libexec/platform-pytho     9.4M    35.9M    38.3M    48.2M
+  558 root     /usr/libexec/platform-pytho     1.8M    38.5M    41.1M    51.2M
+271621 hysteria /usr/local/bin/hysteria ser    21.5M    41.9M    41.9M    41.9M
+2674943 root     /usr/bin/dockerd -H fd:// -    10.1M    78.7M    79.0M    82.2M
+2911944 root     /usr/local/bin/node /usr/ap        0    89.1M    95.3M   118.8M
+1161554 root     bin/xray-linux-amd64 -c bin   104.5M   118.2M   118.2M   118.2M
+2686814 systemd-coredump mongod --bind_ip_all           30.4M   155.4M   155.4M   155.4M
+-------------------------------------------------------------------------------
+   49 7                                      219.4M   815.9M   887.2M     1.1G
+[root@racknerd-8454f32 ~]#
+~~~
+
+
+
+~~~bash
+[root@racknerd-8454f32 ~]# cat /proc/meminfo
+MemTotal:        2521376 kB
+MemFree:          225064 kB
+MemAvailable:    1452992 kB
+Buffers:          114968 kB
+Cached:          1175700 kB
+SwapCached:        49412 kB
+Active:           960324 kB
+Inactive:        1073668 kB
+Active(anon):     184172 kB
+Inactive(anon):   592828 kB
+Active(file):     776152 kB
+Inactive(file):   480840 kB
+Unevictable:           0 kB
+Mlocked:               0 kB
+SwapTotal:       1310716 kB
+SwapFree:        1096536 kB
+Dirty:                68 kB
+Writeback:             0 kB
+AnonPages:        690892 kB
+Mapped:           209812 kB
+Shmem:             33676 kB
+KReclaimable:     160776 kB
+Slab:             210860 kB
+SReclaimable:     160776 kB
+SUnreclaim:        50084 kB
+KernelStack:        5584 kB
+PageTables:        14992 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:     2571404 kB
+Committed_AS:    2972736 kB
+VmallocTotal:   34359738367 kB
+VmallocUsed:       22824 kB
+VmallocChunk:          0 kB
+Percpu:             1032 kB
+HardwareCorrupted:     0 kB
+AnonHugePages:    468992 kB
+ShmemHugePages:        0 kB
+ShmemPmdMapped:        0 kB
+FileHugePages:         0 kB
+FilePmdMapped:         0 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+Hugetlb:               0 kB
+DirectMap4k:      155500 kB
+DirectMap2M:     2465792 kB
+DirectMap1G:     1048576 kB
+[root@racknerd-8454f32 ~]#
+
+
+~~~
+
+
+
+### **内存使用情况分析**
+
+#### **1. 总内存和可用内存**
+从 `/proc/meminfo` 文件中的数据可以看出：
+
+- **总内存（MemTotal）**: 2521376 kB (约 2.4 GB)
+- **空闲内存（MemFree）**: 225064 kB (约 220 MB)
+- **可用内存（MemAvailable）**: 1452992 kB (约 1.4 GB)
+- **缓存内存（Cached）**: 1175700 kB (约 1.1 GB)
+
+缓存内存占用了较多的系统内存，但这是正常的，Linux 系统会利用未使用的内存作为缓存和缓冲区，以提高系统性能。在需要时，这些缓存内存可以立即释放给应用程序使用。
+
+#### **2. 内存消耗最多的进程**
+根据 `smem` 输出结果，内存消耗最多的进程如下：
+
+- **mongod --bind_ip_all**: 使用了 155.4M PSS (Proportional Set Size)
+- **bin/xray-linux-amd64**: 使用了 118.2M PSS
+- **node /usr/local/bin/node**: 使用了 95.3M PSS
+
+这些进程是内存使用的主要贡献者。
+
+#### **3. 内存指标解释**
+- **USS（Unique Set Size）**: 进程独占的内存量，不包括共享内存。
+- **PSS（Proportional Set Size）**: 按比例分配的共享内存。共享内存被多个进程使用时，按比例计算到每个进程的内存使用中。
+- **RSS（Resident Set Size）**: 实际驻留在物理内存中的内存量，包括独占和共享内存。
+
+##### **进一步分析和建议**
+- **共享内存和独占内存**: 多个 `mongod` 进程显示相同的内存使用量，可能是因为共享相同的内存段。实际物理内存并没有被多次分配。
+
+- **缓存和缓冲**: 如果希望释放一些缓存内存，可以手动清理缓存：
+  ```bash
+  sync; echo 3 > /proc/sys/vm/drop_caches
+  ```
+
+##### **内存使用优化**
+1. **优化数据库配置**: 如果 `mongod` 使用了较多内存，考虑优化 MongoDB 的配置，降低内存占用。
+2. **监控内存使用**: 定期使用工具（如 `smem`、`htop`、`free`）监控内存使用情况，确保资源合理分配。
+
+
+
+## 18.7.3 缓存清理指令： sync; echo 3 > /proc/sys/vm/drop_caches 这条指令是通用的吗？
+
+是的，`sync; echo 3 > /proc/sys/vm/drop_caches` 这条指令在大多数 Linux 系统上是通用的。这条命令用于清理内存缓存，并可以立即释放未使用的内存。以下是各个部分的具体作用：
+
+#### **指令解释**
+1. **sync**：将所有未写入的文件系统缓冲区（缓存中的数据）写入磁盘。这可以确保数据安全，并防止数据丢失。
+2. **echo 3 > /proc/sys/vm/drop_caches**：向 `/proc/sys/vm/drop_caches` 写入值 3，强制操作系统清理页面缓存、目录项和 inode。
+
+#### **可用的 `drop_caches` 值**
+- **1**：清理页面缓存
+- **2**：清理目录项和 inode
+- **3**：清理页面缓存、目录项和 inode
+
+#### **示例**
+以下是如何使用这些指令的示例：
+
+```bash
+# 清理页面缓存
+sync; echo 1 > /proc/sys/vm/drop_caches
+
+# 清理目录项和 inode
+sync; echo 2 > /proc/sys/vm/drop_caches
+
+# 清理页面缓存、目录项和 inode
+sync; echo 3 > /proc/sys/vm/drop_caches
+```
+
+通过这些指令，您可以释放系统内存，使其可用于其他应用程序。请注意，这些操作会暂时降低系统性能，因为缓存被清理后需要重新构建。
+
+
+
+
+
+## 18.7.4 `smem`基本使用
+
+`smem` 是一个用于 Linux 系统的命令行工具，它提供了比传统内存报告工具（如 `free` 或 `top`）更为详细和高级的内存使用情况分析。以下是 `smem` 的常用指令和基本用法：
+
+### **安装 `smem`**
+在基于 Debian 的系统上：
+```bash
+sudo apt-get install smem
+```
+在基于 Red Hat 的系统上：
+```bash
+sudo yum install smem
+```
+
+### **常用指令**
+1. **查看内存概览**
+   ```bash
+   smem
+   ```
+   显示所有进程的内存使用情况，包括 VSS、RSS、PSS 和 USS。
+
+2. `smem -tk`  这个命令用于查看系统中每个进程的内存使用情况。`smem` 工具可以显示独占内存、按比例分配的共享内存和实际驻留在物理内存中的内存量。
+
+当然可以！以下是 `smem -tk` 命令的详细解释以及常用选项：
+
+### **命令解释**
+
+#### **`smem -tk`**	【好用】搭配：`cat /proc/meminfo`使用更好
+这个命令用于查看系统中每个进程的内存使用情况。`smem` 工具可以显示独占内存、按比例分配的共享内存和实际驻留在物理内存中的内存量。
+
+- **-t**：显示总计行。此选项将在输出的末尾添加一行总结，显示所有进程的总内存使用情况。
+- **-k**：显示单位后缀（如 KB、MB、GB 等）。这使得输出更具可读性。
+
+### **示例输出**
+
+```plaintext
+
+PID User     Command                         Swap      USS      PSS      RSS
+2974745 root     /bin/sh -c yarn start              0    80.0K   257.0K     1.3M
+2974797 root     /bin/sh -c npx lerna run st        0    88.0K   288.0K     1.4M
+2974824 root     /bin/sh -c cross-env NODE_E        0    92.0K   303.0K     1.4M
+...
+-------------------------------------------------------------------------------
+   49 7                                      219.4M   884.4M   955.7M     1.2G
+```
+
+![image-20250211095003118](https://tgimgbed.999190.xyz/file/1739238619213_image-20250211095003118.png)
+
+![image-20250211095121076](https://tgimgbed.999190.xyz/file/1739238688260_image-20250211095121076.png)
+
+### **输出解释**
+
+- **PID**：进程 ID
+- **User**：执行该进程的用户
+- **Command**：执行的命令
+- **Swap**：进程使用的交换内存
+- **USS (Unique Set Size)**：进程独占的内存量，不包括共享内存
+- **PSS (Proportional Set Size)**：按比例分配的共享内存。共享内存被多个进程使用时，按比例计算到每个进程的内存使用中
+- **RSS (Resident Set Size)**：实际驻留在物理内存中的内存量，包括独占和共享内存
+
+### **常用选项**
+
+- **-r**：按 RSS 排序
+  ```bash
+  smem -r
+  ```
+
+- **-s**：指定排序列（例如按 PSS 排序）
+  ```bash
+  smem -s pss
+  ```
+
+- **-k**：显示单位后缀
+  
+  ```bash
+  smem -k
+  ```
+  
+- **-t**：显示总计行
+  ```bash
+  smem -t
+  ```
+
+- **-u**：按用户显示
+  ```bash
+  smem -u
+  ```
+
+### **示例**
+
+查看系统中每个进程的内存使用情况，按 PSS 排序并显示单位后缀：
+```bash
+smem -tk -s pss
+```
+
+通过这些命令和选项，您可以详细查看和分析系统中每个进程的内存使用情况。
+
+
+
+
+
+3. **查看内存占用百分比**
+
+```bash
+smem -p
+```
+显示所有运行进程的内存占用百分比，按 PSS 大小降序排列。
+
+4. **查看系统内存使用情况**
+
+```bash
+smem -w
+```
+显示系统内存的整体使用情况，包括缓存和非缓存内存。
+
+1. **显示单位后缀**
+   ```bash
+   smem -k
+   ```
+   显示内存使用情况时附带单位后缀，如 KB、MB、GB 等。
+
+2. **对结果排序**
+   ```bash
+   smem -s pss
+   ```
+   按 PSS（Proportional Set Size）排序，PSS 是按比例分配共享库占用的内存。
+
+3. **显示饼状图和柱状图**
+   ```bash
+   smem --pie=name
+   smem --bar=name
+   ```
+   显示内存使用情况的饼状图和柱状图。
+
+### **示例操作**
+以下是一些常用操作的示例：
+
+```bash
+# 查看内存概览
+smem
+
+# 查看内存占用百分比
+smem -p
+
+# 查看系统内存使用情况
+smem -w
+
+# 显示单位后缀
+smem -k
+
+# 按 PSS 排序
+smem -s pss
+
+# 显示饼状图和柱状图
+smem --pie=name
+smem --bar=name
+```
+
+通过这些指令，您可以更详细地了解系统的内存使用情况。
+
+
+
+
+
+
+
+
+
+
+
+### 18.8 在 Linux 系统中，有多种命令可以用来查看内存和其他资源的占用情况。以下是一些常用的命令：
+
+#### **查看内存使用情况**
+
+1. **free 命令**
+
+   ```
+   free -h
+   ```
+
+   这个命令显示系统的物理内存和交换内存的使用情况。`-h` 选项以人类可读的格式显示信息。
+
+2. **/proc/meminfo 文件**
+
+   ```
+   cat /proc/meminfo
+   ```
+
+   这个文件包含了系统内存的详细信息，包括总内存、空闲内存、缓存等。
+
+3. **vmstat 命令**
+
+   ```
+   vmstat -s
+   ```
+
+   这个命令显示系统的内存统计信息，包括总内存、已用内存、空闲内存等。
+
+#### **查看 CPU 使用情况**
+
+1. **top 命令**
+
+   ```
+   top
+   ```
+
+   这个命令实时显示系统的 CPU 和内存使用情况，以及各个进程的资源占用情况。
+
+2. **htop 命令**
+
+   ```
+   htop
+   ```
+
+   这个命令是 `top` 命令的增强版，提供了更友好的用户界面和更多的功能。
+
+#### **查看磁盘使用情况**
+
+1. **df 命令**
+
+   ```
+   df -h
+   ```
+
+   这个命令显示文件系统的磁盘使用情况。`-h` 选项以人类可读的格式显示信息。
+
+2. **du 命令**
+
+   ```
+   du -sh /path/to/directory
+   ```
+
+   这个命令显示指定目录的磁盘使用情况。`-sh` 选项以人类可读的格式显示目录的总大小。
+
+#### **查看网络使用情况**
+
+1. **ifconfig 命令**
+
+   ```
+   ifconfig
+   ```
+
+   这个命令显示网络接口的配置信息和统计信息。
+
+2. **netstat 命令**
+
+   ```
+   netstat -tuln
+   ```
+
+   这个命令显示系统的网络连接和端口监听情况。
+
+通过这些命令，您可以全面了解 Linux 系统的资源使用情况。
+
+
+
 ### 18.7 监控网络状态
 
 #### 18.7.1 查看系统网络情况 `netstat`
