@@ -651,4 +651,535 @@ vrrp_instance VI_1 {
 
 
 
-# 15
+# 15 Nginx 配置与端口共享笔记
+
+遇到的问题如下：
+
+如果我输入的是chat.999190.xyz则会进入到fiora服务页面，如果我输入的是服务器ip如：74.48.31.142 然后在地址栏回车，则会进入到nginx默认的index.html页面，为什么？这里80端口分别被默认页面和fiora共同使用着了吗？
+
+
+
+![image-20250228042846049](https://tgimgbed.999190.xyz/file/1740688146525_image-20250228042846049.png)
+
+![image-20250228042912232](https://tgimgbed.999190.xyz/file/1740688155642_image-20250228042912232.png)
+
+1
+
+
+
+~~~shell
+[root@racknerd-8454f32 nginx]# cd conf/conf.d/
+
+[root@racknerd-8454f32 conf.d]# ls
+
+default.conf      fiora_nginx.conf.bak   fiora_nginx.conf.bak3       one-api_nginx.conf
+
+fiora_nginx.conf  fiora_nginx.conf.bak2  fiora_nginx.conf.wanshande  one-api_nginx.conf.bak
+
+[root@racknerd-8454f32 conf.d]# cat fiora_nginx.conf
+
+server {
+
+listen       80;
+
+server_name  chat.999190.xyz vrchat.vip;  #如果要配置多个域名，则要用空格分割
+
+# 将 HTTP 请求重定向到 HTTPS
+
+#return 301 https://$host$request_uri;
+
+#return 301 https://$server_name$request_uri;
+
+#return 301 https://chat.999190.xyz$request_uri;
+
+#}
+
+# HTTPS 服务器
+
+#server {
+
+#listen       443 ssl http2;
+
+#server_name  chat.999190.xyz;
+
+#charset koi8-r;
+
+#access_log  /var/log/nginx/log/host.access.log  main;
+
+# SSL 证书配置
+
+#ssl_certificate /root/.acme.sh/*.999190.xyz_ecc/fullchain.cer;
+
+#ssl_certificate_key /root/.acme.sh/*.999190.xyz_ecc/*.999190.xyz.key;
+
+# SSL 协议和加密套件配置
+
+#ssl_protocols TLSv1.2 TLSv1.3;
+
+#ssl_protocols TLSv1.2;
+
+#ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:HIGH:!aNULL:!MD5:!RC4:!DHE;
+
+#ssl_prefer_server_ciphers on;
+
+#ssl_session_timeout 5m;
+
+# 代理配置
+
+location / {
+
+#下面这一版本,记录的新用户的注册IP其实是cloudflare服务器代理的ip
+
+#proxy_pass http://fiora:9200;  # 修改为您的后端服务地址
+
+#proxy_set_header   X-Real-IP        $remote_addr;
+
+#proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
+
+#proxy_set_header   Host             $http_host;
+
+#proxy_set_header   Upgrade          $http_upgrade;
+
+#proxy_set_header   X-NginX-Proxy    true;
+
+#proxy_set_header   Connection "upgrade";
+
+#proxy_http_version 1.1;
+
+#proxy_pass         http://fiora:9200;
+
+# 代理到后端服务
+
+proxy_pass http://fiora:9200;  # 修改为您的后端服务地址
+
+# 设置请求头
+
+proxy_set_header   CF-Connecting-IP $http_cf_connecting_ip;  # Cloudflare真实IP
+
+proxy_set_header   X-Real-IP        $http_cf_connecting_ip;  # 使用Cloudflare的真实IP
+
+proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;  # 传递IP链
+
+proxy_set_header   Host             $http_host;  # 原始主机头
+
+proxy_set_header   Upgrade          $http_upgrade;  # WebSocket支持
+
+proxy_set_header   X-NginX-Proxy    true;  # Nginx代理标识
+
+proxy_set_header   Connection "upgrade";  # 连接升级
+
+proxy_http_version 1.1;  # HTTP版本
+
+# WebSocket 支持
+
+#proxy_set_header Upgrade $http_upgrade;
+
+#proxy_set_header Connection "upgrade";
+
+#proxy_http_version 1.1;
+
+}
+
+#location / {
+
+#root   /usr/share/nginx/html;
+
+#index  index.html index.htm;
+
+#}
+
+#error_page  404              /404.html;
+
+# redirect server error pages to the static page /50x.html
+
+#
+
+error_page   500 502 503 504  /50x.html;
+
+location = /50x.html {
+
+root   /usr/share/nginx/html;
+
+}
+
+# proxy the PHP scripts to Apache listening on 127.0.0.1:80
+
+#
+
+#location ~ \.php$ {
+
+#    proxy_pass   http://127.0.0.1;
+
+#}
+
+# pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+
+#
+
+#location ~ \.php$ {
+
+#    root           html;
+
+#    fastcgi_pass   127.0.0.1:9000;
+
+#    fastcgi_index  index.php;
+
+#    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+
+#    include        fastcgi_params;
+
+#}
+
+# deny access to .htaccess files, if Apache's document root
+
+# concurs with nginx's one
+
+#
+
+#location ~ /\.ht {
+
+#    deny  all;
+
+#}
+
+}
+
+[root@racknerd-8454f32 conf.d]# cat one-api_nginx.conf
+
+# HTTP 服务器（监听 80 端口，Cloudflare 会处理 HTTPS）
+
+server {
+
+listen 80;
+
+server_name api.999190.xyz api.vrchat.vip;  # 支持多个域名，用空格分隔
+
+# 代理配置
+
+location / {
+
+client_max_body_size 64m;
+
+proxy_http_version 1.1;
+
+proxy_pass http://one-api:38888;  # 指向 one-api 容器的 38888 端口
+
+proxy_set_header Host $host;
+
+proxy_set_header X-Forwarded-For $remote_addr;
+
+proxy_set_header CF-Connecting-IP $http_cf_connecting_ip;
+
+proxy_cache_bypass $http_upgrade;
+
+proxy_set_header Accept-Encoding gzip;
+
+proxy_read_timeout 300s;
+
+proxy_set_header Upgrade $http_upgrade;
+
+proxy_set_header Connection "upgrade";
+
+}
+
+# 错误页面配置（可选）
+
+error_page 500 502 503 504 /50x.html;
+
+location = /50x.html {
+
+root /usr/share/nginx/html;
+
+}
+
+}
+
+[root@racknerd-8454f32 conf.d]# cat default.conf
+
+server {
+
+listen       80;
+
+server_name  localhost;
+
+#charset koi8-r;
+
+#access_log  /var/log/nginx/log/host.access.log  main;
+
+location / {
+
+root   /usr/share/nginx/html;
+
+index  index.html index.htm;
+
+}
+
+#error_page  404              /404.html;
+
+# redirect server error pages to the static page /50x.html
+
+#
+
+error_page   500 502 503 504  /50x.html;
+
+location = /50x.html {
+
+root   /usr/share/nginx/html;
+
+}
+
+# proxy the PHP scripts to Apache listening on 127.0.0.1:80
+
+#
+
+#location ~ \.php$ {
+
+#    proxy_pass   http://127.0.0.1;
+
+#}
+
+# pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+
+#
+
+#location ~ \.php$ {
+
+#    root           html;
+
+#    fastcgi_pass   127.0.0.1:9000;
+
+#    fastcgi_index  index.php;
+
+#    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+
+#    include        fastcgi_params;
+
+#}
+
+# deny access to .htaccess files, if Apache's document root
+
+# concurs with nginx's one
+
+#
+
+#location ~ /\.ht {
+
+#    deny  all;
+
+#}
+
+}
+
+[root@racknerd-8454f32 conf.d]#
+~~~
+
+
+
+> 如果我输入的是chat.999190.xyz则会进入到fiora服务页面，如果我输入的是服务器ip如：74.48.31.142 然后在地址栏回车，则会进入到nginx默认的index.html页面，为什么？这里80端口分别被默认页面和fiora共同使用着了吗？
+
+# 问题15中导致Nginx 80端口共享的配置解析
+
+您的问题涉及 Nginx 的虚拟主机配置机制。我来解释一下为什么会出现这种情况：
+
+## 原因分析
+
+当您访问 `chat.999190.xyz` 时，会进入 fiora 服务页面，而访问 IP 地址 `74.48.31.142` 时，会进入 Nginx 默认页面。这是因为：
+
+1. Nginx 使用基于域名的虚拟主机配置（server_name 指令）来区分不同的请求
+2. 当请求中的 Host 头与某个 server_name 匹配时，请求会被路由到对应的 server 块
+3. 当请求的 Host 头与任何 server_name 都不匹配时，Nginx 会：
+   - 首先尝试使用默认服务器（即第一个定义的 server 块）
+   - 或者使用明确标记为 `default_server` 的服务器块
+
+## 您的配置分析
+
+在您的配置中：
+
+1. `fiora_nginx.conf` 中的 server 块配置了 `server_name chat.999190.xyz vrchat.vip`
+2. `default.conf` 中的 server 块配置了 `server_name localhost`
+
+当您通过 IP 地址访问时，请求的 Host 头是 IP 地址本身，不匹配任何已配置的 server_name，所以 Nginx 使用默认的 server 块（在这种情况下是 `default.conf` 中的配置）。
+
+## 解决方案
+
+如果您希望通过 IP 地址访问时也进入 fiora 服务，可以修改 `fiora_nginx.conf` 文件，在 server_name 中添加 IP 地址或设置为默认服务器：
+
+```nginx:fiora_nginx.conf
+server {
+    listen       80 default_server;  # 添加 default_server 标记
+    server_name  chat.999190.xyz vrchat.vip 74.48.31.142;  # 添加 IP 地址
+    
+    # 其余配置保持不变
+    ...
+}
+```
+
+这样，无论是通过域名还是 IP 地址访问，都会进入 fiora 服务页面。
+
+## 总结
+
+是的，80 端口确实被多个配置共同使用，但 Nginx 通过 Host 头和 server_name 指令来区分请求应该由哪个 server 块处理。这就是为什么同一个端口可以提供不同的服务，取决于访问时使用的域名或 IP 地址。
+
+
+
+## 基本概念
+
+Nginx 使用虚拟主机（Virtual Host）机制在同一个端口上提供多个不同的网站服务。这是通过 `server_name` 指令实现的，它允许 Nginx 根据 HTTP 请求头中的 Host 字段将请求路由到不同的配置块。
+
+## 配置文件分析
+
+### 1. 默认配置 (default.conf)
+```
+server {
+    listen       80;
+    server_name  localhost;
+    
+    location / {
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+    }
+    
+    # 错误页面配置
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+}
+```
+
+### 2. Fiora 应用配置 (fiora_nginx.conf)
+```
+server {
+    listen       80;
+    server_name  chat.999190.xyz vrchat.vip;
+    
+    location / {
+        proxy_pass http://fiora:9200;
+        proxy_set_header   CF-Connecting-IP $http_cf_connecting_ip;
+        proxy_set_header   X-Real-IP        $http_cf_connecting_ip;
+        proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
+        proxy_set_header   Host             $http_host;
+        proxy_set_header   Upgrade          $http_upgrade;
+        proxy_set_header   X-NginX-Proxy    true;
+        proxy_set_header   Connection "upgrade";
+        proxy_http_version 1.1;
+    }
+    
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+}
+```
+
+### 3. One-API 应用配置 (one-api_nginx.conf)
+```
+server {
+    listen 80;
+    server_name api.999190.xyz api.vrchat.vip;
+    
+    location / {
+        client_max_body_size 64m;
+        proxy_http_version 1.1;
+        proxy_pass http://one-api:38888;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header CF-Connecting-IP $http_cf_connecting_ip;
+        # 其他代理设置...
+    }
+}
+```
+
+## 工作原理
+
+1. **端口共享**：所有配置都监听 80 端口，但通过不同的 `server_name` 区分
+2. **请求路由**：
+   - 访问 `chat.999190.xyz` → 路由到 fiora 服务
+   - 访问 `api.999190.xyz` → 路由到 one-api 服务
+   - 访问 IP 地址 (74.48.31.142) → 路由到默认配置
+
+3. **默认服务器选择**：
+   - 当请求的 Host 头不匹配任何 `server_name` 时，Nginx 会选择：
+     - 第一个定义的 server 块，或
+     - 标记为 `default_server` 的 server 块
+
+## 解决方案
+
+如果希望通过 IP 地址访问时也进入特定服务，可以：
+
+1. 在目标配置中添加 IP 地址到 `server_name`：
+   ```
+   server_name chat.999190.xyz vrchat.vip 74.48.31.142;
+   ```
+
+2. 或将目标配置设为默认服务器：
+   ```
+   listen 80 default_server;
+   ```
+
+## 总结
+
+Nginx 通过虚拟主机机制实现了在同一端口上提供多个不同服务的能力，根据请求的 Host 头将流量导向不同的应用程序。当使用 IP 地址直接访问时，由于没有匹配的 `server_name`，请求会被路由到**默认服务器**配置。
+
+
+
+# 16 但是有时却说服务不能同时使用同一个端口，比如两个不同的服务同时监听一个端口会导致服务启动失败，报错有占用之类的，我这里的one-api服务，可以使用80端口吗？类似于上面这个问题，如何配置？
+
+
+
+# Nginx 端口共享与服务配置说明
+
+您提出了一个很好的问题。确实，从操作系统层面来说，一个端口只能被一个进程直接监听。当我们说多个服务"共享"同一个端口时，实际上是通过反向代理服务器(如Nginx)实现的，而不是多个服务直接监听同一个端口。
+
+## 端口监听的工作原理
+
+1. **直接监听端口**：在操作系统层面，一个端口只能被一个进程直接监听。如果两个服务同时尝试监听同一个端口(如80端口)，第二个服务会启动失败并报"端口已被占用"错误。
+
+2. **通过反向代理共享端口**：Nginx作为反向代理服务器，它直接监听80端口，然后根据请求的域名(Host头)将流量转发到不同的后端服务。
+
+## 您的情况分析
+
+在您的配置中：
+
+1. **Nginx**直接监听80端口
+2. **fiora服务**运行在9200端口
+3. **one-api服务**运行在38888端口
+
+Nginx根据请求的域名将流量转发到不同的后端服务：
+- 访问`chat.999190.xyz`时，Nginx将请求转发到`fiora:9200`
+- 访问`api.999190.xyz`时，Nginx将请求转发到`one-api:38888`
+
+## 如何配置one-api使用80端口
+
+您不需要让one-api直接监听80端口，而是应该：
+
+1. 让one-api监听它自己的端口(如38888)
+2. 通过Nginx配置将特定域名的80端口请求转发到one-api服务
+
+您已经有了正确的配置：
+
+```nginx
+server {
+    listen 80;
+    server_name api.999190.xyz api.vrchat.vip;  # 这些域名的请求会被转发到one-api
+
+    location / {
+        proxy_pass http://one-api:38888;  # 转发到one-api服务
+        # 其他代理设置...
+    }
+}
+```
+
+## 总结
+
+1. **不同服务不能直接共享同一个端口**：从操作系统角度，一个端口只能被一个进程监听。
+
+2. **通过Nginx实现"端口共享"**：
+   - Nginx监听80端口
+   - 后端服务(fiora, one-api)监听各自的端口
+   - Nginx根据请求域名将流量转发到对应的后端服务
+
+3. **您的配置已经正确**：您不需要让one-api直接监听80端口，现有的Nginx配置已经能够将api.999190.xyz的请求转发到one-api服务。
+
+这种架构不仅解决了端口共享问题，还提供了额外的安全性、负载均衡和灵活性优势。
+
