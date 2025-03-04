@@ -1707,7 +1707,37 @@ find [搜索范围] [选项]
   find / -size +200M
   ```
 
-------
+
+
+### `find`指令在vps上全局搜索特定名称的文件-查找图片
+
+![image-20250304074238438](https://tgimgbed.999190.xyz/file/1741045389677_1741045369585_image-20250304074238438.png)
+
+`find / -name "*.jpg" -o -name "*.png" -o -name "*.jpeg" | grep -E 'ImageMessage|Avatar'`
+
+
+
+~~~bash
+[root@racknerd-8454f32 fioraredisdata]# find / -name "*.jpg" -o -name "*.png" -o -name "*.jpeg" | grep -E 'ImageMessage|Avatar'
+/mydata/bulita/bulita/data/Avatar/67c54ec24fd156003c0248c9_1740984765916.png
+/mydata/bulita/bulita/data/ImageMessage/67c4e733cf34d6003c317d68_1740982957585.png
+/mydata/bulita/bulita/data/ImageMessage/67c4e733cf34d6003c317d68_1740982838678.png
+/var/lib/docker/overlay2/a2ace8d7f74542c555f271d41cefbf228f4530bba30891f8eb692a41fd6a6108/diff/usr/app/fiora/packages/server/public/Avatar/67af5c9021c09c003c1359fe_1739546614731.jpg
+/var/lib/docker/overlay2/a2ace8d7f74542c555f271d41cefbf228f4530bba30891f8eb692a41fd6a6108/diff/usr/app/fiora/packages/server/public/Avatar/67af28aa994eaa003c9648f9_1739534387776.jpg
+/var/lib/docker/overlay2/a2ace8d7f74542c555f271d41cefbf228f4530bba30891f8eb692a41fd6a6108/diff/usr/app/fiora/packages/server/public/Avatar/67aee34b10e2a8003cc1c06b_1739521470054.png
+/var/lib/docker/overlay2/a2ace8d7f74542c555f271d41cefbf228f4530bba30891f8eb692a41fd6a6108/diff/usr/app/fiora/packages/server/public/Avatar/67af608121c09c003c135b75_1739546960127.png
+/var/lib/docker/overlay2/a2ace8d7f74542c555f271d41cefbf228f4530bba30891f8eb692a41fd6a6108/diff/usr/app/fiora/packages/server/public/ImageMessage/67aee34b10e2a8003cc1c06b_1740335968283.png
+/var/lib/docker/overlay2/a2ace8d7f74542c555f271d41cefbf228f4530bba30891f8eb692a41fd6a6108/diff/usr/app/fiora/packages/server/public/ImageMessage/67aee34b10e2a8003cc1c06b_1739708226380.png
+/var/lib/docker/overlay2/a2ace8d7f74542c555f271d41cefbf228f4530bba30891f8eb692a41fd6a6108/diff/usr/app/fiora/packages/server/public/ImageMessage/67aee34b10e2a8003cc1c06b_1739615737941.png
+~~~
+
+
+
+
+
+
+
+
 
 ###  12.2 `locate` 命令
 
