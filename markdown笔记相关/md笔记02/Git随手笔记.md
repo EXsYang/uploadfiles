@@ -212,7 +212,7 @@ git reset --hard 39128d1
 ~~~
 git init
 
-git remote add origin git@github.com:EXsYang/mycode_nolfs.git
+git remote add origin git@github.com:EXsYang/r2-presign-service.git
 
 git remote add origin git@gitee.com:czbk_zhang_meng/git_test.git
 
@@ -226,7 +226,7 @@ git status
 
 git add .
 
-git commi
+git commit -m 'commit'
 # --set-upstream 推送到远端的同时并且建立起和远端分支的关联关系。如果当前分支已经和远端分支关联，# 则可以省略分支名和远端名。
 git push --set-upstream origin main
 git push --set-upstream origin master
@@ -843,6 +843,7 @@ git remote remove origin
    git lfs install
    ```
    
+
 这个命令会设置 Git LFS 的钩子（hooks）。这是在每个使用 Git LFS 的仓库中需要执行的步骤。
 
 ### 配置文件跟踪
