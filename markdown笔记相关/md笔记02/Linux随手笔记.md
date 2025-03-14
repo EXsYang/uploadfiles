@@ -972,6 +972,12 @@ cp 源文件路径 .
 - `-r` 或 `-R`：递归复制，用于复制目录及其子目录。
 - `-i`：在覆盖文件之前提示用户确认。
 - `-v`：详细输出，显示复制过程的详细信息。
+- `-f` 或 `--force` 参数表示强制复制，即使目标文件已经存在也会覆盖它，不会提示确认。
+
+~~~
+#加sudo可以直接强制覆盖，不加则还是会提示
+sudo cp -f /mydata/testfiora/fiora_all_nginx.conf /mydata/nginx/conf/conf.d/fiora_all_nginx.conf
+~~~
 
 
 
