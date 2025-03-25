@@ -10013,3 +10013,111 @@ EOL'
 ~~~
 
 建议安装 vim，因为它是最常用的文本编辑器，具有语法高亮等实用功能。安装后可以通过 vimtutor 命令学习基本使用方法。
+
+
+
+# 9 服务器管理软件1Panel和宝塔面板
+
+## 9.1 价格对比
+
+1Panel是一款开源的Linux服务器运维管理面板，由杭州飞致云信息科技有限公司开发，于2023年3月20日推出[5](https://blog.csdn.net/2303_76247682/article/details/140083186)。虽然1Panel本身是开源的，但它现在也提供了专业版付费服务。
+
+## 1Panel的价格情况
+
+1Panel目前有两种版本:
+
+- **开源版(社区版)**: 完全免费使用[8](https://bbs.halo.run/d/5192-1panel-和宝塔哪个好)
+- **专业版**: 原价980元/台，曾有限时1折优惠活动，实付98元[2](https://linux.do/t/topic/59173)
+
+根据搜索结果，1Panel专业版采用了永久授权的模式，而不是宝塔面板的订阅制[2](https://linux.do/t/topic/59173)。专业版许可证是与账号绑定的，一个许可证只能在一个实例上使用，但可以通过解除设备绑定的方式更换设备[2](https://linux.do/t/topic/59173)。
+
+## 开源版与专业版的区别
+
+虽然具体差异在搜索结果中没有完全列出，但可以看出:
+
+1. 开源版提供了基础功能，包括服务器管理、应用部署等[3](https://www.1favorites.com/archives/580.html)[10](https://blog.ydxian.xyz/archives/1panel)
+2. 专业版可能提供一些高级功能，如短信告警等功能[9](https://github.com/1Panel-dev/1Panel/discussions/6369)
+
+## 与宝塔面板的价格对比
+
+相比之下，宝塔专业版的价格更高:
+
+- 宝塔专业版永久授权: 4888元/台[1](https://bbs.fit2cloud.com/t/topic/2108)[2](https://linux.do/t/topic/59173)
+- 宝塔专业版双11优惠价: 2788元/台[1](https://bbs.fit2cloud.com/t/topic/2108)
+- 宝塔订阅价格: 一年120到240元不等[1](https://bbs.fit2cloud.com/t/topic/2108)
+
+## 为什么开源项目也收费
+
+虽然1Panel是开源项目，但商业化是其可持续发展的途径之一。正如搜索结果中提到的:"要想项目更好的发展，适当的商业化是必要的"[1](https://bbs.fit2cloud.com/t/topic/2108)。通过提供增值服务和技术支持等方式，1Panel实现了项目的商业变现和持续发展[7](https://cloud.baidu.com/article/3292983)。
+
+1Panel和宝塔面板都是中国产的服务器运维管理软件。
+
+1Panel专业版的定价相比宝塔面板更为亲民，这也是其竞争策略的一部分。
+
+1Panel是由杭州飞致云信息科技有限公司开发的现代化、开源的Linux服务器运维管理面板，于2023年3月20日正式推出[1](https://baike.baidu.com/item/1Panel/63235002)[2](https://www.fit2cloud.com/1panel/about.html)。目前最新版本为v1.10.20-lts，最近一次更新时间是2024年10月24日[1](https://baike.baidu.com/item/1Panel/63235002)。
+
+
+
+宝塔面板则是由广东堡塔安全技术有限公司开发的Linux/Windows服务器运维管理面板[6](https://cloud.tencent.com/developer/article/2217154)。该公司正式成立于2017年，专注于服务器运维效率及运维安全领域[3](https://www.bt.cn/new/about)[5](https://www.bt.cn/new/about.html)。宝塔面板已在国内拥有约800万的服务器安装量，被1000多个中大型企业及政企选择使用[3](https://www.bt.cn/new/about)[6](https://cloud.tencent.com/developer/article/2217154)。
+
+
+
+两款产品都致力于简化服务器管理，提供图形化界面，帮助用户实现服务器的便捷管理和网站的快速部署。
+
+
+
+## 9.2 世界上与1Panel和宝塔面板类似的服务器管理软件有很多，其中最受欢迎的包括cPanel、Plesk、Webmin、Ajenti和Cloudron等。
+
+## 最受欢迎的服务器管理面板
+
+## cPanel
+
+cPanel是全球最流行的服务器管理工具之一，特别在网络托管行业广泛使用[1](https://www.supportpro.com/blog/top-server-management-tools-in-2024/)。它以用户友好的界面和自动化服务器管理任务的能力而著称，包括软件安装、域名管理和数据库设置。
+
+## Plesk
+
+Plesk是另一款广泛使用的服务器管理工具，支持多种服务器操作系统如Linux和Windows[2](https://alternativeto.net/software/1panel/)。它被认为是Windows平台上最受欢迎的1Panel替代品[2](https://alternativeto.net/software/1panel/)。
+
+## 其他知名选择
+
+- **Webmin**: 开源的UNIX服务器管理工具[1](https://www.supportpro.com/blog/top-server-management-tools-in-2024/)
+- **Ajenti**: 适用于Linux和BSD的模块化服务器管理面板[2](https://alternativeto.net/software/1panel/)
+- **Cloudron**: 完整的应用和用户管理解决方案[2](https://alternativeto.net/software/1panel/)
+- **ispmanager**: 为网站开发者和托管专业人士设计的控制面板[2](https://alternativeto.net/software/1panel/)
+- **Vesta Control Panel**: 开源的托管控制面板[2](https://alternativeto.net/software/1panel/)
+
+## 价格对比
+
+## cPanel价格(2025年)
+
+- Solo计划(1个账户): $19.75/月[3](https://www.vpsbg.eu/blog/cpanel-price-updates-2025)
+- Admin计划(最多5个账户): $27.25/月[3](https://www.vpsbg.eu/blog/cpanel-price-updates-2025)
+- Pro计划(最多30个账户): $39.25/月[3](https://www.vpsbg.eu/blog/cpanel-price-updates-2025)
+- Premier计划(最多100个账户): $47.00/月[3](https://www.vpsbg.eu/blog/cpanel-price-updates-2025)
+
+## Plesk价格(2025年1月1日起生效)
+
+- Web Admin(最多5个账户): $15.00/月[4](https://panellicense.com/announcements/12/Important-Update-on-Plesk-Pricing--Effective-January-1-2025.html)
+- Web Pro(最多30个账户): $26.00/月[4](https://panellicense.com/announcements/12/Important-Update-on-Plesk-Pricing--Effective-January-1-2025.html)
+- Web Host(无限账户): $49.00-$66.00/月(取决于是VPS还是独立服务器)[4](https://panellicense.com/announcements/12/Important-Update-on-Plesk-Pricing--Effective-January-1-2025.html)
+
+## ispmanager价格
+
+- Lite版(10个域名): $6/月[6](https://www.trustradius.com/products/ispmanager/pricing)
+- Pro版(50个域名): $12/月[6](https://www.trustradius.com/products/ispmanager/pricing)
+- Host版(无限域名): $18/月[6](https://www.trustradius.com/products/ispmanager/pricing)
+
+## Cloudron价格
+
+- 许可证: $15/月(年付)[5](https://bmannconsulting.com/notes/cloudron/)
+- 备份: $5/月[5](https://bmannconsulting.com/notes/cloudron/)
+- 托管: $11/月[5](https://bmannconsulting.com/notes/cloudron/)
+- 总计: 约$31/月或$372/年[5](https://bmannconsulting.com/notes/cloudron/)
+
+与1Panel和宝塔面板相比，这些国际知名的服务器管理面板价格普遍较高，特别是cPanel和Plesk这样的商业解决方案。值得注意的是，cPanel在2025年将进行第六次连续价格调整，大多数计划价格上涨5-10%[3](https://www.vpsbg.eu/blog/cpanel-price-updates-2025)[8](https://blog.resellerspanel.com/cpanel-reseller-program/a-price-increase-in-line-with-industry-trends-is-now-in-effect-for-cpanel-partners.html)。Plesk也宣布了2025年的价格调整，其中Web Host版本的价格增幅较大[9](https://talk.plesk.com/threads/enormous-price-increases-yet-again-for-2025.375885/)。
+
+
+
+相比之下，1Panel专业版的980元/台(永久授权)和宝塔面板的价格体系在国际市场上仍具有一定的价格优势，尤其对于中小型企业和个人用户来说。
+
+来自 Perplexity 的回答: [pplx.ai/share](https://www.perplexity.ai/search/pplx.ai/share)
