@@ -4580,7 +4580,7 @@ sudo ifdown ens33 && sudo ifup ens33
 
 注意：`ifdown`和`ifup`命令可能需要`net-tools`包，如果系统中没有，你可能需要先安装它。
 
-
+注意：**如果要让虚拟机上外网，则需要宿主机启用TUN模式**
 
 
 
