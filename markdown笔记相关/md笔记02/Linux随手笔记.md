@@ -4467,12 +4467,13 @@ sudo ifdown ens33 && sudo ifup ens33
    ```
    这个命令也会显示所有网络接口的信息，包括 IP 地址。请注意，在一些较新的 Linux 发行版中，`ifconfig` 可能不会默认安装，你可能需要先安装 `net-tools` 包。
 
-3. **使用 `hostname` 命令**（仅显示当前主机名对应的 IP 地址）：
+3. **使用 `hostname` 命令**（仅显示当前主机名对应的 IP 地址）：该指令可以在一些轻量linux镜像虚拟机中运行，替代`ifconfig`没安装时查看主机IP，即ssh要连接的IP
+   
    ```bash
    hostname -I
    ```
    这个命令会显示当前主机的 IP 地址，不包括其他网络接口的信息。
-
+   
 4. **使用 `nmcli` 命令**（NetworkManager 命令行界面）：
    ```bash
    nmcli device show
@@ -4498,6 +4499,8 @@ sudo ifdown ens33 && sudo ifup ens33
 
 
 vi /etc/sysconfig/network-scripts/ifcfg-ens33
+
+![image-20250830035518292](https://tgimgbed.999190.xyz/file/1756497330845_image-20250830035518292.png)
 
 **注意事项：**
 
