@@ -77,6 +77,109 @@ https://repo.maven.apache.org/maven2/
 
 
 
+
+
+# 3.1 如果Maven配置文件什么仓库都不配置则默认走国外中央仓库
+
+
+
+~~~xml
+<mirrors>
+    <!-- mirror
+     | Specifies a repository mirror site to use instead of a given repository. The repository that
+     | this mirror serves has an ID that matches the mirrorOf element of this mirror. IDs are used
+     | for inheritance and direct lookup purposes, and must be unique across the set of mirrors.
+     |
+	-->
+	
+	<!-- 
+    <mirror>
+      <id>mirrorId</id>
+      <mirrorOf>repositoryId</mirrorOf>
+      <name>Human Readable Name for this Mirror.</name>
+      <url>http://my.repository.com/repo/path</url>		
+    </mirror>
+	-->
+
+    <!-- 
+	<mirror>
+    <id>alimaven</id>
+    <name>aliyun maven</name>
+    <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+    <mirrorOf>central</mirrorOf>
+    </mirror> 
+	-->
+
+	<!-- 
+	<mirror>
+	<id>nexus-tencentyun</id>
+	<mirrorOf>*</mirrorOf>
+	<name>Nexus tencentyun</name>
+	<url>http://mirrors.cloud.tencent.com/nexus/repository/maven-public/</url>
+	</mirror>
+	-->
+
+
+  </mirrors>
+~~~
+
+
+
+
+
+是的，完全正确。
+
+如果你在 `settings.xml` 的 `<mirrors>` 标签内什么都不配置，或者像你的例子一样将所有 `<mirror>` 都注释掉，那么 Maven 会**默认直接连接到官方的 Maven 中央仓库** (Maven Central Repository) 去下载所有依赖。
+
+------
+
+
+
+### 工作原理：Super POM
+
+
+
+这个默认行为被定义在 Maven 的一个内置“父项目”文件中，称为 **Super POM**。你可以认为每个 Maven 项目都隐式地继承了这个 Super POM，它包含了最基础的配置，其中就定义了中央仓库：
+
+Super POM 中关于中央仓库的配置大致如下：
+
+XML
+
+```
+<repositories>
+  <repository>
+    <id>central</id>
+    <name>Central Repository</name>
+    <url>https://repo.maven.apache.org/maven2</url>
+    <layout>default</layout>
+    <snapshots>
+      <enabled>false</enabled>
+    </snapshots>
+  </repository>
+</repositories>
+```
+
+所以，当你没有配置任何镜像来“拦截”对 `central` 仓库的请求时，Maven 就会使用上面这个内置的官方地址。
+
+------
+
+
+
+### 总结 📝
+
+
+
+- **不配置镜像** = **直连官方中央仓库**。
+- **配置镜像** = **拦截请求，并转向到你指定的镜像地址**，以提高下载速度。
+
+对于国内用户来说，直连官方仓库的速度通常会比较慢，这就是为什么我们推荐配置国内镜像的原因。
+
+
+
+
+
+
+
 # 4 注意idea的setting中配置的maven只对ThisWindow的项目生效，即默认打开一个新的Maven项目，默认使用的是idea自带的maven软件
 
 默认打开一个新的Maven项目，默认使用的是idea自带的maven软件，同时配置文件和仓库的位置也是默认的配置，如果想要使用自定义的配置文件或是仓库，需要勾选右侧的Override
@@ -843,3 +946,939 @@ https://stackoverflow.com/questions/77171270/compilation-error-after-upgrading-t
 
 项目启动成功！
 
+
+
+
+
+# 19 Maven 镜像配置 “第一个匹配优先”
+
+
+
+一旦找到**第一个**能够匹配该仓库 ID 的镜像，Maven 就会**立即使用它，并停止继续向后查找**。
+
+
+
+~~~xml
+<!-- mirrors
+   | This is a list of mirrors to be used in downloading artifacts from remote repositories.
+   |
+   | It works like this: a POM may declare a repository to use in resolving certain artifacts.
+   | However, this repository may have problems with heavy traffic at times, so people have mirrored
+   | it to several places.
+   |
+   | That repository definition will have a unique id, so we can create a mirror reference for that
+   | repository, to be used as an alternate download site. The mirror site will be the preferred
+   | server for that repository.
+   |-->
+  <mirrors>
+    <!-- mirror
+     | Specifies a repository mirror site to use instead of a given repository. The repository that
+     | this mirror serves has an ID that matches the mirrorOf element of this mirror. IDs are used
+     | for inheritance and direct lookup purposes, and must be unique across the set of mirrors.
+     |
+	-->
+	
+	<!-- 
+    <mirror>
+      <id>mirrorId</id>
+      <mirrorOf>repositoryId</mirrorOf>
+      <name>Human Readable Name for this Mirror.</name>
+      <url>http://my.repository.com/repo/path</url>		
+    </mirror>
+	-->
+
+    
+	<!-- <mirror>
+    <id>alimaven</id>
+    <name>aliyun maven</name>
+    <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+    <mirrorOf>central</mirrorOf>
+    </mirror> -->
+	
+	<mirror>
+	<id>nexus-tencentyun</id>
+	<mirrorOf>*</mirrorOf>
+	<name>Nexus tencentyun</name>
+	<url>http://mirrors.cloud.tencent.com/nexus/repository/maven-public/</url>
+	</mirror>
+
+  </mirrors>
+
+~~~
+
+
+
+
+
+#### 1. 什么是 Maven 镜像 (Mirror)？
+
+
+
+**核心作用**：加速依赖下载。
+
+Maven 镜像相当于一个“重定向器”或“代理服务器”。当你配置了一个镜像后，Maven 在请求某个远程仓库（如官方的 Maven 中央仓库）时，会转而向你指定的镜像地址发起请求。
+
+通常，我们会将镜像地址设置为国内的镜像源（如阿里云、腾讯云、华为云等），因为它们的服务器在国内，访问速度比直连国外的官方仓库快得多。
+
+此配置位于 Maven 的 `settings.xml` 文件中的 `<mirrors>` 标签内。
+
+
+
+#### 2. 镜像的匹配规则：“第一个匹配优先”
+
+
+
+这是 Maven 镜像机制中最核心、也最容易混淆的一点。
+
+- **顺序**：Maven 会从上到下读取 `settings.xml` 文件中定义的所有 `<mirror>`。
+- **匹配**：当需要从某个仓库（比如 ID 为 `central`）下载依赖时，Maven 会拿着这个 ID 逐个检查 `<mirror>` 的 `<mirrorOf>` 设置。
+- **决策**：一旦找到**第一个**能够匹配该仓库 ID 的镜像，Maven 就会**立即使用它，并停止继续向后查找**。
+
+**关键点**：它不是一个“备用”或“失败重试”机制。如果第一个匹配的镜像服务器挂了，Maven 构建会直接失败，它不会自动去尝试列表中的第二个镜像。
+
+
+
+#### 3. 关键配置项：`<mirrorOf>` 详解
+
+
+
+`<mirrorOf>` 标签是镜像配置的灵魂，它决定了当前这个 `<mirror>` 要拦截（或代理）哪个远程仓库的请求。
+
+它有以下几种常见配置：
+
+- **`<mirrorOf>central</mirrorOf>`**
+  - **含义**：只拦截对 Maven 中央仓库（repository ID 为 `central`）的请求。如果项目依赖了其他仓库（如 `jcenter`），则该镜像不会生效。
+- **`<mirrorOf>\*</mirrorOf>` （最常用）**
+  - **含义**：通配符，拦截**所有**的远程仓库请求。无论是 `central` 还是在 POM 文件中定义的任何其他 `<repository>`，所有下载请求都会被这个镜像捕获。
+  - **效果**：相当于一个全局代理，简单、高效，是国内开发者的首选配置。
+- **`<mirrorOf>repo1,repo2</mirrorOf>`**
+  - **含义**：拦截多个指定的仓库，仓库 ID 之间用逗号隔开。
+- **`<mirrorOf>\*,!repo-to-exclude</mirrorOf>`**
+  - **含义**：拦截所有仓库，**但是**排除（`!`）指定的仓库。例如，`*,!internal-repo` 表示代理所有公共仓库，但不代理公司内部的私有仓库。
+
+
+
+#### 4. 关于默认 `settings.xml` 中的示例
+
+
+
+在未经修改的 `settings.xml` 文件中，你会看到一段被注释掉（被 `` 包围）的 `<mirror>` 配置：
+
+**必须明确**：
+
+- **这是示例，不是默认值**：它是一个配置模板或例子，告诉你应该如何填写。
+- **默认是无效的**：只要它被注释，Maven 就会完全忽略它，它对你的系统没有任何影响。`http://my.repository.com/repo/path` 也只是一个无意义的占位符。
+
+------
+
+
+
+### 总结与最佳实践
+
+
+
+1. **全局镜像配置**：对于个人开发环境，最省心的方式是配置一个 `<mirrorOf>*</mirrorOf>` 的国内镜像（如腾讯云或阿里云），这样可以加速所有 Maven 项目的构建。
+2. **理解匹配规则**：牢记“第一个匹配优先”原则，避免在配置多个镜像时产生逻辑混乱。
+3. **区分示例与配置**：`settings.xml` 中被注释掉的部分是说明和示例，不是生效的配置。需要时应取消注释并修改为你自己的值。
+
+
+
+
+
+# 20 刷新听书项目的Maven总是报错
+
+
+
+
+
+
+
+![image-20250831044832523](https://tgimgbed.999190.xyz/file/1756586918947_image-20250831044832523.png)
+
+
+
+~~~
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.10.1:compile (default-compile) on project model: Fatal error compiling: java.lang.NoSuchFieldError: Class com.sun.tools.javac.tree.JCTree$JCImport does not have member field 'com.sun.tools.javac.tree.JCTree qualid' -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException
+[ERROR] 
+[ERROR] After correcting the problems, you can resume the build with the command
+[ERROR]   mvn <args> -rf :model
+
+~~~
+
+
+
+
+
+好的，我们来详细解释一下这个常见的 Maven 报错。
+
+这个错误的核心原因是 **版本不兼容**，具体来说，是你用来运行 Maven 的 **JDK 版本** 与项目中的 **Maven 编译器插件 (`maven-compiler-plugin`)** 或其依赖（尤其是 **Lombok**）之间存在冲突。
+
+------
+
+
+
+### 问题的根源：版本不兼容 💥
+
+
+
+简单来说，错误信息 `NoSuchFieldError` 意味着一个程序（在这里是 Maven 插件）想去调用 Java 编译器内部的一个零件（字段 `qualid`），但在它实际使用的编译器版本里，这个零件根本不存在或者换了个名字。
+
+这就像一个汽修工拿着 1998 年的发动机图纸，去修理一辆 2025 年的电动汽车。他想找的“化油器”在电动车里根本就不存在，于是就彻底懵了。
+
+**最常见的罪魁祸首**：
+
+1. **Lombok 版本过低**：Lombok 通过直接操作 Java 编译器的内部代码来实现功能（如自动生成 `get/set` 方法），因此它对 JDK 版本极其敏感。
+2. **`maven-compiler-plugin` 版本过低**：旧的编译器插件不认识新版 JDK 的内部结构。
+3. **JDK 版本过高或过低**：你系统环境的 JDK 版本与项目 `pom.xml` 文件中声明的版本不匹配。
+
+------
+
+
+
+### 如何解决？
+
+
+
+解决方案就是**统一并升级相关工具的版本**，确保它们能够协同工作。请按以下顺序尝试：
+
+
+
+#### 方案一（推荐）：更新 `pom.xml` 中的插件版本
+
+
+
+这是最常见也是最正确的解决方法。打开你项目模块（`model`）的 `pom.xml` 文件，检查并升级以下配置。
+
+XML
+
+```
+<properties>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+    
+    <lombok.version>1.18.32</lombok.version> 
+</properties>
+
+<dependencies>
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>${lombok.version}</version>
+        <scope>provided</scope>
+    </dependency>
+</dependencies>
+
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.13.0</version>
+            <configuration>
+                <annotationProcessorPaths>
+                    <path>
+                        <groupId>org.projectlombok</groupId>
+                        <artifactId>lombok</artifactId>
+                        <version>${lombok.version}</version>
+                    </path>
+                </annotationProcessorPaths>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+```
+
+**操作指南**：
+
+- 将 `maven-compiler-plugin` 的版本升级到较新的稳定版（例如 `3.13.0`）。
+- 将 `lombok` 的版本升级到较新的稳定版（例如 `1.18.32`）。
+- 确保 `<maven.compiler.source>` 和 `<maven.compiler.target>` 设置为你希望使用的 Java 版本（例如 11, 17）。
+
+修改后，保存 `pom.xml` 文件并让 Maven 重新加载依赖，然后再次尝试构建。
+
+------
+
+
+
+#### 方案二：检查 Maven 使用的 JDK 环境
+
+
+
+有时候，你系统里安装了多个 JDK，而 Maven 可能没有使用你期望的那个。
+
+操作指南：
+
+在你的项目根目录下打开终端，运行以下命令：
+
+Bash
+
+```
+mvn -v
+```
+
+检查输出的 `Java version` 和 `Java home` 是否指向你为这个项目所期望的 JDK 版本。如果不是，请修改你系统的 `JAVA_HOME` 环境变量，使其指向正确的 JDK 安装目录。
+
+------
+
+
+
+#### 方案三（备选方案）：降低项目的 JDK 版本
+
+
+
+如果因为某些原因不能升级插件，你可以尝试在 `pom.xml` 中降低项目的 Java 版本，使其与你现有的旧插件兼容。
+
+操作指南：
+
+修改 pom.xml 中的 <properties>：
+
+XML
+
+```
+<properties>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+</properties>
+```
+
+同时，确保你运行 `mvn` 命令的 JDK 环境也是对应的版本（Java 11 或 8）。
+
+------
+
+
+
+### 总结
+
+
+
+这个错误几乎总是**版本不匹配**导致的。**首选方案是更新 `pom.xml` 中的 `maven-compiler-plugin` 和 `lombok` 的版本**，这能解决 95% 以上的问题。
+
+
+
+
+
+## 解决方案：修改jdk版本为jdk17
+
+![image-20250831045317509](https://tgimgbed.999190.xyz/file/1756587207498_image-20250831045317509.png)
+
+
+
+![image-20250831045326770](https://tgimgbed.999190.xyz/file/1756587213718_image-20250831045326770.png)
+
+
+
+# 21 升级项目jdk版本为Jdk17
+
+
+
+这个报错的核心原因是：你用来运行 Maven 的 **Java (JDK) 版本太低了**。
+
+------
+
+
+
+### 问题的根源：JDK 版本过低 ☕
+
+
+
+这个错误的关键信息是 `Unsupported major.minor version 52.0`。这是一个非常明确的 Java 错误，它告诉我们：
+
+1. **版本号 `52.0`** 对应的是 **Java 8**。
+2. `Unsupported` 的意思是，你当前的 Java 环境**不支持**这个版本。
+
+**结论**：你项目依赖的 `maven-clean-plugin` 版本 `3.2.0` 是用 **Java 8** 编译的。而你系统里用来执行 `mvn` 命令的 Java 环境是 **Java 7 或者更早的版本**。
+
+这就像试图在一台只能播放 VCD 的老旧影碟机上播放一张蓝光光盘——机器根本不认识这种新的格式，所以直接报错。
+
+------
+
+
+
+### 如何解决？
+
+
+
+你有两种解决方案，强烈推荐第一种。
+
+
+
+#### 方案一（强烈推荐）：升级你的 JDK
+
+
+
+这是最正确、最符合现代开发实践的方案。你的开发环境应该使用一个受支持的 Java 版本。
+
+1. **安装新版 JDK**：下载并安装一个 **Java 8 或更高版本** 的 JDK（例如 JDK 8、JDK 11 或 JDK 17 都是不错的选择）。
+
+2. **配置环境变量**：
+
+   - 设置 `JAVA_HOME` 环境变量，使其指向你新安装的 JDK 目录（例如 `C:\Program Files\Java\jdk-11.0.1`）。
+   - 确保你的 `Path` 环境变量中包含了 `%JAVA_HOME%\bin`，并且这个路径在其他旧 Java 路径的前面。
+
+3. **验证版本**：打开一个新的命令行窗口（**必须是新的**），然后运行以下命令来确认版本是否已更新：
+
+   Bash
+
+   ```
+   java -version
+   mvn -v
+   ```
+
+   当你看到输出的 Java 版本是 1.8 或更高时，问题就解决了。再次运行你的 Maven 命令即可。
+
+
+
+#### 方案二（临时方案）：降低插件版本
+
+
+
+如果你因为某些限制无法升级 JDK，唯一的办法就是降低插件的版本，使其与你陈旧的 Java 环境兼容。
+
+操作：
+
+打开你项目（tingshu-parent）的 pom.xml 文件，在 <build> 标签内添加 <pluginManagement> 来锁定 maven-clean-plugin 的版本。
+
+XML
+
+```
+<build>
+    <pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>2.5</version>
+            </plugin>
+        </plugins>
+    </pluginManagement>
+</build>
+```
+
+**注意**：版本 `2.5` 是一个兼容 Java 7 的旧版本。这只是一个临时绕过的方案，长期来看，保持开发环境的更新才是最佳实践。
+
+
+
+注意不要选错为1.7，要选17
+
+
+
+![image-20250831045812049](https://tgimgbed.999190.xyz/file/1756587500603_image-20250831045812049.png)
+
+
+
+
+
+# 22 Maven包在中央仓库有，但是拉不下来。
+
+![image-20250831051559627](https://tgimgbed.999190.xyz/file/1756588571337_image-20250831051559627.png)
+
+![image-20250831051528798](https://tgimgbed.999190.xyz/file/1756588540167_image-20250831051528798.png)
+
+您好，您分析得非常到位！
+
+您已经确认了中央仓库里确实存在这两个依赖包，这是解决问题最关键的第一步。这有力地证明了问题**大概率不是网络问题，也不在于包本身，而在于您本地的 Maven 环境由于某些配置，没能成功地从正确的地址下载它们**。
+
+根据您的截图和描述，最可能的原因是以下几点，我们可以逐一排查：
+
+
+
+### 1. 镜像仓库问题（最常见的原因）
+
+
+
+根据我们之前的交流，您很可能配置了国内的镜像仓库（如阿里云、腾讯云等），并且设置了 `<mirrorOf>*</mirrorOf>`。
+
+- **问题所在**：这个配置会拦截**所有**的 Maven 下载请求，并把它们全部转发到您指定的镜像服务器上。如果这个镜像服务器**恰好还没有同步**您需要的 `wxpay-sdk:0.0.3` 或 `redisson-spring-boot-starter:3.20.0` 这两个包，Maven 就会认为它们“找不到”，因为它根本没机会去访问官方的中央仓库。
+
+- **如何验证和解决**：
+
+  1. **临时禁用镜像**：打开您的 `settings.xml` 文件（通常在 `C:/Users/用户名/.m2/` 目录下），**暂时将 `<mirror>` 整个标签段注释掉**。
+  2. **刷新项目**：回到 IDEA 中，在 Maven 工具栏点击“Reload All Maven Projects”按钮。
+  3. **观察结果**：如果错误消失了，那就证明**就是镜像的问题**。
+
+  **如果确定是镜像问题，您可以**：
+
+  - **更换镜像源**：换一个更稳定或更新及时的镜像源，例如将腾讯云换成阿里云。
+
+    XML
+
+    ```
+    <mirror>
+      <id>aliyunmaven</id>
+      <mirrorOf>*</mirrorOf>
+      <name>aliyun maven</name>
+      <url>https://maven.aliyun.com/repository/public</url>
+    </mirror>
+    ```
+
+  - **强制更新**：在命令行中进入项目根目录，执行 `mvn clean install -U`。`-U` 参数会强制 Maven 检查更新，有时能解决镜像同步延迟的问题。
+
+
+
+### 2. 本地仓库损坏
+
+
+
+有时候，第一次下载失败会在本地 Maven 仓库（`.m2` 文件夹）中留下一个损坏的、不完整的包文件（例如 `*.lastUpdated` 文件）。之后 Maven 每次都会看到这个损坏的标记，并且不会再尝试重新下载。
+
+- **如何解决**：
+  1. **定位文件夹**：进入您的本地 Maven 仓库目录，通常是 `C:/Users/用户名/.m2/repository/`。
+  2. **删除问题包的文件夹**：
+     - 删除 `com/github/wxpay` 整个文件夹。
+     - 删除 `org/redisson` 整个文件夹。
+  3. **刷新项目**：回到 IDEA 中刷新 Maven 项目。Maven 会发现本地没有这些包，并会强制重新下载它们。
+
+
+
+### 3. IDE 与 Maven 设置问题
+
+
+
+偶尔，IDE 的 Maven 设置可能与您系统环境的不一致，或者缓存出现了问题。
+
+- **如何解决**：
+  1. **命令行验证**：在您的项目根目录打开命令行终端，运行 `mvn clean install`。如果在命令行中构建成功，但在 IDEA 中失败，说明是 IDEA 的设置问题。
+  2. **检查 IDEA 设置**：进入 `File -> Settings -> Build, Execution, Deployment -> Build Tools -> Maven`。确认 “User settings file” 和 “Local repository” 都指向了正确的位置。
+  3. **刷新 IDEA 缓存**：尝试 `File -> Invalidate Caches / Restart...` 清理一下 IDEA 的缓存。
+
+
+
+### 总结与排查步骤
+
+
+
+建议您按照以下顺序操作，这能最高效地定位问题：
+
+1. **先执行方案二**：删除本地仓库中 `wxpay` 和 `redisson` 的文件夹，然后刷新项目。这是最快最简单的尝试。
+2. **如果不行，再执行方案一**：暂时注释掉 `settings.xml` 中的 `<mirror>` 配置，然后刷新项目。如果成功，就证明是镜像源的问题，可以考虑更换镜像源。
+3. **如果前两者都不行**，再考虑是不是网络代理或 IDE 本身的问题。
+
+根据经验，90% 的可能性是**第一或第二个原因**导致的。
+
+
+
+# 23 手动安装依赖
+
+
+
+对于一直拉不下来的jar包，可以到中央仓库下载jar包，手动安装到maven仓库
+
+
+
+~~~cmd
+Microsoft Windows [版本 10.0.19045.6216]
+(c) Microsoft Corporation。保留所有权利。
+
+C:\Users\yangd>mvn install:install-file -Dfile="D:\IDM\IDM临时文件下载库\wxpay-sdk-0.0.3.jar" -DgroupId=com.github.wxpay
+ -DartifactId=wxpay-sdk -Dversion=0.0.3 -Dpackaging=jar
+[INFO] Scanning for projects...
+Downloading from nexus-aliyun: https://maven.aliyun.com/repository/central/org/apache/maven/plugins/maven-clean-plugin/2
+.5/maven-clean-plugin-2.5.pom
+Downloaded from nexus-aliyun: https://maven.aliyun.com/repository/central/org/apache/maven/plugins/maven-clean-plugin/2.
+5/maven-clean-plugin-2.5.pom (0 B at 0 B/s)
+Downloading from nexus-aliyun: https://maven.aliyun.com/repository/central/org/apache/maven/plugins/maven-clean-plugin/2
+.5/maven-clean-plugin-2.5.jar
+Downloaded from nexus-aliyun: https://maven.aliyun.com/repository/central/org/apache/maven/plugins/maven-clean-plugin/2.
+5/maven-clean-plugin-2.5.jar (0 B at 0 B/s)
+[INFO]
+[INFO] ------------------< org.apache.maven:standalone-pom >-------------------
+[INFO] Building Maven Stub Project (No POM) 1
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO]
+[INFO] --- maven-install-plugin:2.4:install-file (default-cli) @ standalone-pom ---
+[INFO] Installing D:\IDM\IDM临时文件下载库\wxpay-sdk-0.0.3.jar to C:\Users\yangd\.m2\repository\com\github\wxpay\wxpay-s
+dk\0.0.3\wxpay-sdk-0.0.3.jar
+[INFO] Installing C:\Users\yangd\AppData\Local\Temp\mvninstall4706862768258315113.pom to C:\Users\yangd\.m2\repository\c
+om\github\wxpay\wxpay-sdk\0.0.3\wxpay-sdk-0.0.3.pom
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  6.684 s
+[INFO] Finished at: 2025-08-31T06:32:05+08:00
+[INFO] ------------------------------------------------------------------------
+
+C:\Users\yangd>
+~~~
+
+
+
+
+
+![image-20250831063307934](https://tgimgbed.999190.xyz/file/1756593196214_image-20250831063307934.png)
+
+
+
+将您已下载的 JAR 文件手动安装到本地 Maven 仓库，需要使用 `mvn install:install-file` 命令。
+
+
+
+### 安装指令
+
+
+
+请打开命令行工具（CMD 或 PowerShell），然后复制并执行以下指令：
+
+```
+mvn install:install-file -Dfile="D:\IDM\IDM临时文件下载库\wxpay-sdk-0.0.3.jar" -DgroupId=com.github.wxpay -DartifactId=wxpay-sdk -Dversion=0.0.3 -Dpackaging=jar
+```
+
+**重要提示**：因为您的文件路径中包含中文和空格，所以 `-Dfile` 的值**必须用双引号 `"` 包围**。
+
+------
+
+
+
+### 指令参数详解
+
+
+
+为了方便您理解，这里解释一下每个参数的含义：
+
+- `mvn install:install-file`: 这是执行 Maven 安装插件的 `install-file` 目标。
+- `-Dfile="..."`: 指定您下载的 JAR 文件的完整路径。
+- `-DgroupId=...`: 指定该依赖的 Group ID，与您 `pom.xml` 中一致。
+- `-DartifactId=...`: 指定该依赖的 Artifact ID，与您 `pom.xml` 中一致。
+- `-Dversion=...`: 指定该依赖的 Version，与您 `pom.xml` 中一致。
+- `-Dpackaging=jar`: 指定文件的打包类型，这里是 `jar` 文件。
+
+------
+
+
+
+### 后续步骤
+
+
+
+1. **执行命令**：在命令行中执行上述指令后，您应该会看到 `[INFO] BUILD SUCCESS` 的提示。
+2. **验证安装**：您可以检查 `C:\Users\yangd\.m2\repository\com\github\wxpay\wxpay-sdk\0.0.3\` 目录下是否已经生成了 `wxpay-sdk-0.0.3.jar` 和 `wxpay-sdk-0.0.3.pom` 等文件。
+3. **刷新项目**：回到您的 IDE (如 IntelliJ IDEA)，在 Maven 工具窗口中点击“**Reload All Maven Projects**”按钮。
+
+刷新后，您项目中关于 `wxpay-sdk` 找不到的报错应该就会消失了。
+
+**提醒**：这是一个解决燃眉之急的“手动”方法。您之前遇到的无法自动下载的问题（很可能是镜像或网络原因）仍然存在，后续添加其他新依赖时可能还会遇到。
+
+
+
+
+
+# 24 mvn指令 使用 -e 参数显示更详细的错误 
+
+
+
+~~~
+mvn clean compile -e
+~~~
+
+
+
+好的，没问题。这是一份根据我们刚才的排错过程整理的 Maven 调试笔记，希望能帮助你未来更快地解决类似问题。
+
+------
+
+
+
+### **Maven 编译错误调试笔记：从 `Fatal error compiling` 到精确定位问题**
+
+
+
+
+
+#### **1. 场景回顾**
+
+
+
+在对一个多模块的 Maven 项目进行编译时，执行 `mvn clean install` 命令，构建在 `common-util` 模块处失败。
+
+
+
+#### **2. 初始错误：模糊的线索**
+
+
+
+在未使用任何调试参数时，Maven 输出的错误信息非常笼统，只告诉我们“编译失败”这个结果，但没有提供任何关于“为什么失败”的有效线索。
+
+**未使用 `-e` 时的报错信息：**
+
+```
+[INFO] --- maven-compiler-plugin:3.10.1:compile (default-compile) @ common-util ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 14 source files to D:\...\target\classes
+[INFO] -------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] -------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.10.1:compile (default-compile) on project common-util: Fatal error compiling
+```
+
+**问题分析：**
+
+- `Fatal error compiling` 是一个非常高层的错误。
+- 它可能是由多种原因造成的：Java 代码语法错误、依赖找不到 (Cannot find symbol)、环境配置问题等等。
+- 仅凭这个信息，我们无法直接定位问题，只能进行猜测，排错效率极低。这就像医生只知道病人说“不舒服”，但不知道具体哪里不舒服。
+
+
+
+#### **3. 调试的转折点：`-e` 参数**
+
+
+
+为了获取更多线索，我们必须让 Maven “开口说话”。这时，最有用的工具就是 `-e` (或 `--errors`) 参数。
+
+**关键命令：**
+
+Bash
+
+```
+# -e 参数会开启错误堆栈跟踪，让我们看到底层的异常信息
+mvn clean compile -e
+```
+
+作用：
+
+这个参数会强制 Maven 在遇到错误时，打印出完整的异常堆栈 (stack trace)。异常堆栈是 Java 中排查错误的“藏宝图”，它详细记录了错误发生时的函数调用路径和最根本的异常原因。
+
+
+
+#### **4. 详细错误：锁定根本原因**
+
+
+
+使用了 `-e` 参数后，我们得到了一个信息量暴增的错误日志。在长长的堆栈信息中，我们找到了最关键的那一句：
+
+**使用 `-e` 后的关键报错信息：**
+
+```
+[ERROR] Failed to execute goal ... on project common-util: Fatal error compiling: 无效的目标发行版: 17 -> [Help 1]
+...
+Caused by: org.codehaus.plexus.compiler.CompilerException: 无效的目标发行版: 17
+...
+Caused by: java.lang.IllegalArgumentException: 无效的目标发行版: 17
+```
+
+**问题分析：**
+
+- **“无效的目标发行版: 17”** (Invalid target release: 17) 这条信息非常具体。
+- 它不再是模糊的“编译失败”，而是精确地告诉我们：**Java 编译器不接受 "17" 这个目标版本。**
+- 这立刻将我们的排查方向从“代码语法问题”或“依赖缺失问题”缩小到了**“JDK 环境与项目配置不匹配”**这一个点上。
+
+
+
+#### **5. 问题分析与解决**
+
+
+
+有了明确的线索，解决问题就变得水到渠成。
+
+1. **核对项目配置 (`pom.xml`)**：检查 `pom.xml`，发现项目确实配置了需要 Java 17 进行编译。
+
+   XML
+
+   ```
+   <properties>
+       <java.version>17</java.version>
+   </properties>
+   ```
+
+2. **核对构建环境**：根据错误信息推断，执行 `mvn` 命令的 Java 环境版本低于 17。通过 `mvn -v` 命令验证，证实了 Maven 正在使用一个旧版本的 JDK（如 JDK 8 或 11）。
+
+3. **制定解决方案**：让环境匹配配置。
+
+   - 安装 JDK 17。
+   - 配置系统的 `JAVA_HOME` 和 `Path` 环境变量，使其指向 JDK 17 的安装目录。
+   - 同步更新 IDE（如 IntelliJ IDEA）中的项目和 Maven 的 JDK 配置。
+   - 重启终端和 IDE 后，问题解决。
+
+
+
+#### **6. 总结与反思**
+
+
+
+- **核心经验**：遇到模糊的 Maven `BUILD FAILURE` 或 `Fatal error` 时，**第一反应应该是加上 `-e` 参数重新执行**。这是最快、最有效的调试手段。如果 `-e` 还不够，可以使用 `-X` 获取更详细的 debug 级别日志。
+- **思维转变**：从“猜测错误原因”转变为“让工具告诉我们错误原因”。
+- **环境一致性**：始终确保你的构建环境（终端、IDE）与项目配置文件 (`pom.xml`) 中声明的要求（如 JDK 版本、依赖版本）保持一致。`mvn -v` 是检查 Maven 环境的必备命令。
+
+这份笔记记录了一次典型的 Maven 排错过程，展示了如何利用简单的调试参数，将一个模糊的问题逐步清晰化，并最终高效地解决它。
+
+
+
+# 25 Maven 调试笔记：彻底解决JDK 版本冲突导致的`无效的目标发行版`错误
+
+
+
+
+
+好的，非常感谢你的指正和分享！你提供的参考文章命中了问题的关键，指出了一个我之前笔记中忽略的、至关重要的层面：**开发工具（IDE）本身的版本兼容性**。
+
+你说得对，我之前的解决方案是不完整的。仅仅修改 Windows 的环境变量只能解决**命令行环境**下的 Maven 构建问题，但无法解决**IDE 环境内部**的构建问题。现在，结合你的新发现，我们来重写一份更准确、更全面的调试笔记。
+
+------
+
+
+
+### **Maven & IntelliJ 调试笔记：根治 JDK 兼容性噩梦 (`无效目标发行版` 与 `tools.jar`)**
+
+
+
+
+
+#### **1. 序言：问题的双重性**
+
+
+
+在将项目升级到现代 JDK 版本（如 Java 17）时，我们经常会遇到一系列编译错误。这些问题通常成对出现，表面上看起来不同，但根源都指向**环境与配置的不匹配**。这里的“环境”不仅指操作系统的命令行，更包括我们日常使用的 IDE。
+
+本文档记录了解决两大经典错误的完整过程：
+
+1. `无效的目标发行版: 17` (Invalid target release: 17)
+2. `Cannot determine path to 'tools.jar' library for 17`
+
+
+
+#### **2. 第一幕：命令行的挑战 - `无效的目标发行版`**
+
+
+
+当我们首次在终端（命令行）中运行 `mvn clean install` 时，往往会遇到第一个错误。
+
+- **症状:** 终端报错 `无效的目标发行版: 17`。
+- **诊断:** 通过 `mvn -v` 命令，我们发现 Maven 是由一个旧版本的 JDK（如 JDK 8）来运行的，而项目的 `pom.xml` 要求使用 JDK 17 编译。旧的 JDK 编译器不认识新版本的指令，因此报错。
+- **解决方案:**
+  1. 安装 JDK 17。
+  2. 修正操作系统的环境变量，将 `JAVA_HOME` 指向 JDK 17 的安装目录，并将其 `%JAVA_HOME%\bin` 添加到 `Path` 的最前端。
+  3. 重启终端，再次用 `mvn -v` 确认 Maven 已经运行在 JDK 17 环境下。
+
+**至此，命令行的构建问题解决了。但当我们回到 IDE 时，噩梦进入了第二幕。**
+
+
+
+#### **3. 第二幕：IDE 的陷阱 - `Cannot determine path to 'tools.jar'`**
+
+
+
+在 IntelliJ IDEA 中尝试构建或运行项目时，出现了第二个，也是更令人困惑的错误。
+
+- **症状:** IntelliJ IDEA 内部报错 `Cannot determine path to 'tools.jar' library for 17`。
+- **错误分析:**
+  - **历史背景:** `tools.jar` 是 JDK 8 及其之前版本的一个核心库，包含了编译器等工具。**从 JDK 9 开始，随着 Java 模块化系统的引入，`tools.jar` 文件被彻底移除。**
+  - **根本原因:** 错误信息提示要寻找一个在 JDK 17 中根本不存在的文件，这说明**调用者本身“过时”了**。它不理解 JDK 17 的模块化结构，因此回退到一种旧的、基于 `tools.jar` 的方式去尝试解析 JDK，最终必然失败。
+  - **真正的“元凶”:** 正如你分享的文章所指出的，这个“过时的调用者”就是 **IntelliJ IDEA 本身**。一个旧版本的 IDE（如 2020.1.2）其核心功能最高只支持解析到某个特定版本的 JDK（如 JDK 14）。当它被强制要求使用它无法理解的 JDK 17 时，其内部的构建和分析引擎就会出错。
+
+
+
+#### **4. 终极解决方案：四大环境全面对齐**
+
+
+
+要彻底解决这个问题，必须确保从操作系统到 IDE 再到项目配置，所有环节都协调一致。
+
+1. **系统环境对齐 (解决命令行问题)**
+
+   - **操作:** 设置 `JAVA_HOME` 和 `Path` 环境变量，使其指向你的目标 JDK 版本（JDK 17）。
+   - **验证:** 在**新**终端中执行 `mvn -v`，确认 Java version 为 17。
+
+2. **IDE 版本对齐 (解决 `tools.jar` 问题的核心)**
+
+   - **操作:** **升级你的 IntelliJ IDEA 到一个明确支持 Java 17 的现代版本。** 例如，根据 JetBrains 的官方文档，至少需要 **`2021.2.1`** 或更新的版本。
+   - **解释:** 这是最关键的一步。只有 IDE 本身足够新，它才能正确地解析和集成新的 JDK。
+
+3. **IDE 内部配置对齐**
+
+   - **操作:** 在升级后的新版 IDEA 中，检查并设置以下两处：
+     - `File` -> `Project Structure` -> `Project SDK`：设置为 JDK 17。
+     - `Settings/Preferences` -> `Build, Execution, Deployment` -> `Build Tools` -> `Maven` -> `JDK for importer`：设置为 JDK 17。
+
+4. **项目配置对齐**
+
+   - **操作:** 确保项目的 `pom.xml` 中明确指定了 Java 版本。
+
+     XML
+
+     ```
+     <properties>
+         <java.version>17</java.version>
+     </properties>
+     ```
+
+
+
+#### **5. 总结与反思**
+
+
+
+- **最核心的教训：** 开发工具链（IDE、构建工具）必须与开发语言（JDK）的版本相匹配。**一个过时的 IDE 无法正确构建一个使用新版 JDK 的项目**，无论你的系统环境变量和项目配置多么正确。
+- **`tools.jar` 错误是“时代眼泪”：** 当你为新版 JDK 看到这个错误时，几乎可以 100% 确定是某个工具（插件、IDE）的版本太旧了。
+- **整体性思维：** 现代 Java 开发的环境配置是一个整体。`JAVA_HOME`、`IDE 版本`、`IDE 配置` 和 `pom.xml` 必须形成一个完整的、无冲突的链条。任何一环的短板都可能导致看似奇怪的构建失败。
+
+
+
+# 26 报错：`Cannot determine path to 'tools.jar' library for 17 (C:/jdk/jdk17)`
+
+解决IntelliJ IDEA报错Error:Cannot determine path to 'tools.jar' library for 17 (C:\Program Files\Java\jdk-17
+方法 1
+方法 2
+  这个月，Java 17 终于发布了。这是继 Java 11 之后的又一个 LTS 版本。没事找事的笔者决定试试 Java 17。果然，意料之中的事情发生了：笔者使用 Java 17 运行一个曾经运行正常的项目时，IntelliJ IDEA 发生了如下报错：
+
+笔者报错时的运行环境：
+
+IntelliJ IDEA 2020.1.2 (Ultimate Edition)
+
+JDK 17
+
+Error:Cannot determine path to 'tools.jar' library for 17 (C:\Program Files\Java\jdk-17)
+AI写代码
+cmd
+1
+  然后，和以前一样。笔者又试着运行一个非常简单的 demo 项目，果然又发生了相同的报错。而该项目以前运行正常时的环境为：
+
+该项目以前运行正常时的环境：
+
+IntelliJ IDEA 2020.1.2 (Ultimate Edition)
+
+JDK 11
+
+  笔者曾经屡次在不同的操作系统上安装过多个版本的 Java，对这个报错非常熟悉。这个报错说明，当前的 IntelliJ IDEA 无法解析这个版本的 JDK，所以它尝试从它内置的环境变量 CLASSPATH 来解析 tools.jar，结果还是失败，因此它抛出了如上的报错信息。
+
+  可以印证这一点。在下图的 Project Structure 中可以清晰的看到，笔者的 IntelliJ IDEA 2020.1.2 (Ultimate Edition) 最高支持解析 JDK 14，因此对 Java 17 无能为力。
+
+![在这里插入图片描述](https://tgimgbed.999190.xyz/file/1756600463116_88b4e98a5589e44c3672f3c63fbec8ef.png)
+
+![在这里插入图片描述](https://tgimgbed.999190.xyz/file/1756600484600_4a9cdd99b654ea832c572ac4146b8c89.png)
+
+
+
+方法 1
+  知道原因了就好办了。一种方法是降低 JDK 的版本，使当前 IntelliJ IDEA 能够识别。
+
+该项目以前运行正常时的环境：
+
+IntelliJ IDEA 2020.1.2 (Ultimate Edition)
+
+JDK 11
+
+  先安装低版本的 JDK，然后再在 IntelliJ IDEA 中的 Project Structure 中设置。如下图。不过笔者通常不喜欢这样做。
+
+![](https://tgimgbed.999190.xyz/file/1756600487379_1756600484600_4a9cdd99b654ea832c572ac4146b8c89.png)
+
+方法 2
+  另一种办法是提高 IntelliJ IDEA 的版本。为此，笔者专门下载并安装了当时最新版本的 IntelliJ IDEA：IntelliJ IDEA 2021.2.2 (Ultimate Edition) 。出人意料而又在情理之中的是，笔者安装最新的 IntelliJ IDEA 时又遇到很多坑。笔者一直很想站在巨人的肩膀上，但实际上总是被巨人当做垫脚石。关于安装 IntelliJ IDEA 后打不开的问题，可见笔者的另一篇博客：
+
+解决 IntelliJ IDEA 安装后界面消失，再次打开后界面不动：
+https://blog.csdn.net/wangpaiblog/article/details/120425678
+
+  IntelliJ IDEA 的官网是：https://www.jetbrains.com/idea/。刚下载的时候，笔者还担心它也不能解析 Java 17，不过现在看来这种担心是多余的。
+
+该项目运行正常时的环境：
+
+IntelliJ IDEA 2021.2.2 (Ultimate Edition)
+
+JDK 17
+
+  升级完 IntelliJ IDEA 之后，将 Project Structure 进行如下配置即可。
+
+![在这里插入图片描述](https://tgimgbed.999190.xyz/file/1756600547382_32754978012114637cf0d816abb48ede.png)
