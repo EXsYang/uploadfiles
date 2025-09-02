@@ -407,7 +407,7 @@ idea2020.2卡死在reading maven projects | idea 2020.2正在读取maven项目 �
 
 这是Idea2020.2版本的官方bug，经过多方案测试，我已经解决，下面分享下经验。
 
-我的方法：修改Host文件
+我的方法：修改Host文件 【host文件位置:C:\Windows\System32\drivers\etc\hosts】【hosts文件位置:C:\Windows\System32\drivers\etc\hosts】
 
 1.结束idea的[进程](https://www.finclip.com/news/tags-254.html)
 

@@ -1171,3 +1171,196 @@ Enable annotation processing
 
 
 
+# 20 idea2024.1.4 项目语言级别显示`language level 17 preview - unsupported`
+
+
+
+## 20.1 解决方案，更换idea版本
+
+出现问题的原因`idea 2024.1.4`版本不支持jdk17 preview 了，需要更换其他版本的idea。如`IntelliJ IDEA 2022.2.4 (Community Edition)`
+
+
+
+![image-20250901215323961](https://tgimgbed.999190.xyz/file/1756734815649_image-20250901215323961.png)
+
+
+
+
+
+## 20.2 idea 2024.1.4 虽然不支持17版本，但是可以识别更高版本的jdk语言级别啊
+
+您观察得非常仔细，这是一个很好的问题，也指出了一个看似矛盾的地方。您说得对，列表里确实显示了 18, 19, 20, 21, 22 等更高的语言级别。
+
+这让情况看起来更复杂一些，但根本原因仍然是 **IntelliJ IDEA 版本问题**。让我为您解释一下为什么会这样：
+
+
+
+### “识别”不等于“完全支持”
+
+
+
+这个现象的核心在于区分 **“在列表中显示版本号”** 和 **“真正地在功能上支持该版本”**。
+
+1. **占位符性质：** 旧版本的 IDEA 可能已经知道了未来会有 Java 18、19 等版本，所以在它的配置文件和UI下拉列表中预留了这些选项。这就像一个软件的路线图，它知道未来的方向，但当前版本的功能还没有实现。
+2. **最关键的证据：** 请仔细看您的截图列表，**它缺少了最应该存在的正式版 "Java 17" 选项**。一个完整支持 JDK 17 的 IDEA，其语言级别列表应该是这样的：
+   - ...
+   - 16 - Records and Pattern Matching
+   - **17 - Sealed classes** <-- **您截图中缺失了这个关键的、非预览的正式版选项！**
+   - 17 (Preview) - Pattern matching for switch
+   - 18 - ...
+   - ...
+3. **支持不连贯：** 您的 IDEA 版本可能发布于一个非常尴尬的时间点：在 Java 17 刚发布，但 IDEA 还未完全集成其支持的阶段。因此，它对 Java 17 的支持是残缺的（所以显示 "Unsupported"），但它已经“知道”了后续版本号的存在，所以把它们列了出来。如果您真的把项目的 SDK 换成 JDK 18 或 19（如果您安装了的话），您会发现对应的语言级别选项可能也会变成红色，或者在您实际编写代码时，代码高亮、错误检查等功能会完全错乱。
+
+
+
+### 结论
+
+
+
+所以，尽管列表里出现了更高的版本号，这更像是一个“UI假象”。最能说明问题的指标是：**它没有完整地支持您当前正在使用的 JDK 17**。连当前配置的 JDK 都无法正常支持，这恰恰是 IDE 版本与 JDK 不匹配的最典型表现。
+
+**最终的解决方案依然不变：请更新您的 IntelliJ IDEA 到最新稳定版。**
+
+更新后，您会看到一个完整的、从低到高、连续且被完全支持的语言级别列表，其中会包含一个正常的、非红色的 "17 - Sealed classes" 选项。
+
+
+
+
+
+# 21 【IDEA2022】 Services窗口不显示多服务启动类，添加类型也不存在spring boot解决办法 
+
+
+
+## 21.1 问题分析
+
+> - 软件版本 IntelliJ IDEA 2022.2.4 (Community Edition)
+> - 问题出现的原因：我使用了教育版/社区版的idea功能不全用不了。需要单独安装付费的Spring Boot Helper插件。
+>
+> - 项目是多服务模块的，但是在`Services窗口`中没有识别到多服务
+> - 而且在`Services窗口`添加服务配置`Run Configuration Type`中找不到`Spring Boot`类型
+
+
+
+
+
+
+
+
+
+![image-20250901224241988](https://tgimgbed.999190.xyz/file/1756745419366_1756745122565_1756737775233_image-20250901224241988.png)
+
+![image-20250901224122414](https://tgimgbed.999190.xyz/file/1756745417879_1756745130905_1756737694275_image-20250901224122414.png)
+
+![image-20250901224342875](https://tgimgbed.999190.xyz/file/1756745420781_1756745132392_1756737836104_image-20250901224342875.png)
+
+
+
+## 21.2 终极解决方案：
+
+安装正常的完整版Idea即可，然后破解idea，默认情况下就能用Services窗口的spring boot选项来管理所有的spring boot类型的程序
+
+
+
+## 21.3 问题解决思路探讨过程
+
+**首先，确保你的IntelliJ IDEA安装了Spring Boot插件。可以通过以下步骤检查：**
+
+  打开IDEA，点击File -> Settings（Windows/Linux）或IntelliJ IDEA -> Preferences（macOS）。
+  在左侧菜单中选择Plugins，搜索Spring Boot Helper。
+  **如果未安装，请勾选安装并重启IDEA。**
+
+
+
+如果在idea内置应用商店下载Spring Boot Helper插件安装并重启后Services窗口仍没有显示 Spring Boot选项，
+
+可能是插件不兼容，可以到
+
+[Spring Boot Helper插件官方商店](https://plugins.jetbrains.com/plugin/18622-spring-boot-helper/versions/stable)下载对应版本的插件即可。
+
+![image-20250901233500203](https://tgimgbed.999190.xyz/file/1756745423394_1756745130565_1756740912330_image-20250901233500203.png)
+
+![image-20250901233100549](https://tgimgbed.999190.xyz/file/1756745417576_1756745131325_1756740673971_image-20250901233100549.png)
+
+
+
+下载安装包[Spring Boot Helper 2022.2.2](https://plugins.jetbrains.com/plugin/download?rel=true&updateId=208141)通过本地jar包的方式导入，然后重启ieda，就完成了，services仪表盘也出现了 SpringBoot选项。
+
+![image-20250901233906527](https://tgimgbed.999190.xyz/file/1756745415991_1756745125034_1756741158251_image-20250901233906527.png)
+
+#### 解决办法2
+
+- 找到`.idea`文件里的`workspace.xml`文件
+- 搜索是否存在`RunDashboard`名称的`component`标签
+- 如果不存在，则添加同级别的如下内容
+- 查看`Services窗口`有没有出现对应的服务，要还是没有就重新启动idea试一下
+
+```xml
+<component name="RunDashboard">
+  <option name="configurationTypes">
+    <set>
+      <option value="SpringBootApplicationConfigurationType" />
+    </set>
+  </option>
+</component>
+```
+
+> [![img](https://tgimgbed.999190.xyz/file/1756745426413_1756745135898_1756737737376_1472244-20220727155437988-117458595.png)](https://img2022.cnblogs.com/blog/1472244/202207/1472244-20220727155437988-117458595.png)
+
+> - 最终效果
+>   [![img](https://tgimgbed.999190.xyz/file/1756745427085_1756745127746_1756737736826_1472244-20220727155047928-2092804791.png)](https://img2022.cnblogs.com/blog/1472244/202207/1472244-20220727155047928-2092804791.png)
+
+
+
+
+
+![image-20250901224558760](https://tgimgbed.999190.xyz/file/1756745427053_1756745137045_1756737964658_image-20250901224558760.png)
+
+
+
+### 还有种可能是idea教育版Services面板没有Spring Boot选项，需要通过安装Spring Boot Helper插件来实现，但是要收费
+
+我使用破解软件/网站 https://ckey.run/ (里面提供了一键式破解脚本)。破解的IDEA 2022.3.3 正式版。破解后的正式版idea，默认情况下就使用Services面板 Spring Boot选项。~~也可能是破解软件将所有的插件都整合在一起了，我之前2020版本中有一个Spring Boot插件~~【如下所示】
+
+![image-20250902003339276](https://tgimgbed.999190.xyz/file/1756745428328_1756745137530_1756744423613_image-20250902003339276.png)
+
+
+
+![image-20250902004007871](https://tgimgbed.999190.xyz/file/1756745427330_1756745132374_1756744813247_image-20250902004007871.png)
+
+
+
+## 21.4 残留问题，Spring Boot Helper插件收费了需要破解【暂未找到激活码】
+
+
+
+![image-20250902001039002](https://tgimgbed.999190.xyz/file/1756745426539_1756745138377_1756743051544_image-20250902001039002.png)
+
+
+
+您好，根据您的截图，这个 “**No license**” 的警告提示意思是：
+
+**您没有此插件的有效许可证。**
+
+具体来说：
+
+1. 您安装的这个名为 “Spring Boot Helper” 的插件是一个**付费（Paid）插件**。
+2. 虽然您已经成功安装了它，但要正常并持续地使用它，您需要购买一个许可证（License Key），然后在 IntelliJ IDEA 中进行激活。
+3. 当前这个警告就是在提醒您，IDE 没有检测到有效的许可证，因此该插件可能无法使用，或者正处于功能受限的试用期，试用期结束后就会失效。
+
+**您可以有以下几种选择：**
+
+- **购买许可证：** 如果您觉得这个插件对您的工作很有帮助，可以前往 JetBrains Marketplace 或者插件的官方主页购买许可证并激活。
+- **寻找免费替代品：** Spring 生态非常强大，在插件市场中也有很多免费的辅助插件（例如 Spring Assistant），您可以寻找并安装免费的替代品。
+- **卸载插件：** 如果您不打算购买也不再需要使用它，可以直接将这个插件卸载，这个警告提示也就会消失。
+
+
+
+# 23 IDEA 2022.3.3 支持jdk17 语言级别
+
+
+
+**IntelliJ IDEA Community Edition 2022.2.4** 不支持jdk17 语言级别
+
+
+
+# 24
