@@ -1,3 +1,24 @@
+# 0 Idea中Maven软件只需要修改一次，下一次创建新项目就会自动选择该软件
+
+这里把.m2下idea自带的Maven改了后(改成自己安装的Maven)，再重新创建新的项目，Maven是修改后的，即修改一次下次就会自动选择修改后的Maven。
+这里的Maven可以是自定义安装的Maven，也可以是其他Idea软件中的Maven。
+
+
+
+![image-20250902211102752](https://tgimgbed.999190.xyz/file/1756818672898_image-20250902211102752.png)
+
+
+
+![image-20250902211643020](https://tgimgbed.999190.xyz/file/1756819014288_image-20250902211643020.png)
+
+
+
+
+
+
+
+
+
 # 1 当同时存在多个maven软件时，在windows上要如何区分？
 
 
@@ -189,10 +210,6 @@ XML
 
 
 # 5 **全局** setting 和 用户 setting
-
-
-
-
 
 
 

@@ -1,5 +1,4 @@
  M markdown笔记相关/idea快捷键及常见问题.md
- M markdown笔记相关/md笔记01/markdown格式笔记/随手笔记/随手笔记/sb随手笔记.md
+ M markdown笔记相关/md笔记02/Maven随手笔记.md
  M markdown笔记相关/md笔记02/sb随手笔记.md
- M markdown笔记相关/md笔记03/听书项目-谷粒随想随手笔记.md
  M temp_status.txt
