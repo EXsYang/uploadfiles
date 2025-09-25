@@ -212,12 +212,12 @@ git reset --hard 39128d1
 ~~~
 git init
 
-git remote add origin git@github.com:EXsYang/r2-presign-service.git
+git remote add origin git@github.com:EXsYang/monitor_stooock.git
 
 git remote add origin git@gitee.com:czbk_zhang_meng/git_test.git
 
 #使用 git remote set-url 命令来更新 origin  
-git remote set-url origin git@github.com:EXsYang/mycode_nolfs.git
+git remote set-url origin git@github.com:EXsYang/monitor_stooock.git
 
 
 git remote -v
@@ -1652,3 +1652,451 @@ fi
 - **慎用**：变基是一种强大的工具，但也可能导致复杂的问题，特别是在多人项目中。确保您完全理解变基的影响。
 
 这种方法允许您精确控制哪些提交被修改，并确保只修改需要改变的部分，非常适合处理只有几个提交需要修正的情况。
+
+
+
+
+
+# 9 我拉下来的是别人的仓库，如何推送到自己的GitHub账户中？时期自动新建仓库
+
+
+
+~~~bash
+(base)
+yangda@F2 MINGW64 /d/Java_developer_tools/GithubRepository/monitor_stooock (main)
+$ git add .
+(base)
+yangda@F2 MINGW64 /d/Java_developer_tools/GithubRepository/monitor_stooock (main)
+$ git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        modified:   src/config.php
+        new file:   src/config.php.bak
+        new file:   src/keys.txt
+
+(base)
+yangda@F2 MINGW64 /d/Java_developer_tools/GithubRepository/monitor_stooock (main)
+$ git commit -m 'init'
+[main afad98e] init
+ 3 files changed, 90 insertions(+), 5 deletions(-)
+ create mode 100644 src/config.php.bak
+ create mode 100644 src/keys.txt
+(base)
+yangda@F2 MINGW64 /d/Java_developer_tools/GithubRepository/monitor_stooock (main)
+$ git push --set-upstream origin main
+fatal: User cancelled dialog.
+error: unable to read askpass response from 'D:/Java_developer_tools/Git/Git/mingw64/bin/git-askpass.exe'
+Username for 'https://github.com':
+
+我拉下来的是别人的仓库，如何推送到自己的GitHub账户中？时期自动新建仓库
+~~~
+
+
+
+
+
+好的，没问题。这个问题很常见，你遇到的核心原因是：你的本地仓库当前关联的远程仓库（通常叫做 `origin`）还是别人的地址，而你没有权限向别人的仓库推送代码。
+
+你需要做的是：
+
+1. 在 **你自己的 GitHub 账号** 上创建一个全新的、空的仓库。
+2. 将你本地仓库关联的远程地址 **从别人的地址换成你自己新仓库的地址**。
+3. 最后再把代码推送上去。
+
+下面是详细的步骤。
+
+------
+
+
+
+### ## 解决方法：三步走 🚀
+
+
+
+
+
+#### ### 第一步：在你的 GitHub 上创建新仓库
+
+
+
+1. 登录你的 [GitHub](https://github.com/) 账户。
+2. 点击页面右上角的 **+** 号，选择 **New repository**。
+3. 给你的仓库起一个名字（例如 `monitor_stooock`）。
+4. **非常重要**：不要勾选任何 "Initialize this repository with..." 的选项（比如添加 README、.gitignore 或 license）。**你需要一个完全空的仓库**，否则下一步推送时可能会产生冲突。
+5. 点击 **Create repository**。
+6. 创建成功后，复制新仓库的 URL，它看起来像这样：`https://github.com/你的用户名/monitor_stooock.git`。
+
+------
+
+
+
+#### ### 第二步：修改本地仓库的远程地址
+
+
+
+回到你的 Git Bash 命令行窗口，执行以下命令。
+
+1. 查看当前的远程地址（可选，用于确认）
+
+   你可以用这个命令看看现在关联的是谁的仓库：
+
+   Bash
+
+   ```
+   git remote -v
+   ```
+
+   你会看到 `fetch` 和 `push` 的地址都指向原作者的仓库。
+
+   ~~~
+   yangda@F2 MINGW64 /d/Java_developer_tools/GithubRepository/monitor_stooock (main)
+   $ git remote -v
+   origin  https://github.com/chunkburst/monitor_stooock.git (fetch)
+   origin  https://github.com/chunkburst/monitor_stooock.git (push)
+   (base)
+   yangda@F2 MINGW64 /d/Java_developer_tools/GithubRepository/monitor_stooock (main)
+   $
+   
+   ~~~
+
+   
+
+2. 将远程地址修改为你的新仓库地址
+
+   使用 git remote set-url 命令，把 origin 这个默认的远程名称指向你刚刚复制的新仓库 URL。
+
+   Bash
+
+   ```
+   # 语法: git remote set-url origin <你新仓库的URL>
+   # 示例:
+   git remote set-url origin git@github.com:EXsYang/monitor_stooock.git
+   ```
+
+   **请务必将 `你的用户名` 替换成你自己的 GitHub 用户名。**
+
+3. 再次验证（可选，用于确认）
+
+   再次运行 git remote -v，你会发现地址已经成功更新为你自己的仓库地址了。
+
+------
+
+
+
+#### ### 第三步：推送代码到你的新仓库
+
+
+
+现在，万事俱备，可以推送了！执行你之前用过的命令：
+
+Bash
+
+```
+git push --set-upstream origin main
+```
+
+这次 Git 会将你的本地 `main` 分支的代码推送到你自己的远程仓库 `origin` 中，并且使用 `--set-upstream`（简写 `-u`）参数将两者关联起来。以后再推送这个分支时，你只需要简单地使用 `git push` 即可。
+
+------
+
+
+
+### ## 自动化方案（使用 GitHub CLI）
+
+
+
+如果你想实现“自动新建仓库”，GitHub 官方的命令行工具 **GitHub CLI** (`gh`) 可以一行命令搞定所有事情。
+
+如果你安装了 `gh` 并已登录 (`gh auth login`)，你可以直接在你的项目文件夹下运行：
+
+Bash
+
+```
+# 这条命令会自动在你的GitHub上创建新仓库，并设置好远程地址，然后把代码推送上去
+gh repo create monitor_stooock --public --source=. --remote=origin --push
+```
+
+- `gh repo create monitor_stooock`: 创建一个名为 `monitor_stooock` 的仓库。
+- `--public`: 设置为公开仓库（也可以用 `--private`）。
+- `--source=.`: 使用当前目录作为仓库的源代码。
+- `--remote=origin`: 将新创建的远程仓库命名为 `origin`。
+- `--push`: 立即将当前分支的 commit 推送上去。
+
+这是一个更现代、更高效的选择。
+
+
+
+### ⚠️ **安全提示**
+
+
+
+你的提交中包含了 `src/keys.txt` 和 `src/config.php` 这样的文件，它们很可能包含密码、API 密钥等敏感信息。**强烈建议不要将这类文件上传到公共仓库！**
+
+你应该创建一个名为 `.gitignore` 的文件，在里面写上这些文件名，以防止 Git 追踪它们。
+
+例如，在你的项目根目录创建一个 `.gitignore` 文件，内容如下：
+
+```
+# 忽略敏感配置文件和密钥
+src/config.php
+src/keys.txt
+
+# 忽略备份文件
+*.bak
+```
+
+然后运行 `git rm --cached <文件名>` 来取消对这些文件的追踪。
+
+
+
+
+
+# 10 `.gitignore` 文件不生效的**根本原因**是：它只能忽略那些 **还未被 Git 追踪（untracked）的文件**。
+
+
+
+~~~bash
+(base)
+yangda@F2 MINGW64 /d/Java_developer_tools/GithubRepository/monitor_stooock (main)
+$ git add .
+(base)
+yangda@F2 MINGW64 /d/Java_developer_tools/GithubRepository/monitor_stooock (main)
+$ git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        modified:   src/config.php
+        new file:   src/config.php.bak
+        new file:   src/keys.txt
+
+(base)
+yangda@F2 MINGW64 /d/Java_developer_tools/GithubRepository/monitor_stooock (main)
+$ git commit -m 'init'
+[main afad98e] init
+ 3 files changed, 90 insertions(+), 5 deletions(-)
+ create mode 100644 src/config.php.bak
+ create mode 100644 src/keys.txt
+(base)
+yangda@F2 MINGW64 /d/Java_developer_tools/GithubRepository/monitor_stooock (main)
+$ git push --set-upstream origin main
+fatal: User cancelled dialog.
+error: unable to read askpass response from 'D:/Java_developer_tools/Git/Git/mingw64/bin/git-askpass.exe'
+Username for 'https://github.com':
+error: unable to read askpass response from 'D:/Java_developer_tools/Git/Git/mingw64/bin/git-askpass.exe'
+Password for 'https://github.com':
+(base)
+yangda@F2 MINGW64 /d/Java_developer_tools/GithubRepository/monitor_stooock (main)
+$ git remote -v
+origin  https://github.com/chunkburst/monitor_stooock.git (fetch)
+origin  https://github.com/chunkburst/monitor_stooock.git (push)
+(base)
+yangda@F2 MINGW64 /d/Java_developer_tools/GithubRepository/monitor_stooock (main)
+$ git remote set-url origin git@github.com:EXsYang/monitor_stooock.git
+(base)
+yangda@F2 MINGW64 /d/Java_developer_tools/GithubRepository/monitor_stooock (main)
+$ git push --set-upstream origin main
+Enumerating objects: 26, done.
+Counting objects: 100% (26/26), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (20/20), done.
+Writing objects: 100% (26/26), 24.49 KiB | 6.12 MiB/s, done.
+Total 26 (delta 7), reused 18 (delta 4), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (7/7), done.
+To github.com:EXsYang/monitor_stooock.git
+ * [new branch]      main -> main
+branch 'main' set up to track 'origin/main'.
+(base)
+yangda@F2 MINGW64 /d/Java_developer_tools/GithubRepository/monitor_stooock (main)
+$ git remote -v
+origin  git@github.com:EXsYang/monitor_stooock.git (fetch)
+origin  git@github.com:EXsYang/monitor_stooock.git (push)
+(base)
+yangda@F2 MINGW64 /d/Java_developer_tools/GithubRepository/monitor_stooock (main)
+$ git push --set-upstream origin main
+Enumerating objects: 26, done.
+Counting objects: 100% (26/26), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (20/20), done.
+Writing objects: 100% (26/26), 24.49 KiB | 1.75 MiB/s, done.
+Total 26 (delta 7), reused 18 (delta 4), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (7/7), done.
+To github.com:EXsYang/monitor_stooock.git
+ * [new branch]      main -> main
+branch 'main' set up to track 'origin/main'.
+(base)
+yangda@F2 MINGW64 /d/Java_developer_tools/GithubRepository/monitor_stooock (main)
+$
+(base)
+yangda@F2 MINGW64 /d/Java_developer_tools/GithubRepository/monitor_stooock (main)
+$ # 停止追踪 keys.txt
+git rm --cached src/keys.txt
+
+# 停止追踪所有 .bak 文件 (如果还有其他bak文件，可以用通配符)
+# 或者明确指定单个文件
+git rm --cached src/config.php.bak
+rm 'src/keys.txt'
+rm 'src/config.php.bak'
+(base)
+yangda@F2 MINGW64 /d/Java_developer_tools/GithubRepository/monitor_stooock (main)
+$ git rm --cached src/keys.txt
+fatal: pathspec 'src/keys.txt' did not match any files
+(base)
+yangda@F2 MINGW64 /d/Java_developer_tools/GithubRepository/monitor_stooock (main)
+$ git rm --cached src/config.php.bak
+fatal: pathspec 'src/config.php.bak' did not match any files
+(base)
+yangda@F2 MINGW64 /d/Java_developer_tools/GithubRepository/monitor_stooock (main)
+$ git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        deleted:    src/config.php.bak
+        deleted:    src/keys.txt
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   src/config.php
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        .gitignore
+
+(base)
+yangda@F2 MINGW64 /d/Java_developer_tools/GithubRepository/monitor_stooock (main)
+
+~~~
+
+
+
+
+
+你遇到的情况非常经典，这是每个 Git 用户基本都会遇到的问题。
+
+`.gitignore` 文件不生效的**根本原因**是：它只能忽略那些 **还未被 Git 追踪（untracked）的文件**。
+
+在你的操作中，你先执行了 `git add .`，这个命令已经把 `src/keys.txt` 和 `src/config.php.bak` 加入到了 Git 的暂存区，然后你又用 `git commit` 提交了它们。这时，这两个文件已经是 “被追踪”（tracked）的状态了。
+
+> 你可以把 `.gitignore` 想象成一个仓库的“门卫”。它只负责阻止“新人”（未被追踪的文件）进入。但如果有些文件（比如 `src/keys.txt`）早就已经是“会员”了（已经被 `git add` 和 `git commit`），那门卫是不会把它赶出去的。
+
+
+
+### ## 如何解决？
+
+
+
+你需要手动告诉 Git：“请停止追踪这个文件，但不要删除我本地的实际文件”。
+
+按照以下步骤操作即可：
+
+
+
+#### ### 第一步：从 Git 的追踪列表（索引）中删除文件
+
+
+
+在你的项目根目录下，打开 Git Bash，运行以下命令。
+
+使用 `git rm --cached <文件>` 命令。`--cached` 参数是关键，它意味着**只从 Git 的索引中删除，但保留你本地工作目录中的文件**。
+
+Bash
+
+```
+# 停止追踪 keys.txt
+git rm --cached src/keys.txt
+
+# 停止追踪所有 .bak 文件 (如果还有其他bak文件，可以用通配符)
+# 或者明确指定单个文件
+git rm --cached src/config.php.bak
+```
+
+
+
+#### ### 第二步：检查状态
+
+
+
+现在运行 `git status`，你会看到类似这样的输出：
+
+```
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        deleted:    src/config.php.bak
+        deleted:    src/keys.txt
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        .gitignore
+        src/config.php.bak
+        src/keys.txt
+```
+
+这表示 Git 准备在下一次提交中“删除”对这两个文件的追踪。同时，因为 `.gitignore` 的存在，这两个文件现在显示为 “Untracked files”（未追踪文件），这正是我们想要的效果！
+
+
+
+#### ### 第三步：提交这个“取消追踪”的操作
+
+
+
+现在，创建一个新的提交，来保存你刚刚做的“取消追踪”这个更改。
+
+Bash
+
+```
+# 添加 .gitignore 文件本身到提交中
+git add .gitignore
+
+# 提交所有更改
+git commit -m "Stop tracking sensitive and backup files"
+```
+
+或者使用中文注释：
+
+Bash
+
+```
+git commit -m "停止追踪敏感文件和备份文件"
+```
+
+
+
+#### ### 第四步：推送到远程仓库
+
+
+
+最后，将这个新的提交推送到你的 GitHub 仓库。
+
+Bash
+
+```
+git push
+```
+
+完成以上步骤后，这两个敏感文件就从你仓库的 `main` 分支的最新状态中移除了。以后你再修改它们，`git status` 也不会再提示你有改动，`.gitignore` 就正式生效了。
+
+------
+
+
+
+### ⚠️ **重要：关于历史提交记录**
+
+
+
+请注意，上述操作只是让 Git **不再追踪** 这些文件未来的修改。但是，**这些文件的内容依然存在于你之前的提交历史中**。
+
+对于一个刚刚创建的个人项目，这可能问题不大。但如果这是一个严肃的项目，或者你已经将含有密钥的提交推送到了一个公共仓库，任何人都还是可以通过查看历史记录来找到你的密钥。
+
+如果需要彻底从历史记录中清除这些文件，需要使用 `git filter-branch` 或者 `BFG Repo-Cleaner` 这样的高级工具来改写历史，这个过程相对复杂且具有破坏性。
+
+**但对于你目前的情况，完成上述四步，确保未来的提交不再包含敏感信息，是最重要也是最优先的一步。**
