@@ -362,6 +362,26 @@ gg dG
 
 
 
+~~~
+[tor@hspEdu100 Browser]$ 
+[tor@hspEdu100 Browser]$ su -
+密码：
+
+上一次登录：四 10月  2 22:18:17 CST 2025从 192.168.254.1pts/2 上
+[root@hspEdu100 ~]# ^C
+[root@hspEdu100 ~]# 
+[root@hspEdu100 ~]# su - tor
+上一次登录：四 10月  2 22:40:00 CST 2025pts/0 上
+[tor@hspEdu100 ~]$ 
+
+~~~
+
+tor用户的密码是123456或者hspedu100, root密码是root
+
+
+
+
+
 在 Linux 和类 Unix 系统中，使用 `su - 用户名` 与直接使用 `su` 的主要区别在于用户环境和加载的配置文件：
 
 1. **`su - 用户名`（或 `su -`）**:
@@ -3140,6 +3160,18 @@ drwx------. 3 xq    bandit   4096 1月  19 23:17 xq
   3. 在 `t1` 目录下创建并编辑文件 `aa`。
   4. 修改 `aa` 的权限，执行文件并查看效果。
   5. 清理创建的用户和目录。
+
+
+
+#### 14.7.5 更改文件目录所有权给tor用户
+
+
+
+将这个目录的所有权交给 `tor` 用户。
+
+```
+chown -R tor:tor tor-browser
+```
 
 
 
