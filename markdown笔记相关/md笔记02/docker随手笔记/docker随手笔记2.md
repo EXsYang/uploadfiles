@@ -795,3 +795,448 @@ docker logs --since 10m synapse 2>&1 | grep -i "error" | tail -n 10
 - 上述命令中的 `error` 关键词可能会根据你的日志格式有所不同。你可能需要根据实际情况调整为其他关键词，如 `ERROR`, `Exception`, 或者其他你认为可能表示错误的词。
 - 如果你的日志格式复杂，可能会需要更复杂的 `grep` 表达式或其他工具（如 `awk` 或 `sed`）来精确过滤错误信息。
 - 如果你经常需要查看特定类型的日志信息，考虑设置日志输出到文件或使用专门的日志管理工具，这会使查询和分析变得更加方便。
+
+
+
+
+
+# 7 第一次遇见磁盘空间已满，文件夹都创建不了
+
+
+
+![image-20251128060229839](https://tgimgbed.999190.xyz/file/1764282151676_1764280954947_image-20251128060229839.png)
+
+
+
+你的磁盘状态非常明确：**根目录 `/` (39G) 已经 100% 占满**，完全没有剩余空间了。
+
+注意看 `df -h` 输出中出现了很多 `overlay` 和 `/var/lib/docker/...`，这强烈暗示**罪魁祸首是 Docker**。Docker 的镜像、容器层或构建缓存极有可能吃光了你的 39G 空间。
+
+请按顺序执行以下步骤来急救：
+
+
+
+### 第一步：清理 Docker 垃圾（最可能的解决方案）
+
+
+
+Docker 经常会产生大量“悬空镜像”和停止的容器。 请尝试运行以下命令（**注意：这会删除所有停止的容器和未使用的镜像，如果你有重要数据在停止的容器里，请先启动它们**）：
+
+Bash
+
+```
+docker system prune -a -f
+```
+
+- `-a`: 删除所有没有被容器使用的镜像（不仅仅是悬空镜像）。
+- `-f`: 强制执行，不需要手动确认（因为你现在可能连确认的交互都卡）。
+
+运行完后，再次查看空间：
+
+Bash
+
+```
+df -h
+```
+
+如果 `Use%` 降下来了（比如降到了 50%），恭喜你，问题解决了。
+
+------
+
+
+
+
+
+## 15.1 清理docker日志文件
+
+
+
+Docker 的日志默认存储在宿主机（你的 VPS）的 `/var/lib/docker/containers/` 目录下。
+
+由于你之前遇到了磁盘空间不足的问题，Docker 容器的标准输出（stdout/stderr）日志往往是占用空间的“隐形杀手”。
+
+以下是查看和清理 Docker 日志缓存的完整步骤：
+
+
+
+~~~
+[root@racknerd-8454f32 ~]# cd /mydata
+[root@racknerd-8454f32 mydata]# ll
+total 1416
+drwxr-xr-x 6 root             root      4096 Jun 22 08:34 autologens
+drwxr-xr-x 2 root             root      4096 Mar 12  2025 CORS
+drwxr-xr-x 2 root             docker    4096 Mar  2  2025 dbdata_bak
+drwxr-xr-x 2 root             root      4096 Sep 23 12:20 element-stack
+drwxr-xr-x 3 root             root      4096 Mar  3  2025 fiora
+drwxr-xr-x 3 root             root      4096 Mar  3  2025 fiora_backup
+drwxr-xr-x 6 systemd-coredump root      4096 Sep 23 11:14 fioramongodbdata
+drwxr-xr-x 5 root             root      4096 Mar  3  2025 fioramongodbdata_backup_20250303
+-rw-r--r-- 1 root             root   1293037 Mar  3  2025 fioramongodbdata_backup_20250303_1748.tar.gz
+drwxr-xr-x 2 systemd-coredump root      4096 Sep 23 11:27 fioraredisdata
+drwxr-xr-x 2 root             docker    4096 Mar  2  2025 images
+-rw-r--r-- 1 root             root     77950 Mar 22  2025 mas_backup.sql
+drwxr-xr-x 5 root             docker    4096 Mar  2  2025 mongodb_backup_all
+drwxr-xr-x 4 root             root      4096 Sep 24 07:19 monitor_stooock
+drwxr-xr-x 6 root             root      4096 Sep 23 10:38 nginx
+drwxr-xr-x 3 root             root      4096 Mar 22  2025 postgres
+drwx------ 4 root             root      4096 Sep 23 07:57 R2
+drwxr-xr-x 2 root             docker    4096 Mar  2  2025 redis_backup
+drwxr-xr-x 4 root             root      4096 Sep 23 09:30 synapse
+drwxr-xr-x 6 root             root      4096 Mar 22  2025 testfiora
+[root@racknerd-8454f32 mydata]# ls
+autologens     fiora_backup                                  images              postgres
+CORS           fioramongodbdata                              mas_backup.sql      R2
+dbdata_bak     fioramongodbdata_backup_20250303              mongodb_backup_all  redis_backup
+element-stack  fioramongodbdata_backup_20250303_1748.tar.gz  monitor_stooock     synapse
+fiora          fioraredisdata                                nginx               testfiora
+[root@racknerd-8454f32 mydata]# cd ..
+[root@racknerd-8454f32 /]# ls
+bin   dev  home  lib64       media  mydata  path  root  sbin  sys  tunnel.json  usr
+boot  etc  lib   lost+found  mnt    opt     proc  run   srv   tmp  tunnel.yml   var
+[root@racknerd-8454f32 /]# 
+[root@racknerd-8454f32 /]# find /var/lib/docker/containers/ -name "*-json.log" -exec ls -lh {} \; | sort -rh | head -n 10
+-rw-r----- 1 root root 32M Nov 27 17:10 /var/lib/docker/containers/42c8c4ab5c3a66219b79d728df432fc4e61f2f096c4ab2172caa466ef6f73fd1/42c8c4ab5c3a66219b79d728df432fc4e61f2f096c4ab2172caa466ef6f73fd1-json.log
+-rw-r----- 1 root root 3.2G Nov 27 17:11 /var/lib/docker/containers/982f2cfcc23808f8928b01ff8e915ddc32ce29029d350865ca6debf43fce9d36/982f2cfcc23808f8928b01ff8e915ddc32ce29029d350865ca6debf43fce9d36-json.log
+-rw-r----- 1 root root 1.3K Sep 23 12:20 /var/lib/docker/containers/0fcd7febade5279f0a92d8aa5aa2d91daf574dc008a967a89f01f858bd32461c/0fcd7febade5279f0a92d8aa5aa2d91daf574dc008a967a89f01f858bd32461c-json.log
+[root@racknerd-8454f32 /]# docker ps -a --filter id=982f2cfcc23
+CONTAINER ID   IMAGE                              COMMAND       CREATED        STATUS                    PORTS                                        NAMES
+982f2cfcc238   shirous/custom-synapse-r2:latest   "/start.py"   2 months ago   Up 2 months (unhealthy)   8009/tcp, 0.0.0.0:8008->8008/tcp, 8448/tcp   synapse
+[root@racknerd-8454f32 /]# #!/bin/sh
+[root@racknerd-8454f32 /]# echo "======== start clean docker containers logs ========"
+======== start clean docker containers logs ========
+[root@racknerd-8454f32 /]# logs=$(find /var/lib/docker/containers/ -name "*-json.log")
+[root@racknerd-8454f32 /]# for log in $logs
+> do
+>     echo "clean logs : $log"
+>     cat /dev/null > $log
+> done
+clean logs : /var/lib/docker/containers/0fcd7febade5279f0a92d8aa5aa2d91daf574dc008a967a89f01f858bd32461c/0fcd7febade5279f0a92d8aa5aa2d91daf574dc008a967a89f01f858bd32461c-json.log
+clean logs : /var/lib/docker/containers/982f2cfcc23808f8928b01ff8e915ddc32ce29029d350865ca6debf43fce9d36/982f2cfcc23808f8928b01ff8e915ddc32ce29029d350865ca6debf43fce9d36-json.log
+clean logs : /var/lib/docker/containers/42c8c4ab5c3a66219b79d728df432fc4e61f2f096c4ab2172caa466ef6f73fd1/42c8c4ab5c3a66219b79d728df432fc4e61f2f096c4ab2172caa466ef6f73fd1-json.log
+[root@racknerd-8454f32 /]# echo "======== end clean docker containers logs ========"
+======== end clean docker containers logs ========
+[root@racknerd-8454f32 /]# find /var/lib/docker/containers/ -name "*-json.log" -exec ls -lh {} \; | sort -rh | head -n 10
+-rw-r----- 1 root root 221K Nov 27 17:13 /var/lib/docker/containers/982f2cfcc23808f8928b01ff8e915ddc32ce29029d350865ca6debf43fce9d36/982f2cfcc23808f8928b01ff8e915ddc32ce29029d350865ca6debf43fce9d36-json.log
+-rw-r----- 1 root root 167 Nov 27 17:13 /var/lib/docker/containers/42c8c4ab5c3a66219b79d728df432fc4e61f2f096c4ab2172caa466ef6f73fd1/42c8c4ab5c3a66219b79d728df432fc4e61f2f096c4ab2172caa466ef6f73fd1-json.log
+-rw-r----- 1 root root 0 Nov 27 17:13 /var/lib/docker/containers/0fcd7febade5279f0a92d8aa5aa2d91daf574dc008a967a89f01f858bd32461c/0fcd7febade5279f0a92d8aa5aa2d91daf574dc008a967a89f01f858bd32461c-json.log
+[root@racknerd-8454f32 /]# vim /etc/docker/daemon.json
+[root@racknerd-8454f32 /]# cd /etc/docker
+[root@racknerd-8454f32 docker]# ls
+[root@racknerd-8454f32 docker]# ll
+total 0
+[root@racknerd-8454f32 docker]# vim /etc/docker/daemon.json
+[root@racknerd-8454f32 docker]# systemctl daemon-reload
+[root@racknerd-8454f32 docker]# systemctl restart docker
+[root@racknerd-8454f32 docker]# 
+~~~
+
+
+
+
+
+### 1. 查看哪些容器的日志占用最大
+
+
+
+直接运行这行命令，它会扫描 Docker 目录，并找出**最大的前 10 个日志文件**及其大小：
+
+Bash
+
+```
+find /var/lib/docker/containers/ -name "*-json.log" -exec ls -lh {} \; | sort -rh | head -n 10
+```
+
+- **输出解释：**
+  - 第一列是文件大小（例如 `5G`, `100M`）。
+  - 最后一列是文件路径，其中包含一长串字符（容器 ID）。
+
+
+
+### 2. 如何找到对应的容器名
+
+
+
+上面的命令只能看到 ID，如果你想知道是哪个应用（比如 `nginx` 还是 `fiora`）产生的日志，可以用这个命令（把 `<Container-ID>` 换成上面查到的 ID 前几位）：
+
+Bash
+
+```
+docker ps -a --filter id=<Container-ID>
+```
+
+
+
+### 3. 如何安全清理日志（不重启容器）
+
+
+
+⚠️ 警告：千万不要直接用 rm 删除日志文件！
+
+如果直接删除文件，Linux 系统可能不会释放空间，因为 Docker 进程还在占用文件句柄，必须重启 Docker 才能释放。
+
+**正确方法：清空文件内容**
+
+假设你查到 `/var/lib/docker/containers/xxx/xxx-json.log` 占用了 10G，运行以下命令将其清空：
+
+Bash
+
+```
+cat /dev/null > /var/lib/docker/containers/xxx/xxx-json.log
+```
+
+*(将路径替换为你实际查到的路径)*
+
+------
+
+
+
+### 4. 一键清理所有 Docker 日志（脚本）
+
+
+
+如果你懒得一个一个找，可以使用下面这个脚本，它会遍历所有正在运行的容器并清空它们的日志文件：
+
+Bash
+
+```
+#!/bin/sh
+echo "======== start clean docker containers logs ========"
+logs=$(find /var/lib/docker/containers/ -name "*-json.log")
+for log in $logs
+do
+    echo "clean logs : $log"
+    cat /dev/null > $log
+done
+echo "======== end clean docker containers logs ========"
+```
+
+你可以直接复制上面的代码粘贴到终端运行。
+
+------
+
+
+
+### 5. 彻底解决：限制日志大小（推荐）
+
+
+
+为了防止以后再次爆满，建议配置 Docker 的全局日志限制。
+
+1. 编辑 Docker 配置文件：
+
+   Bash
+
+   ```
+   nano /etc/docker/daemon.json
+   ```
+
+   *(如果没有 nano，就用 vi)*
+
+2. 添加或修改 `"log-driver"` 和 `"log-opts"` 配置，使其变成这样：
+
+   JSON
+
+   ```
+   {
+     "log-driver": "json-file",
+     "log-opts": {
+       "max-size": "50m",
+       "max-file": "3"
+     }
+   }
+   ```
+
+   *(意思：每个容器最多存 3 个日志文件，每个最大 50MB，总共不会超过 150MB)*
+
+3. 重启 Docker 生效：
+
+   Bash
+
+   ```
+   systemctl daemon-reload
+   systemctl restart docker
+   ```
+
+
+
+### 补充：关于你的 `/mydata` 目录
+
+
+
+我看你的文件列表中有 /mydata/nginx、/mydata/fiora 等。
+
+有些应用（比如 Nginx）不仅会有 Docker 标准输出日志，还会在挂载的目录里存日志。
+
+你也应该检查一下这些目录的占用：
+
+Bash
+
+```
+du -sh /mydata/* | sort -rh
+```
+
+如果 `nginx` 或 `fiora` 很大，记得进去清理里面的 `.log` 文件。
+
+
+
+# 8 全盘扫描查看文件占用排行指令
+
+
+
+~~~
+du -ah -d 1 / | sort -rh | head -n 15
+~~~
+
+
+
+~~~
+[root@racknerd-8454f32 docker]# du -ah -d 1 / | sort -rh | head -n 15
+du: cannot access '/proc/910584/task/910584/fd/4': No such file or directory
+du: cannot access '/proc/910584/task/910584/fdinfo/4': No such file or directory
+du: cannot access '/proc/910584/fd/3': No such file or directory
+du: cannot access '/proc/910584/fdinfo/3': No such file or directory
+36G     /
+27G     /var
+4.0G    /usr
+3.4G    /mydata
+1.1G    /opt
+321M    /boot
+130M    /etc
+125M    /run
+70M     /root
+268K    /home
+16K     /path
+16K     /lost+found
+12K     /tmp
+4.0K    /tunnel.yml
+4.0K    /tunnel.json
+[root@racknerd-8454f32 docker]# 
+~~~
+
+你的直觉非常敏锐。**`df -h` 只是告诉你“房子满了”，但没告诉你“谁住在里面”。** 它显示的是**总的**分区占用情况，不仅仅是日志。
+
+既然清理了日志（`.log` 文件）只释放了几 GB，剩下的 **35GB** 很可能被以下两类东西占用了：
+
+1. **Docker 镜像和容器层 (Overlay2)**：这是最常见的。旧版本的镜像、构建缓存、没用的容器层都堆在这里。
+2. **应用数据 (`/mydata`)**：你运行了 Synapse (Matrix)、Fiora 等，这些应用会存储图片、视频、数据库文件。
+
+请按照以下步骤，我们要像做 CT-扫描一样，把磁盘占用彻底“透视”出来。
+
+
+
+### 第一步：全盘扫描，找出最大的顶级目录
+
+
+
+请复制并运行这条“黄金命令”，它会按照大小列出根目录下最大的 15 个文件夹：
+
+Bash
+
+```
+du -ah -d 1 / | sort -rh | head -n 15
+```
+
+*(注意：这个命令可能需要跑十几秒，请耐心等待)*
+
+**预期结果分析：**
+
+- 如果 **`/var`** 最大（比如 20G+），说明垃圾在 **Docker 系统内部**（镜像/容器层）。
+- 如果 **`/mydata`** 最大，说明是你的 **业务数据**（数据库/用户上传的图片）太大了。
+- 如果 **`/usr`** 很大，通常是系统软件装太多了（较少见）。
+
+------
+
+
+
+### 第二步：如果发现是 Docker 占用了大量空间 (`/var`)
+
+
+
+如果第一步显示 `/var` 很大，请运行下面这个专门针对 Docker 的分析命令：
+
+Bash
+
+```
+docker system df
+```
+
+它会显示类似这样的表格：
+
+- **Images (镜像):** 比如 `Size: 10GB`，说明你下载了很多镜像。
+- **Containers (容器):** 比如 `Size: 5GB`，这是容器运行时产生的读写层。
+- **Local Volumes (卷):** 数据卷大小。
+- **Build Cache (构建缓存):** 往往这里会藏着好几个 G 的垃圾。
+
+解决方案（清理 Docker 垃圾）：
+
+如果确认这里占用很高，请执行这个命令来清理未被使用的镜像、缓存和停止的容器（注意：这不会删除正在运行的容器，是安全的）：
+
+Bash
+
+```
+docker system prune -a
+```
+
+- 它会提示你输入 `y` 确认。这通常能瞬间释放大量空间。
+
+------
+
+
+
+### 第三步：如果发现是 `/mydata` 很大
+
+
+
+你运行了 Synapse (Matrix 服务器)，这种服务有个特点：**它会缓存其他服务器发来的媒体文件（图片/视频）**，而且默认不清理，会无限增长。
+
+运行这个命令查看 `/mydata` 里的具体占用：
+
+Bash
+
+```
+du -sh /mydata/* | sort -rh
+```
+
+- 如果是 synapse 目录很大：
+
+  你需要配置 Synapse 的 media_retention 策略，或者手动进入目录清理旧的媒体缓存。
+
+  (如果是这种情况，不要直接 rm 删除文件，建议在 Synapse 配置里设置自动清理)。
+
+- 如果是 mongodb 或 postgres 很大：
+
+  说明你的聊天记录或数据非常多，这是硬性需求，无法直接清理，只能扩容或删除旧数据。
+
+------
+
+
+
+### 第四步：检查“幽灵文件”（文件已删但空间未释放）
+
+
+
+有时候你删除了日志文件，但程序（如 Docker）还“抓着”文件句柄不放，导致磁盘空间没释放。
+
+运行这个命令检查：
+
+Bash
+
+```
+lsof | grep deleted | sort -nr -k 7 | head -n 10
+```
+
+如果看到列表中有很大的文件（几 GB），且状态是 (deleted)，说明需要重启对应的进程（通常是重启 Docker 或对应的容器）才能真正释放空间。
+
+命令：
+
+Bash
+
+```
+systemctl restart docker
+```
+
+------
+
+现在的行动建议：
+
+先执行 第一步 的 du 命令，把输出结果发给我，我立刻就能告诉你那 35GB 到底是什么，以及能不能删。
