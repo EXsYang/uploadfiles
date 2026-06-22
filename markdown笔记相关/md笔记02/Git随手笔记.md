@@ -251,6 +251,342 @@ git push origin main --force-with-lease
 
 
 
+# 暂存指令`git stash`用法：
+
+简单来说，`git stash` 的作用就是“暂存”你当前正在进行的工作，让你可以切换到其他分支去干别的活，而不用为了保存进度而进行一次无意义的 `commit`。
+
+想象一下这个场景：你正在开发一个新功能（分支 A），代码写了一半，突然线上报了一个紧急 Bug 需要修复（分支 B）。此时你的代码还没写完，直接 `commit` 会破坏提交历史，但不 `commit` 的话，Git 又不让你直接切换分支。这时候 `git stash` 就派上用场了。
+
+### 核心作用与常见命令
+
+`git stash` 会把当前工作区和暂存区（Stage）的改动保存到一个储藏栈（Stash Stack）中，并将工作区恢复到最近一次提交（HEAD）的状态。
+
+以下是它的常用操作：
+
+- **暂存当前修改**
+
+  Bash
+
+  ```
+  git stash
+  # 或者添加备注（强烈推荐，方便以后查找）
+  git stash save "完成了大概一半的登录功能"
+  # 或者新版 Git 推荐：
+  git stash push -m "完成了大概一半的登录功能"
+  ```
+
+- **查看所有的暂存记录**
+
+  Bash
+
+  ```
+  git stash list
+  ```
+
+  > 运行后你会看到类似 `stash@{0}: On main: 完成了大概一半的登录功能` 的列表。
+
+- **恢复并删除暂存（最常用）**
+
+  Bash
+
+  ```
+  # 恢复最近一次的暂存，并把这条记录从储藏栈中删除
+  git stash pop
+  ```
+
+- **恢复暂存但保留记录**
+
+  Bash
+
+  ```
+  # 恢复最近一次的暂存，但储藏栈里依然保留它
+  git stash apply
+  # 也可以恢复指定的某次暂存
+  git stash apply stash@{1}
+  ```
+
+- **删除暂存**
+
+  Bash
+
+  ```
+  # 删除最近一次的暂存
+  git stash drop
+  # 清空所有暂存
+  git stash clear
+  ```
+
+### ⚠️ 注意事项（避坑指南）
+
+1. **未跟踪的文件（Untracked Files）默认不会被暂存**：如果你新建了一个文件，但还没有执行过 `git add`，直接运行 `git stash` 是**不会**把它存起来的。如果你想连同新文件一起暂存，需要加上 `-u` 参数：
+
+   Bash
+
+   ```
+   git stash -u  # 或者 git stash --include-untracked
+   ```
+
+2. **冲突处理**：当你执行 `git stash pop` 恢复工作时，如果当前分支的代码和暂存的代码有冲突，Git 会提示冲突。你需要手动解决冲突，解决后**记得手动运行 `git stash drop`**，因为发生冲突时 `pop` 不会自动删除那条暂存记录。
+
+
+
+# 恢复（也就是执行 `pop` 或 `apply`）之后，你的工作区就回到了你当初执行 `stash` 时的状态，你**可以继续接着写代码，写完后正常进行 `git add` 和 `git commit` 提交**。 
+
+对，完全正确！恢复（也就是执行 `pop` 或 `apply`）之后，你的工作区就回到了你当初执行 `stash` 时的状态，你**可以继续接着写代码，写完后正常进行 `git add` 和 `git commit` 提交**。
+
+为了让你对整个闭环流程有个清晰的了解，我把“遇到紧急任务 -> 暂存 -> 修复 Bug -> 恢复并提交代码”的**完整全套流程**给你梳理一遍：
+
+### 完整的实战场景演练
+
+假设你正在 `feature` 分支开发新功能，代码写了一半，突然要切换到 `main` 分支去修 Bug：
+
+
+
+**1.暂存当前未完成的工作:**在 feature 分支。
+
+包含新文件的话，用 `-u` 确保所有改动都被存起来：
+
+Bash
+
+```
+git stash -u -m "新功能写了一半"
+```
+
+此时，你的工作区变干净了。
+
+**2.切换并修复 Bug:**在 main 分支。
+
+切换到主分支，开一个修复分支把 Bug 搞定，然后合并、提交：
+
+Bash
+
+```
+git checkout main
+# ...去修 Bug、测试、commit、push...
+```
+
+**3.切回原本的分支:**在 feature 分支。
+
+线上 Bug 修复并发布后，切回你之前开发新功能的两边：
+
+Bash
+
+```
+git checkout feature
+```
+
+**4.恢复之前暂存的代码:**在 feature 分支。
+
+把之前存起来的进度弹出来：
+
+Bash
+
+```
+git stash pop
+```
+
+这时候，你之前写了一半的代码、新建的文件，全都原封不动地回到了你的电脑上。
+
+**5.继续开发并正常提交:**在 feature 分支。
+
+现在你可以继续写剩下的代码。全部写完并测试通过后，走正常的 Git 提交流程：
+
+Bash
+
+```
+git add .
+git commit -m "功能开发完成"
+git push origin feature
+```
+
+
+
+### 💡 恢复后可能遇到的两种特殊情况
+
+在你执行第四步 `git stash pop` 恢复代码时，通常会有两种结局：
+
+#### 情况 A：顺理成章，无缝衔接（最常见）
+
+如果线上修复的代码，和你正在开发的代码不是同一个文件，Git 会非常聪明地直接合并。你会看到类似 `Changes not staged for commit` 的提示，代码完美回到工作区。你直接看上面的 **第 5 步** 正常写代码、提交即可。
+
+#### 情况 B：代码冲突（Conflict）
+
+如果你在 `main` 分支修 Bug 时，刚好改了和你新功能**同一行**的代码，这时候 `git stash pop` 会报错，提示你 `Merge conflict`。
+
+- **别慌**：这和普通的 `git merge` 冲突一模一样。
+- **解决办法**：打开冲突的文件，删掉 Git 自动生成的冲突标记（如 `<<<<<<<` 和 `>>>>>>>`），决定保留哪一部分代码。
+- **后续提交**：手动解决完冲突后，你需要先 `git add .` 标记冲突已解决。
+- **关键一步**：因为遇到了冲突，Git 为了安全起见，**不会自动帮你删除**储藏栈里的那条记录。你需要手动运行一次 `git stash drop` 来把栈清理干净。清理完后，依然可以正常 `git commit` 提交。
+
+
+
+# 记录一次提交代码本地有新的更改时的冲突
+
+~~~
+C:\Users\yangd>cd /d "D:\Java_developer_tools\uploadfiles"
+
+D:\Java_developer_tools\uploadfiles>git pull --rebase
+error: cannot pull with rebase: You have unstaged changes.
+error: Please commit or stash them.
+
+D:\Java_developer_tools\uploadfiles>git stash
+Saved working directory and index state WIP on master: 517f8c0 鑷姩鎻愪氦 #47: 鍛ㄥ叚 2026/06/13 17:33:54.87
+
+D:\Java_developer_tools\uploadfiles>git stash
+No local changes to save
+
+D:\Java_developer_tools\uploadfiles>git pull --rebase
+Already up to date.
+
+D:\Java_developer_tools\uploadfiles>
+~~~
+
+
+
+你刚刚经历了一次非常经典的 Git 协同开发工作流！为了让你彻底明白发生了什么，我们先来解释**什么是 `git pull --rebase`**，然后再复盘一下你刚才的操作日志。
+
+### 一、 什么是 `git pull --rebase`？
+
+在理解它之前，我们要知道 `git pull` 的本质：**`git pull` = `git fetch`（拉取远程代码） + `git merge` 或 `git rebase`（合并到本地）**。
+
+当你执行 `git pull --rebase` 时，它的核心含义是：**“把我本地新写的、还没推送到远程的提交（Commit），先小心地拿下来放在一边；然后把远程仓库最新的代码拉下来，接到我本地分支的基底上；最后，再把我刚才拿下来的本地提交，一个一个像贴膏药一样，重新追加到最前面。”**
+
+#### 它的好处是什么？
+
+如果用普通的 `git pull`，Git 会自动生成一个类似 `Merge branch 'master' of ...` 的无意义合并提交（Merge Commit），让提交历史变成一团乱麻的交叉线。
+
+而 `git pull --rebase` 可以**避免生成这个多余的合并提交**，让你的 Git 提交历史保持成**一条干净的直线**，非常清爽。
+
+### 二、 复盘：你刚才的命令行里发生了什么？
+
+我们来一步步拆解你发出来的日志，这简直是一本教科书级别的 `git stash` 与 `rebase` 配合案例：
+
+#### 1. 遭遇报错：你有未保存的修改
+
+Bash
+
+```
+D:\Java_developer_tools\uploadfiles>git pull --rebase
+error: cannot pull with rebase: You have unstaged changes.
+error: Please commit or stash them.
+```
+
+- **原因**：你想执行 `rebase` 变基操作，但 Git 发现你本地有些文件被改动了，既没有 `commit` 也没有 `stash`。为了防止远程代码在合并时把你本地写了一半的代码覆盖掉导致代码丢失，Git 贴心地拒绝了你的请求，并提示你：**要么提交（commit），要么存起来（stash）。**
+
+#### 2. 完美化解：使用 `git stash` 暂存
+
+Bash
+
+```
+D:\Java_developer_tools\uploadfiles>git stash
+Saved working directory and index state WIP on master: 517f8c0 ...
+```
+
+- **原因**：你听从了 Git 的建议，执行了 `git stash`。Git 把你本地那部分没写完的代码成功打包存到了“储藏室”里，并把你的当前工作区恢复到了和远程（或者说上次提交）一模一样的干净状态。
+
+#### 3. 再次 stash（小插曲）
+
+Bash
+
+```
+D:\Java_developer_tools\uploadfiles>git stash
+No local changes to save
+```
+
+- **原因**：你又执行了一次 `git stash`，Git 告诉你：“别存了，现在工作区已经比脸还干净了，没有任何本地修改需要保存。”
+
+#### 4. 成功拉取：代码已是最新的
+
+Bash
+
+```
+D:\Java_developer_tools\uploadfiles>git pull --rebase
+Already up to date.
+```
+
+- **原因**：因为工作区干净了，`git pull --rebase` 顺利执行。Git 去远程服务器看了一眼，发现远程并没有人提交新代码，所以提示 `Already up to date`（已经是最新状态）。
+
+### 三、 接下来你该做什么？（关键最后一步）
+
+你现在虽然成功拉取了代码，但你**写了一半的代码还在“储藏室”里搁着呢**！
+
+你现在需要执行：
+
+Bash
+
+```
+git stash pop
+```
+
+把刚才存起来的代码弹出来，恢复到你的电脑上。恢复之后，你就可以继续写你的代码，写完后正常 `add`、`commit` 然后 `push` 啦！
+
+
+
+~~~
+D:\Java_developer_tools\uploadfiles>git stash pop
+On branch master
+Your branch is up to date with 'origin/master'.
+
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   markdown绗旇鐩稿叧/md绗旇02/Git闅忔墜绗旇.md
+        deleted:    temp_status.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
+Dropped refs/stash@{0} (14b89fd3a0fc5633a87a3384e1c0f4db884436f7)
+
+D:\Java_developer_tools\uploadfiles>
+~~~
+
+太棒了！这正是我们预期的**完美结局**（前面提到的“情况 A：顺理成章，无缝衔接”）。
+
+从你发出来的日志看，执行 `git stash pop` 之后，Git 成功把你之前存起来的进度“弹”了出来，并且因为远程没有和你冲突的修改，它已经自动把储藏室里的那条记录删除了（最后一行提示：`Dropped refs/stash@{0}`）。
+
+### 🔍 翻译与解读你当前的状态：
+
+- **`On branch master / Your branch is up to date with 'origin/master'.`**
+
+  你目前在 `master` 分支，并且你本地的提交历史和远程服务器是完全同步的（多亏了你刚才执行的 `git pull --rebase`）。
+
+- **`Changes not staged for commit:`**
+
+  这些是你刚刚从储藏室里拿出来的、还没准备好提交的修改：
+
+  1. `modified: .../Git闅忔墜绗旇.md`：你之前修改了这个 Markdown 笔记文件（后面的乱码是因为 Windows 命令行 GBK 编码与 Git 的 UTF-8 编码不一致，不用担心，文件内容没坏）。
+  2. `deleted: temp_status.txt`：你之前删除了这个临时文件。
+
+### 🛠️ 接下来你该怎么做？
+
+现在代码已经安全回到你的工作区了，你可以自由选择：
+
+#### 选择 1：如果你还要继续修改
+
+那就不用管 Git 的提示，直接打开你的编辑器（如 VS Code、IDEA 或记事本），接着写你的笔记。写完之后统一提交。
+
+#### 选择 2：如果你觉得已经写好了，现在就要提交并推送到远程
+
+依次运行以下命令，完成这套完整的工作流闭环：
+
+Bash
+
+```
+# 1. 把所有改动（修改和删除）添加到暂存区
+git add .
+
+# 2. 提交到本地仓库
+git commit -m "更新Git随手笔记并清理临时文件"
+
+# 3. 推送到远程服务器（因为前面 pull 过了，这次可以放心大胆地 push）
+git push origin master
+```
+
+恭喜你，到这一步，你已经完美掌握了 `git stash` 配合 `git pull --rebase` 的高级协同技巧！
+
+
+
+
+
 
 
 
