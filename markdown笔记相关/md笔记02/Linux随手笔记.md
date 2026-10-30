@@ -3578,7 +3578,63 @@ chmod +x /home/bb/script.sh
 
 
 
-#### 15.1.3 快速入门
+#### 使用 **vim** 来编辑 crontab
+
+`crontab -l` 只是查看（list）内容，不支持编辑。要使用 **vim** 来编辑 crontab，可以通过修改编辑命令的环境变量来实现。
+
+###### 方法 1：单次使用 vim 打开（最直接）
+
+运行以下命令：
+
+Bash
+
+```
+VISUAL=vim crontab -e
+```
+
+或者：
+
+Bash
+
+```
+EDITOR=vim crontab -e
+```
+
+*验证：* 命令执行后，终端会直接调起 vim 界面并加载你的 crontab 内容。
+
+###### 方法 2：永久将默认编辑器设为 vim
+
+如果希望以后每次直接输入 `crontab -e` 都默认使用 vim，可以选择以下任一方式：
+
+**在 Debian / Ubuntu 系统中（推荐）：**
+
+Bash
+
+```
+select-editor
+```
+
+终端会列出可用的编辑器列表（如 nano、vim.basic、vim.tiny 等），输入对应 vim 的数字序号并按回车即可。
+
+**在 Shell 配置文件中设置环境变量：** 将默认编辑器写入当前用户的环境配置文件（如 `~/.bashrc`）：
+
+Bash
+
+```
+echo 'export EDITOR=vim' >> ~/.bashrc
+echo 'export VISUAL=vim' >> ~/.bashrc
+source ~/.bashrc
+```
+
+*验证：* 执行 `crontab -e`，确认是否无需前缀命令即可自动使用 vim 打开。
+
+
+
+
+
+### 15.1.3 快速入门
+
+
 
 - 设置系统级任务调度文件：编辑 `/etc/crontab` 文件。
 - 设置个人任务调度：执行 `crontab -e` 命令并输入任务计划。
